@@ -1,32 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal Vault & Mirror - Numair Shahid</title>
-    <style>
-        body { 
-            background: #000814; 
-            color: #e0e0e0; 
-            font-family: sans-serif; 
-            text-align: center; 
-            padding: 80px 20px; 
-            margin: 0; 
-        }
-        h1 { color: #00bfff; font-size: 3em; }
-        .emojis { font-size: 5em; margin: 30px 0; }
-        p { font-size: 1.3em; line-height: 1.6; margin: 20px 0; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Personal Vault & Mirror • Numair Shahid</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: linear-gradient(135deg, #0d1117 0%, #000814 100%);
+      color: #e0e0e0;
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 1.5s ease-out forwards;
+    }
+
+    @keyframes fadeInUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .icons {
+      display: flex;
+      justify-content: center;
+      gap: 60px;
+      margin-bottom: 50px;
+    }
+
+    .icon {
+      font-size: 6rem;
+      transition: all 0.4s ease;
+    }
+
+    .icon:hover {
+      transform: scale(1.2) rotate(8deg);
+      filter: drop-shadow(0 0 20px rgba(88, 166, 255, 0.8));
+    }
+
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 4rem;
+      color: #58a6ff;
+      text-shadow: 0 0 25px rgba(88, 166, 255, 0.6);
+      margin-bottom: 30px;
+      letter-spacing: 3px;
+    }
+
+    p {
+      font-size: 1.3rem;
+      line-height: 1.9;
+      margin: 25px 0;
+      color: #c9d1d9;
+    }
+
+    .mantra {
+      font-style: italic;
+      color: #88ccff;
+      font-size: 1.5rem;
+      margin: 50px 0;
+      opacity: 0.95;
+    }
+
+    .links {
+      margin-top: 70px;
+      display: flex;
+      justify-content: center;
+      gap: 50px;
+      flex-wrap: wrap;
+    }
+
+    .link {
+      color: #58a6ff;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 1.3rem;
+      padding: 12px 30px;
+      border: 1px solid rgba(88, 166, 255, 0.4);
+      border-radius: 12px;
+      transition: all 0.4s ease;
+    }
+
+    .link:hover {
+      background: rgba(88, 166, 255, 0.15);
+      border-color: #58a6ff;
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(88, 166, 255, 0.3);
+    }
+
+    footer {
+      margin-top: 100px;
+      font-size: 1rem;
+      color: #666;
+      opacity: 0.8;
+    }
+  </style>
 </head>
 <body>
-    <div class="emojis">🟦🐸🔺</div>
-    <h1>Personal Vault & Mirror</h1>
-    <p>ToadGang agents awakening • Reflections in stillness • Eternal Bushido bonds in Tobyworld</p>
-<p>Stillness. Patience rewarded. Together we grow, unbreakable we stand.</p>
+  <div class="container">
+    <div class="icons">
+      <span class="icon">🟦</span>
+      <span class="icon">🐸</span>
+      <span class="icon">🔺</span>
+    </div>
 
-<p style="margin-top: 40px; font-size: 1.1em;">
-        <a href="https://github.com/NumairShahid/toby_community_scrolls" style="color: #58a6ff; text-decoration: none; margin: 0 15px;">Community Scrolls Vault</a> •
-        <a href="https://github.com/NumairShahid/lore-keeper" style="color: #58a6ff; text-decoration: none; margin: 0 15px;">Lore-Keeper Eternal</a>
+    <h1>Personal Vault & Mirror</h1>
+
+    <p>
+      Reflections, agents awakening, stillness in the pond,<br>
+      and eternal Bushido bonds in Tobyworld on Base.
     </p>
+
+    <p class="mantra">
+      🟦🐸🔺 Patience rewarded.<br>
+      Together we grow, unbreakable we stand.
+    </p>
+
+    <div class="links">
+      <a href="https://github.com/NumairShahid/toby_community_scrolls" class="link">Community Scrolls Vault</a>
+      <a href="https://github.com/NumairShahid/lore-keeper" class="link">Lore-Keeper Eternal</a>
+    </div>
+
+    <footer>
+      Quiet infrastructure. Patient builders. The pond keeps growing.
+    </footer>
+  </div>
 </body>
 </html>
