@@ -47,15 +47,31 @@
   }
 
   .links {
-    flex-direction: column; /* stack links vertically on very small screens */
-    gap: 20px;
-  }
+  flex-direction: column;      /* stack vertically */
+  gap: 20px;
+  align-items: center;         /* center them */
+}
 
-  .link {
-    width: 100%;         /* full-width pills on mobile for easier tap */
-    text-align: center;
-    padding: 14px 20px;
-  }
+.link {
+  width: 90%;                  /* almost full width for easy tap */
+  max-width: 320px;            /* don't stretch too wide on larger phones */
+  padding: 14px 20px;
+  font-size: 1.1rem;
+  text-align: center;
+  border: 1px solid rgba(88, 166, 255, 0.4);
+  border-radius: 12px;
+  color: #58a6ff;
+  text-decoration: none;
+  transition: all 0.4s ease;
+  background: transparent;     /* start transparent */
+}
+
+.link:hover,
+.link:active {                 /* :active for touch devices */
+  background: rgba(88, 166, 255, 0.15);
+  border-color: #58a6ff;
+  transform: translateY(-3px); /* smaller lift on mobile */
+  box-shadow: 0 8px 20px rgba(88, 166, 255, 0.25);
 }
     footer {
       margin-top: 100px;
