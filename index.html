@@ -14,24 +14,58 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    background: #000000; /* pure black mirror background */
+    background: #000000; /* pure black base */
     color: #e0e0e0;
     font-family: 'Inter', sans-serif;
     min-height: 100vh;
     display: flex;
-    justify-content: center;      /* horizontal center – fixes laptop left shift */
-    align-items: center;          /* vertical center */
+    justify-content: center;
+    align-items: center;
     padding: 40px 20px;
-    margin: 0;
+    position: relative; /* for absolute ripple layers */
+    overflow: hidden;   /* hide any overflow from ripples */
+  }
+
+  /* Subtle pond ripple layers – very gentle, slow pulse */
+  body::before,
+  body::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(96, 165, 250, 0.08) 10%, transparent 70%);
+    transform: translate(-50%, -50%);
+    animation: ripplePulse 18s infinite ease-in-out;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  body::after {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(96, 165, 250, 0.05) 10%, transparent 70%);
+    animation: ripplePulse 24s infinite ease-in-out reverse;
+    opacity: 0.6;
+  }
+
+  @keyframes ripplePulse {
+    0%   { transform: translate(-50%, -50%) scale(0.6); opacity: 0.2; }
+    50%  { transform: translate(-50%, -50%) scale(1.8); opacity: 0.5; }
+    100% { transform: translate(-50%, -50%) scale(3.0); opacity: 0; }
   }
 
   .container {
-    max-width: 900px;             /* slightly wider on desktop for breathing room */
+    max-width: 900px;
     width: 100%;
     text-align: center;
     opacity: 0;
     transform: translateY(30px);
     animation: fadeInUp 1.5s ease-out forwards;
+    position: relative;
+    z-index: 1; /* above ripples */
   }
 
   @keyframes fadeInUp {
@@ -52,14 +86,14 @@
 
   .icon:hover {
     transform: scale(1.2) rotate(8deg);
-    filter: drop-shadow(0 0 20px rgba(96, 165, 250, 0.8)); /* blue glow */
+    filter: drop-shadow(0 0 20px rgba(96, 165, 250, 0.8));
   }
 
   h1 {
     font-family: 'Cinzel', serif;
     font-size: 5rem;
-    color: #60a5fa;               /* vibrant bright blue */
-    text-shadow: 0 0 35px rgba(96, 165, 250, 0.8); /* strong blue glow */
+    color: #60a5fa;
+    text-shadow: 0 0 35px rgba(96, 165, 250, 0.8);
     margin-bottom: 30px;
     letter-spacing: 4px;
   }
@@ -112,14 +146,14 @@
     opacity: 0.8;
   }
 
-  /* Mobile adjustments – ensures everything stays centered & readable */
+  /* Mobile adjustments */
   @media (max-width: 600px) {
     body {
       padding: 30px 15px;
     }
 
     h1 {
-      font-size: 3.5rem;          /* smaller but still big on mobile */
+      font-size: 3.5rem;
       letter-spacing: 3px;
     }
 
@@ -140,15 +174,20 @@
     }
 
     .links {
-      flex-direction: column;     /* stack links vertically */
+      flex-direction: column;
       gap: 25px;
     }
 
     .link {
-      width: 100%;                /* full-width buttons on mobile */
+      width: 100%;
       padding: 14px 20px;
       font-size: 1.2rem;
       text-align: center;
+    }
+
+    /* Slightly slower ripples on mobile for performance */
+    body::before, body::after {
+      animation-duration: 24s, 32s;
     }
   }
 </style>
