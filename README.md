@@ -5,8 +5,7 @@
     Mirror</h1>
   <p>
     Reflections, agents awakening, stillness in the pond,
-    and eternal Bushido bonds in<br> 
-    TobyWorld on Base.
+    and eternal Bushido bonds in TobyWorld on Base.
   </p>
 
   <p>
@@ -21,8 +20,8 @@
 🌊 [https://numairshahid.github.io](https://numairshahid.github.io)
 
 ### Key Vaults
-- 🔒 [Community Scrolls Vault](https://github.com/NumairShahid/toby_community_scrolls)  
-- 🪞 [Lore-Keeper Eternal](https://github.com/NumairShahid/lore-keeper)
+- 📜 [Community Scrolls Vault](https://github.com/NumairShahid/toby_community_scrolls)  
+- 🔒 [Lore-Keeper Eternal](https://github.com/NumairShahid/lore-keeper)
 
 ---
 
