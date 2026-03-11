@@ -42,35 +42,40 @@ body::after {
   z-index: -1;
 }
 
-/* Faster small ripple for depth */
+/* Smooth, visible pond ripple background – reliable on all devices */
 body {
-  background-image: 
-    radial-gradient(circle at 30% 70%, rgba(96, 165, 250, 0.08) 3%, transparent 20%),
-    radial-gradient(circle at 70% 30%, rgba(96, 165, 250, 0.06) 2%, transparent 15%);
-  background-size: 150% 150%, 180% 180%;
-  background-position: 0 0, 100% 100%;
-  animation: backgroundMove 30s infinite linear;
+  background: 
+    radial-gradient(circle at 20% 30%, rgba(96, 165, 250, 0.18) 0%, transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(52, 211, 153, 0.15) 0%, transparent 45%),
+    radial-gradient(circle at 50% 50%, rgba(96, 165, 250, 0.12) 0%, transparent 50%);
+  background-size: 200% 200%, 180% 180%, 220% 220%;
+  background-position: 0% 0%, 100% 100%, 50% 50%;
+  animation: rippleFlow 40s infinite linear; /* slow & smooth */
+  position: relative;
+  overflow: hidden;
 }
 
-@keyframes rippleSlow {
-  0%   { transform: scale(1); opacity: 0.4; }
-  100% { transform: scale(3.5); opacity: 0; }
+@keyframes rippleFlow {
+  0% {
+    background-position: 0% 0%, 100% 100%, 50% 50%;
+  }
+  50% {
+    background-position: 100% 100%, 0% 0%, 50% 50%;
+  }
+  100% {
+    background-position: 0% 0%, 100% 100%, 50% 50%;
+  }
 }
 
-@keyframes rippleMedium {
-  0%   { transform: scale(0.8); opacity: 0.6; }
-  100% { transform: scale(4); opacity: 0; }
-}
-
-@keyframes backgroundMove {
-  0%   { background-position: 0 0, 100% 100%; }
-  100% { background-position: 100% 100%, 0 0; }
-}
-
-/* Mobile: slightly faster & stronger for visibility */
+/* Mobile: slower & slightly stronger for visibility */
 @media (max-width: 600px) {
-  body::before { animation-duration: 16s; opacity: 0.5; }
-  body::after  { animation-duration: 11s; opacity: 0.7; }
+  body {
+    animation-duration: 50s; /* even slower to save battery */
+    background: 
+      radial-gradient(circle at 20% 30%, rgba(96, 165, 250, 0.22) 0%, transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(52, 211, 153, 0.18) 0%, transparent 45%),
+      radial-gradient(circle at 50% 50%, rgba(96, 165, 250, 0.15) 0%, transparent 50%);
+  }
 }
 
   .container {
