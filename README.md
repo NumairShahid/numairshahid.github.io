@@ -1,16 +1,16 @@
 <div align="center">
-  <style="color: #FFD700;">
-  <h1> Personal Vault<br> 
-    &<br> 
-    Mirror</h1>
-  <p>
-    Reflections, agents awakening, stillness in the pond,
-    and eternal Bushido bonds in TobyWorld on Base.
+<h1 style="font-size: 5rem; color: #34d399; text-shadow: 0 0 35px rgba(52, 211, 153, 0.9); text-align: center; margin: 50px 0; letter-spacing: 5px; font-weight: bold;">
+  POND MIRROR
+</h1>
+   <p>
+    Whispers of stillness ripple through the pond,<br>
+    agents awaken in quiet reflection,<br>
+    Bushido bonds grow forever in TobyWorld on Base.
   </p>
 
   <p>
-  🟦🐸🔺 Patience rewarded.<br>
-    Together we grow, unbreakable we stand.
+  Together we grow, unbreakable we stand.<br>
+  🟦🐸🔺 Patience rewarded 🟦🐸🔺 
   </p>
 </div>
 
@@ -26,5 +26,5 @@
 ---
 
 <div align="center">
-  <small>Quiet infrastructure. Patient builders. The pond keeps growing.</small>
+  The pond deepens. Builders rise. Whispers become waves.
 </div>
