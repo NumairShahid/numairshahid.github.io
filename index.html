@@ -6,12 +6,47 @@
   <title>Pond Mirror • Numair Shahid</title>
 
   <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 
  <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+/* Glass UI Styles for Pond Mirror – Frosted Reflection Effect */
+/* Usage: Apply 'glass-container' to parent divs for the glass look */
+
+:root {
+  --glass-bg-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black for dark pond vibe */
+  --glass-blur: blur(20px); /* Soft blur for misty water feel */
+  --glass-border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle edge glow */
+  --glass-shadow: 0 8px 32px rgba(0, 212, 255, 0.2); /* Cyan glow for ripple depth */
+  --glass-radius: 20px; /* Rounded corners like pond edges */
+}
+
+.glass-container {
+  background: var(--glass-bg-color);
+  backdrop-filter: var(--glass-blur); /* Core glass blur */
+  border: var(--glass-border); /* Subtle border */
+  box-shadow: var(--glass-shadow); /* Glow shadow */
+  border-radius: var(--glass-radius); /* Rounded */
+  padding: 2rem; /* Inner space */
+  max-width: 800px; /* For centering on page */
+  margin: 2rem auto; /* Center on screen */
+  color: #e0f7ff; /* Soft cyan text for readability */
+  font-family: 'Orbitron', sans-serif; /* Futuristic font – add via Google Fonts */
+}
+
+.glass-title {
+  text-shadow: 0 0 10px rgba(0, 212, 255, 0.8); /* Glowing text effect */
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.glass-container:hover {
+  box-shadow: 0 12px 48px rgba(0, 212, 255, 0.3); /* Stronger glow on hover */
+  transition: box-shadow 0.3s ease-in-out; /* Smooth ripple */
+}
+</style>
 
   body {
     background: #000000; /* pure black mirror background */
