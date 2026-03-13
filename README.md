@@ -10,7 +10,7 @@
 
   <p>
   Together we grow, unbreakable we stand.<br>
-  🟦🐸🔺 Patience rewarded 🟦🐸🔺 
+  🟦🐸🔺 Patience rewarded 🔺🐸🟦 
   </p>
 </div>
 
