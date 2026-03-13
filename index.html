@@ -15,64 +15,90 @@
 /* Glass UI Styles for Pond Mirror – Frosted Reflection Effect */
 /* Usage: Apply 'glass-container' to parent divs for the glass look */
 
+/* Advanced Glass UI Animations for Pond Mirror – Frosted Reflection with Ripple & Glow */
+/* Builds on basic glass UI – add to your style.css or <style> tag */
+
+/* Base variables (from basic) + animation vars */
 :root {
-  --glass-bg-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black for dark pond vibe */
-  --glass-blur: blur(20px); /* Soft blur for misty water feel */
-  --glass-border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle edge glow */
-  --glass-shadow: 0 8px 32px rgba(0, 212, 255, 0.2); /* Cyan glow for ripple depth */
-  --glass-radius: 20px; /* Rounded corners like pond edges */
+  --glass-bg-color: rgba(0, 0, 0, 0.6);
+  --glass-blur: blur(20px);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px rgba(0, 212, 255, 0.2);
+  --glass-radius: 20px;
+  --ripple-color: rgba(0, 212, 255, 0.3); /* Cyan ripple for pond effect */
+  --glow-color: rgba(0, 212, 255, 0.6); /* Soft cyan glow */
+  --animation-duration: 1s; /* Ripple & pulse speed */
 }
 
+/* Glass container with hover animation */
 .glass-container {
   background: var(--glass-bg-color);
-  backdrop-filter: var(--glass-blur); /* Core glass blur */
-  border: var(--glass-border); /* Subtle border */
-  box-shadow: var(--glass-shadow); /* Glow shadow */
-  border-radius: var(--glass-radius); /* Rounded */
-  padding: 2rem; /* Inner space */
-  max-width: 800px; /* For centering on page */
-  margin: 2rem auto; /* Center on screen */
-  color: #e0f7ff; /* Soft cyan text for readability */
-  font-family: 'Orbitron', sans-serif; /* Futuristic font – add via Google Fonts */
-}
-
-.glass-title {
-  text-shadow: 0 0 10px rgba(0, 212, 255, 0.8); /* Glowing text effect */
-  font-size: 3rem;
-  margin-bottom: 1rem;
+  backdrop-filter: var(--glass-blur);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: var(--glass-radius);
+  padding: 2rem;
+  max-width: 800px;
+  margin: 2rem auto;
+  color: #e0f7ff;
+  font-family: 'Orbitron', sans-serif;
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
 .glass-container:hover {
-  box-shadow: 0 12px 48px rgba(0, 212, 255, 0.3); /* Stronger glow on hover */
-  transition: box-shadow 0.3s ease-in-out; /* Smooth ripple */
+  box-shadow: 0 12px 48px var(--glow-color);
+  transform: translateY(-5px); /* Subtle lift on hover */
 }
-</style>
 
-  body {
-    background: #000000; /* pure black mirror background */
-    color: #e0e0e0;
-    font-family: 'Inter', sans-serif;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;      /* horizontal center – fixes laptop left shift */
-    align-items: center;          /* vertical center */
-    padding: 40px 20px;
-    margin: 0;
+/* Ripple animation on click/tap */
+.glass-container:active {
+  animation: ripple 0.6s linear;
+}
+
+@keyframes ripple {
+  0% {
+    box-shadow: 0 0 0 0 var(--ripple-color);
   }
-
-  .container {
-    max-width: 900px;             /* slightly wider on desktop for breathing room */
-    width: 100%;
-    text-align: center;
-    opacity: 0;
-    transform: translateY(30px);
-    animation: fadeInUp 1.5s ease-out forwards;
+  100% {
+    box-shadow: 0 0 0 50px transparent;
   }
+}
 
-  @keyframes fadeInUp {
-    to { opacity: 1; transform: translateY(0); }
-  }
+/* Pulse glow for title or elements */
+.glass-title {
+  text-shadow: 0 0 10px var(--glow-color);
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  animation: pulse-glow 2s infinite alternate ease-in-out;
+}
 
+@keyframes pulse-glow {
+  from { text-shadow: 0 0 10px var(--glow-color); }
+  to { text-shadow: 0 0 20px rgba(0, 212, 255, 0.8); }
+}
+
+/* Faint background ripple animation for depth */
+.glass-container::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, transparent 10%, var(--ripple-color) 40%, transparent 70%);
+  transform: translate(-50%, -50%);
+  animation: background-ripple 8s infinite ease-in-out;
+  opacity: 0.1;
+}
+
+@keyframes background-ripple {
+  0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.1; }
+  100% { transform: translate(-50%, -50%) scale(1.2); opacity: 0; }
+}
+
+/* Example usage: <div class="glass-container"><h1 class="glass-title">Pond Mirror</h1>...</div> */
   .icons {
     display: flex;
     justify-content: center;
