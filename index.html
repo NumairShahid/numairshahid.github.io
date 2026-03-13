@@ -6,7 +6,7 @@
     <title>Pond Mirror</title>
     
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -15,7 +15,7 @@
             --glass-border: 1px solid rgba(255, 255, 255, 0.12);
             --glass-shadow: 0 10px 40px rgba(0, 212, 255, 0.25);
             --glass-radius: 24px;
-            --glow-color: rgba(0, 212, 255, 0.7);
+            --glow-color: rgba(0, 212, 255, 0.8);
         }
 
         body {
@@ -47,43 +47,62 @@
         }
 
         .glass-title {
-            font-size: 4.2rem;
+            font-size: 4.5rem;
             font-weight: 700;
             color: #00d4ff;
-            text-shadow: 0 0 20px var(--glow-color), 0 0 40px var(--glow-color);
-            margin-bottom: 1.5rem;
-            letter-spacing: 2px;
+            text-shadow: 0 0 25px var(--glow-color), 0 0 50px var(--glow-color);
+            margin-bottom: 1.8rem;
+            letter-spacing: 3px;
         }
 
         .glass-container p {
-            line-height: 1.7;
-            margin: 1rem 0;
+            line-height: 1.75;
+            margin: 1.2rem 0;
             font-size: 1.15rem;
+        }
+
+        .patience-line {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: nowrap;
+            font-size: 1.8rem;
+            margin: 2rem 0;
+            white-space: nowrap;
         }
 
         .pill {
             display: inline-block;
-            background: rgba(0, 212, 255, 0.1);
-            border: 1px solid #00d4ff;
+            background: rgba(0, 212, 255, 0.12);
+            border: 2px solid #00d4ff;
             color: #00ffff;
-            padding: 12px 28px;
-            margin: 10px 8px;
+            padding: 14px 32px;
+            margin: 12px 8px;
             border-radius: 50px;
             text-decoration: none;
-            font-size: 1.05rem;
+            font-size: 1.1rem;
+            font-weight: 600;
             transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
         }
 
         .pill:hover {
-            background: rgba(0, 212, 255, 0.25);
-            box-shadow: 0 0 20px rgba(0, 212, 255, 0.6);
-            transform: translateY(-2px);
+            background: rgba(0, 212, 255, 0.3);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.8);
+            transform: translateY(-3px) scale(1.03);
         }
 
         footer {
-            margin-top: 2rem;
+            margin-top: 2.5rem;
             font-size: 1rem;
-            opacity: 0.75;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 600px) {
+            .glass-title { font-size: 3.2rem; }
+            .glass-container { padding: 2rem 1.5rem; }
+            .patience-line { font-size: 1.5rem; gap: 8px; }
         }
     </style>
 </head>
@@ -97,12 +116,15 @@
         
         <p>Together we grow, unbreakable we stand.</p>
         
-        <p style="font-size: 2rem; margin: 2rem 0;">🟦🐸🔺 Patience rewarded 🔺🐸🟦</p>
+        <div class="patience-line">
+            🟦 🐸 🔺 Patience rewarded 🔺 🐸 🟦
+        </div>
         
-        <a href="#" class="pill">Community Scrolls Vault</a>
-        <a href="#" class="pill">Lore-Keeper Eternal</a>
+        <!-- UPDATED LINKS - exactly as you asked -->
+        <a href="https://toadaid.github.io" target="_blank" class="pill">Community Scrolls Vault</a>
+        <a href="https://toadaid.github.io/honors/mirror-system-blueprint.html" target="_blank" class="pill">Lore-Keeper Eternal (Mirror Runtime)</a>
         
-        <footer>The pond deepens. Builders rise. Whispers become waves.</footer>
+        <footer>The pond deepens. Builders rise. Whispers become waves. 🌊🍃</footer>
     </div>
 </body>
 </html>
