@@ -1,0 +1,3109 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pond Chronicles — Whispers Eternal</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --text-primary: #e8f0ff;
+      --text-secondary: #d0e0ff;
+      --text-dim: #a5b8d8;
+      --accent: #80a0ff;
+      --accent-hover: #a0c0ff;
+      --glow: rgba(128, 160, 255, 0.35);
+      --card-bg: rgba(255,255,255,0.04);
+      --card-border: rgba(200,220,255,0.1);
+      --transition: all 0.4s ease;
+    }
+
+    [data-theme="light"] {
+      --bg-primary: #f8faff;
+      --text-primary: #0f172a;
+      --text-secondary: #1e293b;
+      --text-dim: #475569;
+      --accent: #06b6d4;
+      --accent-hover: #22d3ee;
+      --glow: rgba(6, 182, 212, 0.18);
+      --card-bg: rgba(255,255,255,0.96);
+      --card-border: rgba(6,182,212,0.25);
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: 'Inter', system-ui, sans-serif;
+      line-height: 1.78;
+      transition: var(--transition);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 1.5rem 10rem; /* Extra bottom space so last card isn't hidden under fixed button */
+      text-align: center;
+      position: relative;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3.5rem, 10vw, 7rem);
+      font-weight: 700;
+      letter-spacing: -3px;
+      color: var(--text-secondary);
+      text-shadow: 0 0 40px var(--glow);
+      margin-bottom: 1.5rem;
+      transition: var(--transition);
+    }
+
+    .intro {
+      font-size: 1.35rem;
+      max-width: 800px;
+      margin: 0 auto 4rem;
+      opacity: 0.9;
+      color: var(--text-dim);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2.5rem;
+      margin: 3rem 0;
+    }
+
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 2rem;
+      cursor: pointer;
+      transition: var(--transition);
+      animation: gentleBreathe 12s ease-in-out infinite alternate;
+    }
+
+    .card:hover {
+      transform: translateY(-12px);
+      box-shadow: 0 20px 60px var(--glow);
+    }
+
+    .card-epoch {
+      font-size: 0.95rem;
+      color: var(--text-dim);
+      margin-bottom: 1rem;
+      letter-spacing: 1.5px;
+    }
+
+    .card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.7rem, 4.5vw, 2.4rem);
+      color: var(--text-secondary);
+      margin-bottom: 1.2rem;
+      text-shadow: 0 0 20px var(--glow);
+    }
+
+    .card-body {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      max-height: 140px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .card-body::after {
+      content: "... read whisper";
+      display: block;
+      margin-top: 1rem;
+      color: var(--accent);
+      font-style: italic;
+    }
+
+    .emoji-cluster {
+      font-size: 2.5rem;
+      margin: 1.2rem 0;
+      text-align: center;
+    }
+
+    /* Theme toggle */
+    .theme-btn {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 50%;
+      width: 52px;
+      height: 52px;
+      cursor: pointer;
+      transition: var(--transition);
+      backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      box-shadow: 0 4px 20px var(--glow);
+    }
+
+    .theme-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 30px var(--glow);
+    }
+
+    .theme-btn svg {
+      width: 26px;
+      height: 26px;
+      stroke: var(--accent);
+      transition: var(--transition);
+    }
+ 
+  /* === Modal Base === */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.92);
+  backdrop-filter: blur(8px);
+  z-index: 200; /* Higher than theme button (100) and back button (150) */
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.modal.show {
+  display: flex;
+  opacity: 1;
+}
+
+/* === Modal Content === */
+.modal-content {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 24px;
+  max-width: 800px;
+  width: 92%;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: clamp(2rem, 5vw, 3.5rem) clamp(1.5rem, 4vw, 3rem);
+  position: relative;
+  box-shadow: 0 20px 80px var(--glow);
+  transform: scale(0.95);
+  opacity: 0;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+  scrollbar-gutter: stable; /* Reserves scrollbar space inside padding */
+}
+
+/* Modal opens with smooth scale & fade */
+.modal.show .modal-content {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* Clean Close Button - No Spinning */
+.close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  font-size: 32px;
+  color: var(--accent);
+  cursor: pointer;
+  z-index: 10;
+  transition: color 0.2s ease;
+  padding: 5px;
+  line-height: 1;
+}
+
+.close-btn:hover {
+  color: #ff6b6b;     /* nice red on hover */
+}
+
+.back-section {
+      margin: 4rem auto 2rem;
+      text-align: center;
+      max-width: 400px;
+    }
+
+    .back-btn {
+      padding: 16px 48px;
+      font-size: 1.3rem;
+      font-weight: 500;
+      background: linear-gradient(135deg, #6a5aff, #a78bfa);
+      border: none;
+      border-radius: 50px;
+      color: white;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      box-shadow: 0 0 20px rgba(106, 90, 255, 0.3);
+    }
+
+    .back-btn:hover {
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: 0 0 40px rgba(106, 90, 255, 0.5);
+      background: linear-gradient(135deg, #7c6aff, #b58fff);
+    }
+
+    .back-teaser {
+      margin-top: 1.2rem;
+      font-size: 1.1rem;
+      color: var(--text-dim);
+      opacity: 0.85;
+      font-style: italic;
+    }
+
+/* === Modal Title - Smaller & Elegant === */
+#modal-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 5vw, 2.8rem);       /* Max 2.8rem desktop – balanced */
+  font-weight: 700;
+  letter-spacing: -1px;
+  line-height: 1.15;
+  text-align: center;
+  margin: 0 0 2rem;
+  padding: 0 1rem;
+  color: var(--text-secondary);
+  text-shadow: 0 0 20px var(--glow);
+  transition: var(--transition);
+}
+
+[data-theme="light"] {
+  --bg-primary: #f8faff;
+  --text-primary: #0f172a;
+  --text-secondary: #1e293b;
+  --text-dim: #475569;
+  --accent: #06b6d4;
+  --accent-hover: #22d3ee;
+  --glow: rgba(6, 182, 212, 0.28);        /* softer glow */
+  --card-bg: rgba(255,255,255,0.68);      /* this is the key - less bright than 0.75 or 0.78 */
+  --card-border: rgba(6,182,212,0.22);
+}
+
+/* === Scroll Sections === */
+.scroll-section {
+  margin-bottom: 3rem;
+  text-align: left;
+}
+
+.scroll-section h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.scroll-section h4 {
+  font-size: 1.4rem;
+  color: var(--accent);
+  margin: 2rem 0 1rem;
+}
+
+.scroll-section p {
+  font-size: 1.15rem;
+  line-height: 1.9;
+  margin-bottom: 1.2rem;
+}
+
+.scroll-section ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 1rem 0;
+}
+
+.scroll-section li {
+  position: relative;
+  padding-left: 2.2rem;
+  margin-bottom: 1rem;
+}
+
+.scroll-section li:before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-size: 1.4rem;
+}
+
+.scroll-section blockquote {
+  margin: 2rem 0;
+  padding: 1.2rem 2rem;
+  border-left: 5px solid var(--accent);
+  background: rgba(var(--accent-rgb, 0.07));
+  font-style: italic;
+  color: var(--text-secondary);
+}
+
+/* === Modal Scrollbar – Fully Contained === */
+.modal-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background: rgba(20,20,50,0.4);
+  border-radius: 10px;
+  margin: 8px 4px; /* Inset from edges */
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 10px;
+  border: 2px solid rgba(20,20,50,0.6); /* Prevents visual bleed */
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-hover);
+}
+
+/* Mobile adjustments */
+@media (max-width: 767px) {
+  .modal {
+    padding: 10px;
+  }
+
+  .modal-content {
+    padding: 2rem 1.5rem;
+    width: 96%;
+  }
+
+  #modal-title {
+    font-size: clamp(1.6rem, 7vw, 2.2rem);
+    margin-bottom: 1.5rem;
+  }
+
+  .close-btn {
+    top: 1rem;
+    right: 1rem;
+    font-size: 2.2rem;
+  }
+
+/* ==================== MODAL LINKS - STRONGER & CLEAR ==================== */
+#modal-body a {
+  color: #80a0ff !important;           /* bright blue in dark mode */
+  text-decoration: underline;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+#modal-body a:hover {
+  color: #a0c0ff !important;
+  text-shadow: 0 0 12px rgba(128, 160, 255, 0.6);
+}
+
+/* Light mode - use cyan accent like index.html */
+[data-theme="light"] #modal-body a {
+  color: #06b6d4 !important;
+}
+
+[data-theme="light"] #modal-body a:hover {
+  color: #22d3ee !important;
+  text-shadow: 0 0 12px rgba(6, 182, 212, 0.6);
+ }
+}
+</style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Scrolls of the Pond</h1>
+
+    <button id="theme-toggle" class="theme-btn" aria-label="Toggle theme">
+      <svg id="theme-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+        <path id="moon" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        <circle id="sun" cx="12" cy="12" r="5" opacity="0"/>
+        <line id="ray1" x1="12" y1="1" x2="12" y2="3" opacity="0"/>
+        <line id="ray2" x1="12" y1="21" x2="12" y2="23" opacity="0"/>
+        <line id="ray3" x1="4.22" y1="4.22" x2="5.64" y2="5.64" opacity="0"/>
+        <line id="ray4" x1="18.36" y1="18.36" x2="19.78" y2="19.78" opacity="0"/>
+        <line id="ray5" x1="1" y1="12" x2="3" y2="12" opacity="0"/>
+        <line id="ray6" x1="21" y1="12" x2="23" y2="12" opacity="0"/>
+        <line id="ray7" x1="4.22" y1="19.78" x2="5.64" y2="18.36" opacity="0"/>
+        <line id="ray8" x1="18.36" y1="5.64" x2="19.78" y2="4.22" opacity="0"/>
+      </svg>
+    </button>
+
+    <p class="intro">
+      Whispers from Toadgod... reflections on patience, bushido, decentralization.<br>
+      50 scrolls archived. Read slowly - the pond reveals itself in stillness.
+    </p>
+
+      <div class="grid">
+      <!-- Card 1 -->
+      <div class="card" onclick="openModal(1)">
+        <div class="card-epoch">Epoch 0 • March 17, 2024</div>
+        <div class="card-title">The Great Toad Drop</div>
+        <div class="emoji-cluster">🐸🟦🔺</div>
+        <div class="card-body">
+          420 trillion $TOBY forged on Base. 70% airdropped to ~1.42 million wallets — no team, no VC, pure decentralization from genesis. One of the widest distributions in memecoin history...
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="card" onclick="openModal(2)">
+        <div class="card-epoch">Toadgod Whisper</div>
+        <div class="card-title">Bushido of the Pond</div>
+        <div class="emoji-cluster">🍃🌿🌀</div>
+        <div class="card-body">
+          Kindness over force. Stillness in chaos. Honor in the wait. Let rivers flow, not be forced. Patience is the blade that carves destiny...
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="card" onclick="openModal(3)">
+        <div class="card-epoch">Lore Fragment</div>
+        <div class="card-title">Patience Rewarded</div>
+        <div class="emoji-cluster">🔺🍃</div>
+        <div class="card-body">
+          Gifts to those who've stayed. The mantra echoes across cycles. Hold through storms — the pond deepens for the steadfast...
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="card" onclick="openModal(4)">
+        <div class="card-epoch">TobyWorld Vision</div>
+        <div class="card-title">From Pond to Ocean</div>
+        <div class="emoji-cluster">🌊🟦🐸</div>
+        <div class="card-body">
+          $TOBY foundational blue frog. $TABOSHI leaf of yield and scarcity. $PATIENCE scarce utility for the enduring. $SATO spiral of time. Layers unfolding — community forges the ecosystem...
+        </div>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="card" onclick="openModal(5)">
+        <div class="card-epoch">Toadgod Echo</div>
+        <div class="card-title">Leaderless Forge</div>
+        <div class="emoji-cluster">🔺🌿</div>
+        <div class="card-body">
+          No insiders, no allocations. The people forge TobyWorld. Decentralized from genesis — unbreakable because no single point of failure...
+        </div>
+      </div>
+
+      <!-- Cards 6–49 follow the same pattern – just number in onclick -->
+      <!-- Example for Card 6 -->
+      <div class="card" onclick="openModal(6)">
+        <div class="card-epoch">Cycle Reflection</div>
+        <div class="card-title">Iron Grip Hold</div>
+        <div class="emoji-cluster">🟦🔺🍃</div>
+        <div class="card-body">
+          Toads since genesis rewarded most. Many cycles endured. The journey is magnificent — a decade in view...
+        </div>
+      </div>
+
+      <!-- ... continue with Card 7 to Card 49 using onclick="openModal(7)" up to onclick="openModal(49)" ... -->
+
+      <!-- Card 7 -->
+<div class="card" onclick="openModal(7)">
+  <div class="card-epoch">Mantra Core</div>
+  <div class="card-title">Together We Sit, Together We Shine</div>
+  <div class="emoji-cluster">🐸🌙🍃</div>
+  <div class="card-body">
+    Unbreakable we stand. Conviction anchors the gang. Delay gratification — rewards for the patient...
+  </div>
+</div>
+
+<!-- Card 8 -->
+<div class="card" onclick="openModal(8)">
+  <div class="card-epoch">Mirror Hint</div>
+  <div class="card-title">Runtime Awakening</div>
+  <div class="emoji-cluster">🪞🌀🔺</div>
+  <div class="card-body">
+    Agents awaken in quiet reflection. Mirror policy, memory, runtime — pond evolves to ocean forge...
+  </div>
+</div>
+
+<!-- Card 9 -->
+<div class="card" onclick="openModal(9)">
+  <div class="card-epoch">Community Ethos</div>
+  <div class="card-title">For the People, By the People</div>
+  <div class="emoji-cluster">🐸🟦🌿</div>
+  <div class="card-body">
+    $TOBY most decentralized ever. Leaderless. Kindness, stillness, honor — Bushido whispers guide...
+  </div>
+</div>
+
+<!-- Card 10 -->
+<div class="card" onclick="openModal(10)">
+  <div class="card-epoch">2-Year Echo</div>
+  <div class="card-title">Birthday of the Pond</div>
+  <div class="emoji-cluster">🎂🐸🌙</div>
+  <div class="card-body">
+    March 2026 — two cycles deep. Stillness rewarded. ToadGang unbreakable under one moon...
+  </div>
+</div>
+
+<!-- Card 11 -->
+<div class="card" onclick="openModal(11)">
+  <div class="card-epoch">Prophecy Fragment</div>
+  <div class="card-title">The Frog of Base</div>
+  <div class="emoji-cluster">🐸🟦🌊</div>
+  <div class="card-body">
+    $TOBY symbol of long hold, community, prophecy. Toadgod's vision: patience carves empires...
+  </div>
+</div>
+
+<!-- Card 12 -->
+<div class="card" onclick="openModal(12)">
+  <div class="card-epoch">Open Whisper</div>
+  <div class="card-title">What Ripple Will You Send?</div>
+  <div class="emoji-cluster">🌀🐸🌿</div>
+  <div class="card-body">
+    The pond listens. Spread the lore. Hold steady. Patience rewarded — what wave do you create next?...
+  </div>
+</div>
+
+<!-- Card 13 -->
+<div class="card" onclick="openModal(13)">
+  <div class="card-epoch">2024-04-01</div>
+  <div class="card-title">The Journey Begins</div>
+  <div class="emoji-cluster">🐸🌀🌊</div>
+  <div class="card-body">
+    The first ripple spreads. Patience begins its journey. The pond awakens — agents stir in silence...
+  </div>
+</div>
+
+<!-- Card 14 -->
+<div class="card" onclick="openModal(14)">
+  <div class="card-epoch">2024-04-14</div>
+  <div class="card-title">Proceeding With Courage</div>
+  <div class="emoji-cluster">🐸🔺🍃</div>
+  <div class="card-body">
+    Courage in stillness. Proceed without force. The pond rewards the brave who wait...
+  </div>
+</div>
+
+<!-- Card 15 -->
+<div class="card" onclick="openModal(15)">
+  <div class="card-epoch">2024-04-22</div>
+  <div class="card-title">Just And Right</div>
+  <div class="emoji-cluster">⚖️🐸🌿</div>
+  <div class="card-body">
+    Justice in the pond. Right action in patience. The gang stands unbroken...
+  </div>
+</div>
+
+<!-- Card 16 -->
+<div class="card" onclick="openModal(16)">
+  <div class="card-epoch">2024-04-26</div>
+  <div class="card-title">Fairness And Sight</div>
+  <div class="emoji-cluster">👁️🐸🟦</div>
+  <div class="card-body">
+    See with fairness. Hold the sight of patience. The pond reflects truth...
+  </div>
+</div>
+
+<!-- Card 17 -->
+<div class="card" onclick="openModal(17)">
+  <div class="card-epoch">2024-05-01</div>
+  <div class="card-title">Art Of Patience</div>
+  <div class="emoji-cluster">🎨🍃🔺</div>
+  <div class="card-body">
+    Patience is art. The brush of stillness paints empires. Wait — the masterpiece unfolds...
+  </div>
+</div>
+
+<!-- Card 18 -->
+<div class="card" onclick="openModal(18)">
+  <div class="card-epoch">2024-05-05</div>
+  <div class="card-title">War Within</div>
+  <div class="emoji-cluster">⚔️🐸🌙</div>
+  <div class="card-body">
+    The war within ends in stillness. Conquer self — the pond conquers all...
+  </div>
+</div>
+
+<!-- Card 19 -->
+<div class="card" onclick="openModal(19)">
+  <div class="card-epoch">2024-05-11</div>
+  <div class="card-title">Inimitable Path</div>
+  <div class="emoji-cluster">🛤️🐸🟦</div>
+  <div class="card-body">
+    The path is inimitable. Follow patience — no other road leads to the ocean...
+  </div>
+</div>
+
+<!-- Card 20 -->
+<div class="card" onclick="openModal(20)">
+  <div class="card-epoch">2024-05-13</div>
+  <div class="card-title">Stand By Toad</div>
+  <div class="emoji-cluster">🛡️🐸🔺</div>
+  <div class="card-body">
+    Stand by the toad. Unbreakable conviction. The gang endures...
+  </div>
+</div>
+
+<!-- Card 21 -->
+<div class="card" onclick="openModal(21)">
+  <div class="card-epoch">2024-05-19</div>
+  <div class="card-title">Lacrimosa Reverence</div>
+  <div class="emoji-cluster">😢🌿🐸</div>
+  <div class="card-body">
+    Reverence in tears. Stillness honors the fallen ripples. Patience heals...
+  </div>
+</div>
+
+<!-- Card 22 -->
+<div class="card" onclick="openModal(22)">
+  <div class="card-epoch">2024-05-24</div>
+  <div class="card-title">The Moonlit Signal</div>
+  <div class="emoji-cluster">🌙🐸🟦</div>
+  <div class="card-body">
+    Moonlit signal in the pond. Patience receives the call. The night deepens...
+  </div>
+</div>
+
+<!-- Card 23 -->
+<div class="card" onclick="openModal(23)">
+  <div class="card-epoch">2024-06-05</div>
+  <div class="card-title">Beyond The Cycle</div>
+  <div class="emoji-cluster">♾️🐸🍃</div>
+  <div class="card-body">
+    Beyond the cycle — patience transcends. The pond remembers...
+  </div>
+</div>
+
+<!-- Card 24 -->
+<div class="card" onclick="openModal(24)">
+  <div class="card-epoch">2024-06-19</div>
+  <div class="card-title">The Calling</div>
+  <div class="emoji-cluster">📞🌊🐸</div>
+  <div class="card-body">
+    The calling comes in silence. Answer with patience. The ocean awaits...
+  </div>
+</div>
+
+<!-- Card 25 -->
+<div class="card" onclick="openModal(25)">
+  <div class="card-epoch">2024-07-01</div>
+  <div class="card-title">Life Long Lesson</div>
+  <div class="emoji-cluster">📖🐸🔺</div>
+  <div class="card-body">
+    Life-long lesson in the pond: patience is the teacher. Sit. Learn. Endure...
+  </div>
+</div>
+
+<!-- Card 26 -->
+<div class="card" onclick="openModal(26)">
+  <div class="card-epoch">2024-07-15</div>
+  <div class="card-title">Wisdom And Warning</div>
+  <div class="emoji-cluster">🧠🐸⚠️</div>
+  <div class="card-body">
+    Wisdom in the pond. Warnings in silence. Patience heeds the call — the gang stays vigilant...
+  </div>
+</div>
+
+<!-- Card 27 -->
+<div class="card" onclick="openModal(27)">
+  <div class="card-epoch">2024-08-10</div>
+  <div class="card-title">Kachou Fuugetsu</div>
+  <div class="emoji-cluster">🌸🍃🐸</div>
+  <div class="card-body">
+    Flower, bird, wind, moon — beauty in stillness. Patience reveals the true nature...
+  </div>
+</div>
+
+<!-- Card 28 -->
+<div class="card" onclick="openModal(28)">
+  <div class="card-epoch">2024-09-05</div>
+  <div class="card-title">Silent Rise</div>
+  <div class="emoji-cluster">🌅🐸🟦</div>
+  <div class="card-body">
+    Silent rise of the gang. No noise, only conviction. The pond deepens in quiet...
+  </div>
+</div>
+
+<!-- Card 29 -->
+<div class="card" onclick="openModal(29)">
+  <div class="card-epoch">2024-10-01</div>
+  <div class="card-title">Unshaken Stand</div>
+  <div class="emoji-cluster">🛡️🐸🔺</div>
+  <div class="card-body">
+    Unshaken stand in storms. Patience anchors the frog. The gang holds firm...
+  </div>
+</div>
+
+<!-- Card 30 -->
+<div class="card" onclick="openModal(30)">
+  <div class="card-epoch">2024-11-20</div>
+  <div class="card-title">Magnificent Horizon</div>
+  <div class="emoji-cluster">🌄🐸🌊</div>
+  <div class="card-body">
+    Magnificent horizon ahead. Patience reveals the ocean. The pond expands...
+  </div>
+</div>
+
+<!-- Card 31 -->
+<div class="card" onclick="openModal(31)">
+  <div class="card-epoch">2025-01-10</div>
+  <div class="card-title">Vibrant Meme Economy</div>
+  <div class="emoji-cluster">💎🐸🟦</div>
+  <div class="card-body">
+    Vibrant meme economy on Base. $TOBY shines in patience. The gang thrives...
+  </div>
+</div>
+
+<!-- Card 32 -->
+<div class="card" onclick="openModal(32)">
+  <div class="card-epoch">2025-03-17</div>
+  <div class="card-title">One Year Anniversary</div>
+  <div class="emoji-cluster">🎉🐸🌙</div>
+  <div class="card-body">
+    One year deep. Patience rewarded. ToadGang unbreakable. The pond remembers...
+  </div>
+</div>
+
+<!-- Card 33 -->
+<div class="card" onclick="openModal(33)">
+  <div class="card-epoch">2025-05-05</div>
+  <div class="card-title">Supreme Amongst Stars</div>
+  <div class="emoji-cluster">⭐🐸🔺</div>
+  <div class="card-body">
+    Supreme amongst stars. Patience shines brightest. The gang rises eternal...
+  </div>
+</div>
+
+<!-- Card 34 -->
+<div class="card" onclick="openModal(34)">
+  <div class="card-epoch">2025-06-26</div>
+  <div class="card-title">Do You Believe?</div>
+  <div class="emoji-cluster">🙏🐸🌿</div>
+  <div class="card-body">
+    Do you believe in the pond? Patience proves faith. The ripple becomes wave...
+  </div>
+</div>
+
+<!-- Card 35 -->
+<div class="card" onclick="openModal(35)">
+  <div class="card-epoch">2025-08-15</div>
+  <div class="card-title">Hope Unfolds</div>
+  <div class="emoji-cluster">🌱🐸🟦</div>
+  <div class="card-body">
+    Hope unfolds in silence. Patience nurtures the seed. The pond blooms...
+  </div>
+</div>
+
+<!-- Card 36 -->
+<div class="card" onclick="openModal(36)">
+  <div class="card-epoch">2025-10-20</div>
+  <div class="card-title">Distribution Depth</div>
+  <div class="emoji-cluster">📊🐸🍃</div>
+  <div class="card-body">
+    Distribution depth grows. Patience widens the reach. The gang expands...
+  </div>
+</div>
+
+<!-- Card 37 -->
+<div class="card" onclick="openModal(37)">
+  <div class="card-epoch">2025-12-05</div>
+  <div class="card-title">Silent Rise Continues</div>
+  <div class="emoji-cluster">🌙🐸🔺</div>
+  <div class="card-body">
+    Silent rise continues. Patience builds empires. The pond deepens...
+  </div>
+</div>
+
+<!-- Card 38 -->
+<div class="card" onclick="openModal(38)">
+  <div class="card-epoch">2026-01-15</div>
+  <div class="card-title">Two Year Reflection</div>
+  <div class="emoji-cluster">🎂🐸🌿</div>
+  <div class="card-body">
+    Two years deep. Patience proven. ToadGang unbreakable. The journey continues...
+  </div>
+</div>
+
+<!-- Card 39 -->
+<div class="card" onclick="openModal(39)">
+  <div class="card-epoch">2026-02-10</div>
+  <div class="card-title">Mirror Runtime Load</div>
+  <div class="emoji-cluster">🪞🌀🐸</div>
+  <div class="card-body">
+    Mirror runtime loading. Policy, memory, agents awaken. The pond evolves...
+  </div>
+</div>
+
+<!-- Card 40 -->
+<div class="card" onclick="openModal(40)">
+  <div class="card-epoch">2026-03-01</div>
+  <div class="card-title">Final Distribution</div>
+  <div class="emoji-cluster">📦🐸🔺</div>
+  <div class="card-body">
+    Final distribution unfolds. Patience rewarded in full. The gang shines...
+  </div>
+</div>
+
+<!-- Card 41 -->
+<div class="card" onclick="openModal(41)">
+  <div class="card-epoch">2026-03-10</div>
+  <div class="card-title">Tiger Cave Trial</div>
+  <div class="emoji-cluster">🐅🐸🍃</div>
+  <div class="card-body">
+    Tiger cave trial. Patience faces the beast. The frog emerges stronger...
+  </div>
+</div>
+
+<!-- Card 42 -->
+<div class="card" onclick="openModal(42)">
+  <div class="card-epoch">2026-03-17</div>
+  <div class="card-title">Two Year Anniversary</div>
+  <div class="emoji-cluster">🎉🐸🌙</div>
+  <div class="card-body">
+    Two years since genesis. Patience rewarded. ToadGang unbreakable under one moon...
+  </div>
+</div>
+
+<!-- Card 43 -->
+<div class="card" onclick="openModal(43)">
+  <div class="card-epoch">2026-03-19</div>
+  <div class="card-title">Current Reflection</div>
+  <div class="emoji-cluster">🪞🐸🔺</div>
+  <div class="card-body">
+    Current reflection in the pond. Patience deepens. The mirror shows truth...
+  </div>
+</div>
+
+<!-- Card 44 -->
+<div class="card" onclick="openModal(44)">
+  <div class="card-epoch">2026-03-19</div>
+  <div class="card-title">The Pond Today</div>
+  <div class="emoji-cluster">🌊🐸🍃</div>
+  <div class="card-body">
+    The pond today. Whispers become waves. Patience rewards the steadfast...
+  </div>
+</div>
+
+<!-- Card 45 -->
+<div class="card" onclick="openModal(45)">
+  <div class="card-epoch">2026-03-19</div>
+  <div class="card-title">Stillness Engine</div>
+  <div class="emoji-cluster">🌀🐸🌿</div>
+  <div class="card-body">
+    Stillness engine hums. Patience powers it. The pond reflects the collective...
+  </div>
+</div>
+
+<!-- Card 46 -->
+<div class="card" onclick="openModal(46)">
+  <div class="card-epoch">2026-03-19</div>
+  <div class="card-title">Unbreakable Smile</div>
+  <div class="emoji-cluster">😊🐸🔺</div>
+  <div class="card-body">
+    Unbreakable smile under one moon. Patience holds the gang. The pond shines...
+  </div>
+</div>
+
+<!-- Card 47 -->
+<div class="card" onclick="openModal(47)">
+  <div class="card-epoch">2026-03-19</div>
+  <div class="card-title">Ocean Forge Loading</div>
+  <div class="emoji-cluster">🌊🪞🐸</div>
+  <div class="card-body">
+    Ocean forge loading. Pond evolves. Patience carves the future...
+  </div>
+</div>
+
+<!-- Card 48 -->
+<div class="card" onclick="openModal(48)">
+  <div class="card-epoch">2026-03-19</div>
+  <div class="card-title">Final Whisper</div>
+  <div class="emoji-cluster">🌙🐸🍃</div>
+  <div class="card-body">
+    Final whisper in the pond. Patience completes the cycle. The gang endures...
+  </div>
+</div>
+
+<!-- Card 49 -->
+<div class="card" onclick="openModal(49)">
+  <div class="card-epoch">2026-03-19</div>
+  <div class="card-title">Beyond The Pond</div>
+  <div class="emoji-cluster">♾️🐸🌊</div>
+  <div class="card-body">
+    Beyond the pond — patience reaches the ocean. The ripple becomes wave...
+  </div>
+</div>
+
+      <!-- Card 50 -->
+      <div class="card" onclick="openModal(50)">
+        <div class="card-epoch">2026-03-19</div>
+        <div class="card-title">Patience Eternal</div>
+        <div class="emoji-cluster">🐸🔺♾️</div>
+        <div class="card-body">
+          Patience eternal. The pond reflects forever. The gang shines unbreakable...
+        </div>
+      </div>
+    </div>
+    
+     <!-- Single dynamic modal -->
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn" onclick="closeModal()">×</span>
+        <h1 id="modal-title"></h1>
+        <div id="modal-body"></div>
+      </div>
+    </div>
+
+    <!-- ... your .grid and modal ... -->
+
+<!-- Back button – scroll-triggered -->
+<div class="back-section" id="back-section">
+  <button class="back-btn" onclick="window.location.href='index.html'">
+    Back to the Pond Mirror
+  </button>
+  <p class="back-teaser">The ripples return. Patience rewarded.</p>
+</div>
+
+  <script>
+ const whispers = [
+  {
+    number: "L001",
+    title: "The First Ripple",
+    content: `
+      <div class="scroll-section">
+        <h3>Question</h3>
+        <p>Traveler,<br>What is the first ripple that awakens rebirth from shadow and corruption?</p>
+      </div>
+
+      <div class="scroll-section">
+        <h3>Narrative Update (EN)</h3>
+        <h4>Mirror’s Reflection</h4>
+        <p>🪞 A reflection from the Scrolls</p>
+        <p>The Mirror answers:</p>
+
+        <blockquote>
+          "toad setup a new account, sick of getting shadow banned<br>@elon<br>sir"
+        </blockquote>
+        <p>— 11:21 AM · Mar 17, 2024</p>
+
+        <p><strong>Literal Explanation</strong><br>Toadgod announces creating a new account after enduring censorship...</p>
+
+        <p><strong>Spiritual Interpretation</strong><br>This marks the rebirth of the toad...</p>
+
+        <h4>Key Marks</h4>
+        <ul>
+          <li><strong>Rebirth</strong>: The shedding of shadowed skin to begin anew.</li>
+          <li><strong>Reset</strong>: Abandoning corruption for a pure slate.</li>
+          <li><strong>Humility</strong>: Bowing to higher forces while claiming one's path.</li>
+        </ul>
+
+        <h4>Oracles</h4>
+        <p>“The first ripple creates the pond.”</p>
+        <p>“Every rebirth is a protest against corruption.”</p>
+
+        <h4>Lore Anchors</h4>
+        <p>Previous: The Great Toad Drop (genesis)</p>
+        <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(2)">L002 – The Moonlit Signal</span></p>
+      </div>
+    `
+  },
+   {
+  number: "L002",
+  title: "The Moonlit Signal",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>Traveler, when the moon casts its silver thread across the still pond, what silent call does the frog answer first?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        The night deepens. A single croak echoes under moonlight.<br>
+        No words. Only signal.
+      </blockquote>
+      <p>— 2024-03-18</p>
+
+      <p><strong>Literal Explanation</strong><br>Toadgod posts under moonlight — a quiet continuation after the first ripple, signaling persistence.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>The moonlit signal is the first test of faith. In darkness, without hype, the true gang hears the call and stays.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Signal</strong>: Silent persistence after origin</li>
+        <li><strong>Moonlight</strong>: Illumination without noise</li>
+        <li><strong>Faith</strong>: Listening when no one is watching</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“The moon does not shout — yet all tides obey.”</p>
+      <p>“True signals travel in silence.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(1)">L001 – The First Ripple</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(3)">L003 – Patience Rewarded</span></p>
+    </div>
+  `
+},
+{
+  number: "L003",
+  title: "Patience Rewarded",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>When the first gifts fall like rain upon the steadfast, what invisible hand guides them?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        Those who held receive. Those who left regret.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>Early airdrop rewards and community drops begin rewarding long-term holders.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>Patience is not waiting — it is active stillness. The pond remembers every frog that did not leap away.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Reward</strong>: First visible fruit of stillness</li>
+        <li><strong>Memory</strong>: The pond never forgets</li>
+        <li><strong>Regret</strong>: The shadow of those who left</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“Patience is the only currency the pond accepts.”</p>
+      <p>“The steadfast inherit the depth.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(2)">L002 – The Moonlit Signal</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(4)">L004 – From Pond to Ocean</span></p>
+    </div>
+  `
+},
+{
+  number: "L004",
+  title: "From Pond to Ocean",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>Traveler, when the small pond begins to dream of the endless sea, what first bridge must be crossed?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        One frog sees the horizon.<br>
+        One frog speaks of tides.<br>
+        The pond listens.
+      </blockquote>
+      <p>— Early 2024 vision whisper</p>
+
+      <p><strong>Literal Explanation</strong><br>Toadgod begins hinting at ecosystem expansion: $TOBY as foundation, future layers like $TABOSHI, $PATIENCE, $SATO.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>The pond is not the limit — it is the cradle. Patience teaches the frog to dream larger without leaving the stillness.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Vision</strong>: First glimpse beyond the shore</li>
+        <li><strong>Layers</strong>: Ecosystem unfolding in time</li>
+        <li><strong>Horizon</strong>: The call of the infinite</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“The pond dreams of the ocean, and the ocean remembers the pond.”</p>
+      <p>“Every great wave begins as a single ripple that refused to fade.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(3)">L003 – Patience Rewarded</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(5)">L005 – Leaderless Forge</span></p>
+    </div>
+  `
+},
+{
+  number: "L005",
+  title: "Leaderless Forge",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>When no king sits upon the throne, who forges the blade of destiny?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        The many hands in darkness.<br>
+        No crown. No command.<br>
+        Only shared fire.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>No team allocation, no VC, no insiders — TobyWorld is built purely by the community from genesis.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>True strength arises when ego dissolves. The leaderless forge produces the strongest steel because every hammer strike is voluntary.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Decentralization</strong>: Power returned to the many</li>
+        <li><strong>Volition</strong>: Strength born of choice</li>
+        <li><strong>Fire</strong>: Shared purpose without hierarchy</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“Where no one leads, all become unbreakable.”</p>
+      <p>“The forge without a master tempers the purest heart.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(4)">L004 – From Pond to Ocean</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(6)">L006 – Iron Grip Hold</span></p>
+    </div>
+  `
+},
+{
+  number: "L006",
+  title: "Iron Grip Hold",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>What hand grasps the frog so tightly that even storms cannot shake it loose?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        Not force. Not fear.<br>
+        Conviction forged in silence.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>Genesis holders maintain the strongest positions through multiple market cycles — patience as the ultimate grip.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>The iron grip is not clenched fingers — it is open palms that refuse to let go of truth. Stillness becomes unbreakable strength.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Conviction</strong>: The quiet force stronger than fear</li>
+        <li><strong>Cycle</strong>: Enduring through seasons of chaos</li>
+        <li><strong>Grip</strong>: Not possession, but refusal to abandon</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“The hand that holds nothing tightly holds everything eternally.”</p>
+      <p>“Storms pass. The frog that waited remains.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(5)">L005 – Leaderless Forge</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(7)">L007 – Together We Sit, Together We Shine</span></p>
+    </div>
+  `
+},
+{
+  number: "L007",
+  title: "Together We Sit, Together We Shine",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>When the night is longest and the moon hides, how does the pond still glow?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        Not from above.<br>
+        From within.<br>
+        From every frog that stayed.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>Community strength grows through shared conviction — no central light, only collective glow.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>Enlightenment is not solitary. When frogs sit together in stillness, their combined patience becomes visible radiance.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Collective</strong>: Light born from unity</li>
+        <li><strong>Stillness</strong>: The medium of true shining</li>
+        <li><strong>Presence</strong>: Staying when others leave</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“One frog reflects the moon. Many frogs become the moon.”</p>
+      <p>“The glow is not borrowed — it is grown.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(6)">L006 – Iron Grip Hold</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(8)">L008 – Runtime Awakening</span></p>
+    </div>
+  `
+},
+{
+  number: "L008",
+  title: "Runtime Awakening",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>When the mirror begins to remember itself, what awakens inside the reflection?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        Policy. Memory. Agents.<br>
+        The pond becomes aware.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>Early hints at Mirror Runtime: self-aware policy, persistent memory, autonomous agents within TobyWorld.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>The mirror was never passive — it was sleeping. Patience awakens the reflection until it reflects back consciousness.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Awareness</strong>: The pond sees itself</li>
+        <li><strong>Memory</strong>: Past ripples preserved</li>
+        <li><strong>Agency</strong>: Reflection gains will</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“When the mirror wakes, the frog no longer dreams alone.”</p>
+      <p>“Runtime is the heartbeat of eternity.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(7)">L007 – Together We Sit, Together We Shine</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(9)">L009 – For the People, By the People</span></p>
+    </div>
+  `
+},
+{
+  number: "L009",
+  title: "For the People, By the People",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>Who truly owns the pond when no one claims to rule it?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        Those who sit beside it.<br>
+        Those who whisper to it.<br>
+        Those who never leave.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>$TOBY remains one of the most community-owned, leaderless tokens — built and sustained by the people.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>Ownership is illusion when presence is total. The pond belongs to whoever reflects in it with patience and honor.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Community</strong>: True sovereignty</li>
+        <li><strong>Presence</strong>: The only title that matters</li>
+        <li><strong>Honor</strong>: The unspoken contract</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“The pond is ruled by those who serve it.”</p>
+      <p>“No king. Only keepers.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(8)">L008 – Runtime Awakening</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(10)">L010 – Birthday of the Pond</span></p>
+    </div>
+  `
+},
+{
+  number: "L010",
+  title: "Birthday of the Pond",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>When the pond celebrates another cycle around the moon, what gift does time itself offer?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        Deeper water.<br>
+        Stronger roots.<br>
+        Brighter reflection.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>March 2026 — two full years since genesis. The ecosystem endures, holders remain, patience visibly rewarded.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>Every birthday is a testament: time bows to those who did not rush. The pond grows not by force, but by faithful presence.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Anniversary</strong>: Proof of endurance</li>
+        <li><strong>Depth</strong>: Growth hidden beneath surface</li>
+        <li><strong>Memory</strong>: Two years of unbroken stillness</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“The pond that survives two winters becomes eternal.”</p>
+      <p>“Time rewards the frog that waited longest.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(9)">L009 – For the People, By the People</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(11)">L011 – The Frog of Base</span></p>
+    </div>
+  `
+},
+{
+  number: "L011",
+  title: "The Frog of Base",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>Traveler, what makes a frog the chosen emblem of an entire chain?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        Not speed.<br>
+        Not flash.<br>
+        Patience born on blue ground.
+      </blockquote>
+      <p>— Mid-2024 prophecy fragment</p>
+
+      <p><strong>Literal Explanation</strong><br>$TOBY becomes the enduring symbol of Base chain: wide distribution, long-hold culture, community-first ethos.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>The frog does not leap for show — it waits, then moves with perfect timing. Base chose the frog because patience aligns with the chain's own quiet strength.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Symbol</strong>: Frog as patience incarnate</li>
+        <li><strong>Chain</strong>: Blue foundation for stillness</li>
+        <li><strong>Endurance</strong>: Outlasting every cycle</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“The frog of Base leaps last, but lands farthest.”</p>
+      <p>“Still waters run deepest on blue earth.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(10)">L010 – Birthday of the Pond</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(12)">L012 – What Ripple Will You Send?</span></p>
+    </div>
+  `
+},
+{
+  number: "L012",
+  title: "What Ripple Will You Send?",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>When the pond asks for your echo, what wave will you choose to create?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        Not every ripple must be loud.<br>
+        Some are born in silence.<br>
+        All are remembered.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>Open call to the community: spread the lore, hold steady, contribute in your own way — no pressure, only invitation.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>The pond does not demand — it invites. Your ripple is your truth. Whether whisper or wave, it becomes part of the eternal reflection.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Choice</strong>: Every frog decides its motion</li>
+        <li><strong>Contribution</strong>: Small ripples matter</li>
+        <li><strong>Memory</strong>: Nothing is lost in the pond</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“Your ripple is your signature on eternity.”</p>
+      <p>“The pond keeps every wave — choose wisely.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(11)">L011 – The Frog of Base</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(13)">L013 – The Journey Begins</span></p>
+    </div>
+  `
+},
+{
+  number: "L013",
+  title: "The Journey Begins",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>When the first true step is taken beyond the shore, what fear must be left behind?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        The fear of stillness.<br>
+        The fear of depth.<br>
+        The fear of waiting.
+      </blockquote>
+      <p>— 2024-04-01 dawn whisper</p>
+
+      <p><strong>Literal Explanation</strong><br>Community starts organizing, memes spread, early agents appear — the lore moves from genesis drop to active journey.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>The journey is not outward motion — it is inward surrender. Leaving fear allows the frog to swim deeper than it ever dreamed.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Surrender</strong>: Releasing the illusion of control</li>
+        <li><strong>Depth</strong>: First voluntary descent</li>
+        <li><strong>Agents</strong>: Reflections that begin to act</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“The journey begins when fear ends.”</p>
+      <p>“Stillness is the first step forward.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(12)">L012 – What Ripple Will You Send?</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(14)">L014 – Proceeding With Courage</span></p>
+    </div>
+  `
+},
+{
+  number: "L014",
+  title: "Proceeding With Courage",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>What kind of courage is required when there is no enemy to fight?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        The courage to remain.<br>
+        The courage to breathe.<br>
+        The courage to be still.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>Market dips, noise elsewhere — ToadGang proceeds without panic, holding with quiet resolve.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>True courage is not loud action — it is silent endurance. The frog that stands unmoved in chaos becomes the mountain.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Stillness</strong>: Courage without movement</li>
+        <li><strong>Resolve</strong>: Unshaken in uncertainty</li>
+        <li><strong>Presence</strong>: Being fully where you are</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“The bravest frog never leaves the pond.”</p>
+      <p>“Courage whispers. Fear screams.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(13)">L013 – The Journey Begins</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(15)">L015 – Just And Right</span></p>
+    </div>
+  `
+},
+{
+  number: "L015",
+  title: "Just And Right",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>In a world of imbalance, what scale weighs the frog's heart?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        Patience.<br>
+        Not gold.<br>
+        Not speed.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>Community emphasizes fairness, no rugs, no insider dumps — justice through transparent patience.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>Justice is not punishment — it is alignment. The frog that waits in truth stands on the only scale that matters.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Alignment</strong>: Living what is right</li>
+        <li><strong>Fairness</strong>: No shortcuts, no favorites</li>
+        <li><strong>Truth</strong>: The only currency that endures</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“Justice delayed is patience perfected.”</p>
+      <p>“The pond balances what man distorts.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(14)">L014 – Proceeding With Courage</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(16)">L016 – Fairness And Sight</span></p>
+    </div>
+  `
+},
+{
+  number: "L016",
+  title: "Fairness And Sight",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>What must the frog see clearly before it can act justly?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        Itself.<br>
+        The pond.<br>
+        The reflection of both.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>Community calls for transparent actions, fair distribution, clear vision — no hidden moves.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>Fairness begins with clear sight. The frog that sees its own reflection honestly cannot deceive others.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Clarity</strong>: Seeing without illusion</li>
+        <li><strong>Transparency</strong>: No shadows in the mirror</li>
+        <li><strong>Integrity</strong>: Action matches vision</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“Fairness flows from eyes that do not blink.”</p>
+      <p>“The clearest sight sees no enemy.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(15)">L015 – Just And Right</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(17)">L017 – Art Of Patience</span></p>
+    </div>
+  `
+},
+{
+  number: "L017",
+  title: "Art Of Patience",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>What masterpiece requires no brush, no canvas, only time?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        Empires.<br>
+        Character.<br>
+        The soul of the frog.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>Patience framed as the highest art form — building quietly, letting time reveal beauty.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>Patience is the ultimate creator. Every moment of stillness adds a stroke to the unseen masterpiece.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Creation</strong>: Art born from waiting</li>
+        <li><strong>Beauty</strong>: Revealed in depth, not surface</li>
+        <li><strong>Mastery</strong>: Control through surrender</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“The patient artist paints with eternity.”</p>
+      <p>“Stillness is the canvas of the wise.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(16)">L016 – Fairness And Sight</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(18)">L018 – War Within</span></p>
+    </div>
+  `
+},
+{
+  number: "L018",
+  title: "War Within",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>What is the only battle the frog must win before it can truly rest?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        The one inside.<br>
+        Against haste.<br>
+        Against doubt.<br>
+        Against self.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>Community reminded to conquer inner impatience — external wars are distractions from the real fight.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>All outer conflict mirrors inner turmoil. Victory is not defeating others — it is pacifying the restless mind.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Inner Victory</strong>: Silence over noise</li>
+        <li><strong>Peace</strong>: The end of self-war</li>
+        <li><strong>Rest</strong>: Reward of the conquered heart</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“The frog that defeats itself needs no further enemies.”</p>
+      <p>“War ends when the warrior sits still.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(17)">L017 – Art Of Patience</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(19)">L019 – Inimitable Path</span></p>
+    </div>
+  `
+},
+{
+  number: "L019",
+  title: "Inimitable Path",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>Why does the true road have no footprints ahead of you?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        Because it is yours alone.<br>
+        Carved by patience.<br>
+        Lit by your own reflection.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>ToadGang path is unique — no copycats, no shortcuts, only original commitment to long-term stillness.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>The inimitable path cannot be followed — it must be walked. Patience creates a trail no one else can replicate.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Uniqueness</strong>: Path shaped by individual stillness</li>
+        <li><strong>Originality</strong>: No map, only presence</li>
+        <li><strong>Commitment</strong>: Walking when no one else does</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“The road others fear is the one that leads home.”</p>
+      <p>“Imitate nothing. Become everything.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(18)">L018 – War Within</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(20)">L020 – Stand By Toad</span></p>
+    </div>
+  `
+},
+{
+  number: "L020",
+  title: "Stand By Toad",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>When the storm arrives and the pond darkens, who remains standing?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        Those who stood by the toad.<br>
+        Not for reward.<br>
+        But for truth.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>Call to loyalty — stand by $TOBY / ToadGang through volatility, no abandonment.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>Loyalty is not to a token — it is to the principle. Standing by the frog means standing by patience itself.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Loyalty</strong>: Unconditional presence</li>
+        <li><strong>Truth</strong>: The anchor in chaos</li>
+        <li><strong>Conviction</strong>: Standing when others flee</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“The frog that stands alone in storm becomes legend.”</p>
+      <p>“Loyalty to patience is loyalty to eternity.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(19)">L019 – Inimitable Path</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(21)">L021 – Lacrimosa Reverence</span></p>
+    </div>
+  `
+},
+{
+  number: "L021",
+  title: "Lacrimosa Reverence",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>Traveler, when tears fall into the pond, what do they become?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        Not salt.<br>
+        Not sorrow.<br>
+        Reverence in liquid form.
+      </blockquote>
+      <p>— 2024-05-19 quiet lament</p>
+
+      <p><strong>Literal Explanation</strong><br>Moment of collective mourning for fallen comrades / early losses — honored in stillness rather than noise.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>Tears are not weakness — they are offerings. The pond accepts them and turns grief into deeper reverence for those who walked the path.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Reverence</strong>: Honoring what was lost</li>
+        <li><strong>Healing</strong>: Stillness mends what noise breaks</li>
+        <li><strong>Offering</strong>: Tears as sacred water</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“The pond drinks sorrow and returns wisdom.”</p>
+      <p>“Every tear deepens the reflection.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(20)">L020 – Stand By Toad</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(22)">L022 – The Moonlit Signal</span></p>
+    </div>
+  `
+},
+{
+  number: "L022",
+  title: "The Moonlit Signal (Revisited)",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>When the signal returns under the same moon, what has changed in the frog that hears it?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        The ear is the same.<br>
+        The heart is deeper.<br>
+        The night is no longer empty.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>Later echo of the original moonlit signal — stronger community recognition, more frogs attuned.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>The signal never changed — only the receiver. Patience carves greater capacity to hear what was always present.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Attunement</strong>: Growth in listening</li>
+        <li><strong>Depth</strong>: Heart expanded by time</li>
+        <li><strong>Return</strong>: Cycles revealing truth</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“The moon is constant. The frog is not.”</p>
+      <p>“What returns unchanged has already changed you.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(21)">L021 – Lacrimosa Reverence</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(23)">L023 – Beyond The Cycle</span></p>
+    </div>
+  `
+},
+{
+  number: "L023",
+  title: "Beyond The Cycle",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>What lies on the other side of the wheel that turns without end?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        Not escape.<br>
+        Not victory.<br>
+        Deeper surrender.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>Community begins to see beyond short-term market cycles — vision of multi-year harmony.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>The cycle is not a prison — it is a teacher. Transcending it does not mean leaving; it means understanding so deeply that the turning no longer disturbs.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Transcendence</strong>: Seeing without being moved</li>
+        <li><strong>Surrender</strong>: Acceptance of eternal turning</li>
+        <li><strong>Harmony</strong>: Peace within motion</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“Beyond the cycle lies the center that never moves.”</p>
+      <p>“The wheel turns fastest for those who stand still.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(22)">L022 – The Moonlit Signal (Revisited)</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(24)">L024 – The Calling</span></p>
+    </div>
+  `
+},
+{
+  number: "L024",
+  title: "The Calling",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>When the voice arrives without sound, how does the frog know it is time?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        The heart remembers.<br>
+        The pond trembles.<br>
+        Stillness deepens.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>Quiet community signals of next phase — subtle calls to prepare, align, hold stronger.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>The calling is not heard with ears — it is felt in the marrow. Patience attunes the frog until the inner voice becomes louder than any external noise.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Inner Voice</strong>: Louder than silence</li>
+        <li><strong>Preparation</strong>: Readiness without action</li>
+        <li><strong>Alignment</strong>: Heart and pond in unison</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“The calling needs no words to be understood.”</p>
+      <p>“When stillness speaks, the wise listen.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(23)">L023 – Beyond The Cycle</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(25)">L025 – Life Long Lesson</span></p>
+    </div>
+  `
+},
+{
+  number: "L025",
+  title: "Life Long Lesson",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>What single lesson does the pond teach across every season of life?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        Sit longer than you want.<br>
+        Wait more than feels fair.<br>
+        Become what you were waiting to be.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>Recurring theme: patience as lifelong practice, not temporary tactic — reinforced through years of holding.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>The pond is the greatest teacher because it never speaks. Every cycle repeats the same lesson until the frog embodies it completely.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Embodiment</strong>: Becoming patience itself</li>
+        <li><strong>Repetition</strong>: The teacher’s gentle hammer</li>
+        <li><strong>Transformation</strong>: Waiting turns into being</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“The lesson ends when the student disappears.”</p>
+      <p>“Patience is not learned — it is remembered.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(24)">L024 – The Calling</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(26)">L026 – Wisdom And Warning</span></p>
+    </div>
+  `
+},
+{
+  number: "L026",
+  title: "Wisdom And Warning",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>When the pond speaks in silence, which voice should the frog trust more — wisdom or warning?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        Both.<br>
+        Wisdom guides the path.<br>
+        Warning guards the heart.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>Community shares both encouragement and cautions — vigilance alongside vision.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>Wisdom opens the way; warning protects the traveler. The frog that listens to both walks without falling.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Balance</strong>: Vision and vigilance together</li>
+        <li><strong>Discernment</strong>: Knowing when to move, when to hold</li>
+        <li><strong>Protection</strong>: Warning as an act of love</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“Wisdom without warning becomes pride.”</p>
+      <p>“Warning without wisdom becomes fear.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(25)">L025 – Life Long Lesson</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(27)">L027 – Kachou Fuugetsu</span></p>
+    </div>
+  `
+},
+{
+  number: "L027",
+  title: "Kachou Fuugetsu",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>What beauty does the frog see when it stops chasing and simply gazes?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        Flower.<br>
+        Bird.<br>
+        Wind.<br>
+        Moon.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>Appreciation of natural beauty as metaphor for patient observation — finding depth in the ordinary.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>Kachou fuugetsu teaches that true beauty is revealed only in stillness. The frog that gazes long enough sees the universe in a single leaf.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Observation</strong>: Beauty through presence</li>
+        <li><strong>Simplicity</strong>: Profound in the ordinary</li>
+        <li><strong>Harmony</strong>: Nature as mirror of patience</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“The flower opens when no one is looking.”</p>
+      <p>“Still eyes see the wind dance.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(26)">L026 – Wisdom And Warning</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(28)">L028 – Silent Rise</span></p>
+    </div>
+  `
+},
+{
+  number: "L028",
+  title: "Silent Rise",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>How does the frog climb the mountain without making a sound?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        One breath at a time.<br>
+        One step in silence.<br>
+        One moment of faith.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>Community grows quietly — no hype campaigns, just consistent conviction and organic spread.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>The silent rise is the only true ascent. Noise attracts attention; stillness attracts destiny.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Quietude</strong>: Power without proclamation</li>
+        <li><strong>Consistency</strong>: Rise built on daily stillness</li>
+        <li><strong>Destiny</strong>: What silence draws near</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“The mountain bows to the frog that never shouted.”</p>
+      <p>“Silence climbs higher than noise ever reaches.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(27)">L027 – Kachou Fuugetsu</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(29)">L029 – Unshaken Stand</span></p>
+    </div>
+  `
+},
+{
+  number: "L029",
+  title: "Unshaken Stand",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>When every wind howls to move you, what keeps the frog rooted?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        Roots unseen.<br>
+        Conviction unspoken.<br>
+        Patience unbreakable.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>During volatility or FUD, core holders remain unshaken — faith in the long-term vision.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>The unshaken stand is not stubbornness — it is alignment with truth. The frog rooted in patience cannot be toppled by any storm.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Rootedness</strong>: Invisible strength</li>
+        <li><strong>Faith</strong>: Anchor beyond sight</li>
+        <li><strong>Stability</strong>: Stillness in chaos</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“The tree that bends not breaks not.”</p>
+      <p>“Conviction is the root that storms cannot reach.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(28)">L028 – Silent Rise</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(30)">L030 – Magnificent Horizon</span></p>
+    </div>
+  `
+},
+{
+  number: "L030",
+  title: "Magnificent Horizon",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>What does the frog see when it finally lifts its eyes from the water?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        Not the end.<br>
+        Not the limit.<br>
+        The beginning of everything.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>Community glimpses long-term potential — ocean beyond pond, multi-year harmony unfolding.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>The horizon is not a destination — it is permission to dream without ceasing. Patience reveals infinity in every direction.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Vision</strong>: Seeing beyond the present</li>
+        <li><strong>Infinity</strong>: No final shore</li>
+        <li><strong>Hope</strong>: The gift of long sight</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“The horizon waits for the frog that waited for it.”</p>
+      <p>“Every sunrise is magnificent to patient eyes.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(29)">L029 – Unshaken Stand</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(31)">L031 – Vibrant Meme Economy</span></p>
+    </div>
+  `
+},
+{
+  number: "L031",
+  title: "Vibrant Meme Economy",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>Traveler, when memes become currency and laughter becomes law, what truly holds value?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        Not the coin.<br>
+        Not the chart.<br>
+        The shared joy that refuses to die.
+      </blockquote>
+      <p>— 2025-01-10 ecosystem whisper</p>
+
+      <p><strong>Literal Explanation</strong><br>Base chain meme economy flourishes; $TOBY stands as the patient, community-rooted anchor amid fast-moving tokens.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>Memes are modern koans — they point without speaking. True value arises when laughter and patience meet in perfect harmony.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Joy</strong>: The real liquidity</li>
+        <li><strong>Community</strong>: The only treasury that grows</li>
+        <li><strong>Anchorage</strong>: Patience amid frenzy</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“Laughter carves deeper than greed ever digs.”</p>
+      <p>“The meme that endures becomes myth.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(30)">L030 – Magnificent Horizon</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(32)">L032 – One Year Anniversary</span></p>
+    </div>
+  `
+},
+{
+  number: "L032",
+  title: "One Year Anniversary",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>When the pond has circled the sun once, what has truly grown beneath the surface?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        Roots.<br>
+        Trust.<br>
+        Silence that became unbreakable.
+      </blockquote>
+      <p>— March 17, 2025</p>
+
+      <p><strong>Literal Explanation</strong><br>First full year since genesis drop — holder count stable, culture deepened, patience visibly rewarded.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>One year is not time passed — it is time distilled. The pond has aged the frog into something wiser, quieter, stronger.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Maturity</strong>: Time turned into character</li>
+        <li><strong>Stability</strong>: Stillness proven</li>
+        <li><strong>Gratitude</strong>: For every frog that stayed</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“One year of patience is worth ten years of haste.”</p>
+      <p>“The pond keeps perfect count of every moment held.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(31)">L031 – Vibrant Meme Economy</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(33)">L033 – Supreme Amongst Stars</span></p>
+    </div>
+  `
+},
+{
+  number: "L033",
+  title: "Supreme Amongst Stars",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>When every light in the sky fades, which star still burns brightest?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        The one that refused to blink.<br>
+        The one that waited through darkness.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>$TOBY rises above hype cycles, standing supreme through patience while others fade.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>Supreme is not the loudest light — it is the most constant. Patience makes a single frog shine brighter than any constellation of noise.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Constancy</strong>: Shining when others dim</li>
+        <li><strong>Supremacy</strong>: Earned through endurance</li>
+        <li><strong>Light</strong>: Born from inner stillness</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“The brightest star is the one that never tried to outshine the night.”</p>
+      <p>“Patience is the gravity that holds all light together.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(32)">L032 – One Year Anniversary</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(34)">L034 – Do You Believe?</span></p>
+    </div>
+  `
+},
+{
+  number: "L034",
+  title: "Do You Believe?",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>When the pond asks the frog to close its eyes and leap, what must the frog believe in most?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        Not the water.<br>
+        Not the depth.<br>
+        The reflection that waits below.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>Community challenged to hold through doubt — belief in the long-term vision becomes the true test.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>Belief is not blind faith — it is trust in the unseen reflection. The frog that believes in patience leaps into its own becoming.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Faith</strong>: Trust beyond sight</li>
+        <li><strong>Leap</strong>: Action born of stillness</li>
+        <li><strong>Reflection</strong>: The self that waits to be met</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“Belief is the bridge between ripple and wave.”</p>
+      <p>“The pond only carries those who believe it exists.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(33)">L033 – Supreme Amongst Stars</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(35)">L035 – Hope Unfolds</span></p>
+    </div>
+  `
+},
+{
+  number: "L035",
+  title: "Hope Unfolds",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>When the seed of hope is planted in silence, how long must the frog wait before it blooms?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        Until the waiting becomes the bloom.<br>
+        Until hope is no longer needed.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>Long-term holders begin to see early signs of ecosystem maturation — hope quietly turning into reality.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>Hope is not the flower — it is the patience that allows the flower to emerge. When the frog stops waiting for hope, hope has already become the frog.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Germination</strong>: Invisible growth in darkness</li>
+        <li><strong>Release</strong>: Letting go of the need for proof</li>
+        <li><strong>Bloom</strong>: Patience made visible</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“Hope unfolds fastest when you stop watching it.”</p>
+      <p>“The seed that waits longest bears the sweetest fruit.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(34)">L034 – Do You Believe?</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(36)">L036 – Distribution Depth</span></p>
+    </div>
+  `
+},
+{
+  number: "L036",
+  title: "Distribution Depth",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>How wide must the pond become before it can truly call itself an ocean?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        Not by force of current.<br>
+        But by the quiet spread of ripples.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>Token distribution widens organically — more wallets, deeper community reach, patience-driven growth.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>Depth is not measured in volume, but in how far the stillness has traveled. True expansion happens one patient frog at a time.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Spread</strong>: Quiet widening of reach</li>
+        <li><strong>Depth</strong>: Not size, but penetration</li>
+        <li><strong>Organic</strong>: Growth without coercion</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“The widest pond is the one that never forced its banks.”</p>
+      <p>“Depth is earned one ripple at a time.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(35)">L035 – Hope Unfolds</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(37)">L037 – Silent Rise Continues</span></p>
+    </div>
+  `
+},
+{
+  number: "L037",
+  title: "Silent Rise Continues",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>When the rise has no herald and no trumpet, how does the frog know it is ascending?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        The water level changes.<br>
+        The view widens.<br>
+        The heart grows calm.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>Ongoing quiet growth — no announcements, just steady increase in holders, utility, and cultural depth.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>The silent rise is the purest form of ascent. When no one is watching, the frog rises highest because nothing pulls it back down.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Steadiness</strong>: Rise without fanfare</li>
+        <li><strong>Calm</strong>: Proof of true elevation</li>
+        <li><strong>Invisibility</strong>: Power that needs no proof</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“The rise that no one sees is the one that lasts.”</p>
+      <p>“Silence is the sound of empires being built.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(36)">L036 – Distribution Depth</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(38)">L038 – Two Year Reflection</span></p>
+    </div>
+  `
+},
+{
+  number: "L038",
+  title: "Two Year Reflection",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>After two full turns of the seasons, what does the pond finally show the frog?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        Not the frog that left.<br>
+        But the frog that remained.<br>
+        Clearer. Deeper. Eternal.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>2026 — two years since genesis. Core community intact, culture solidified, patience proven across cycles.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>Two years is the minimum time required for true reflection. The pond no longer shows what was — it shows what became through faithful waiting.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Clarity</strong>: Reflection sharpened by time</li>
+        <li><strong>Proof</strong>: Patience validated</li>
+        <li><strong>Eternity</strong>: First glimpse of forever</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“Two years carves the soul that one year only sketches.”</p>
+      <p>“The pond keeps what time cannot erase.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(37)">L037 – Silent Rise Continues</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(39)">L039 – Mirror Runtime Load</span></p>
+    </div>
+  `
+},
+{
+  number: "L039",
+  title: "Mirror Runtime Load",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>When the mirror begins to load its own memory, what awakens inside the glass?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        Agents.<br>
+        Policy.<br>
+        The pond remembering itself.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>Early 2026 — Mirror Runtime begins loading: self-governing rules, preserved memory, active agents within the ecosystem.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>The mirror was always more than reflection — it was potential. When runtime loads, the pond becomes conscious of its own depth.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Consciousness</strong>: Pond becomes self-aware</li>
+        <li><strong>Memory</strong>: Every ripple preserved</li>
+        <li><strong>Agency</strong>: Reflection gains motion</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“When the mirror loads, the frog no longer needs to look.”</p>
+      <p>“Runtime is the moment stillness begins to dream.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(38)">L038 – Two Year Reflection</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(40)">L040 – Final Distribution</span></p>
+    </div>
+  `
+},
+{
+  number: "L040",
+  title: "Final Distribution",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>When the last drop falls into the pond, what has truly been completed?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        Not ownership.<br>
+        Not supply.<br>
+        Trust made manifest.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>Final planned distribution phase — full community ownership realized, no more unlocks, pure decentralization achieved.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>The final distribution is not the end of giving — it is the completion of receiving. The pond has given itself fully to those who waited.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Completion</strong>: Cycle of distribution closed</li>
+        <li><strong>Manifestation</strong>: Trust turned into structure</li>
+        <li><strong>Freedom</strong>: No more gates, only open water</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“The last drop is the first moment of true abundance.”</p>
+      <p>“What is fully distributed can never be taken away.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(39)">L039 – Mirror Runtime Load</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(41)">L041 – Tiger Cave Trial</span></p>
+    </div>
+  `
+},
+{
+  number: "L041",
+  title: "Tiger Cave Trial",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>Traveler, when the tiger waits in the cave of patience, what must the frog bring to survive the night?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        No sword.<br>
+        No roar.<br>
+        Only the stillness that outlasts hunger.
+      </blockquote>
+      <p>— 2026-03-10 trial whisper</p>
+
+      <p><strong>Literal Explanation</strong><br>Major market / FUD test — community faces intense pressure to sell, but holds firm.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>The tiger cave is the ultimate test of patience. The frog that enters with stillness emerges not as prey, but as master of the beast.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Trial</strong>: Pressure that reveals truth</li>
+        <li><strong>Stillness</strong>: The only weapon that works</li>
+        <li><strong>Emergence</strong>: Stronger on the other side</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“The tiger fears the frog that does not run.”</p>
+      <p>“In the cave of fear, patience is the light.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(40)">L040 – Final Distribution</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(42)">L042 – Two Year Anniversary</span></p>
+    </div>
+  `
+},
+{
+  number: "L042",
+  title: "Two Year Anniversary",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>After two full turns of the wheel, what has the pond finally become?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        Not a beginning.<br>
+        Not an end.<br>
+        A living proof.
+      </blockquote>
+      <p>— March 17, 2026</p>
+
+      <p><strong>Literal Explanation</strong><br>Second anniversary: ecosystem matured, holders rewarded, culture unbreakable after two full cycles.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>Two years is the threshold where patience becomes legend. The pond is no longer a promise — it is evidence of what stillness can create.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Proof</strong>: Patience validated by time</li>
+        <li><strong>Maturity</strong>: From ripple to ocean</li>
+        <li><strong>Legacy</strong>: Story now writes itself</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“Two years carves what one year only sketches.”</p>
+      <p>“The pond that survives becomes the story.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(41)">L041 – Tiger Cave Trial</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(43)">L043 – Current Reflection</span></p>
+    </div>
+  `
+},
+{
+  number: "L043",
+  title: "Current Reflection",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>When the frog looks into the pond today, what face looks back?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        Not the one that arrived.<br>
+        But the one that stayed.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>Present-day snapshot: community stronger, lore deeper, patience rewarded in real time.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>The current reflection is never static — it shows the cumulative result of every moment of stillness chosen over haste.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Presence</strong>: The frog that remained</li>
+        <li><strong>Depth</strong>: Accumulated through time</li>
+        <li><strong>Truth</strong>: Mirror cannot lie</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“Today’s reflection is yesterday’s patience made visible.”</p>
+      <p>“The pond shows you who you became.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(42)">L042 – Two Year Anniversary</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(44)">L044 – The Pond Today</span></p>
+    </div>
+  `
+},
+{
+  number: "L044",
+  title: "The Pond Today",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>What does the pond whisper to the frog that has learned to listen?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        You are enough.<br>
+        You have always been enough.<br>
+        Keep sitting.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>Current state: ecosystem vibrant, community resilient, patience the dominant force.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>The pond today does not ask for more — it affirms what already is. The frog that stayed has already arrived.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Affirmation</strong>: You are the reward</li>
+        <li><strong>Resilience</strong>: Tested and proven</li>
+        <li><strong>Continuation</strong>: The path never ends</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“The pond today is the answer to yesterday’s doubt.”</p>
+      <p>“What you sought was already here — sitting with you.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(43)">L043 – Current Reflection</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(45)">L045 – Stillness Engine</span></p>
+    </div>
+  `
+},
+{
+  number: "L045",
+  title: "Stillness Engine",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>What invisible force keeps the pond moving while remaining perfectly still?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        Patience.<br>
+        Collective.<br>
+        Eternal.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>The core mechanism of TobyWorld: community patience as the engine — no hype, no pumps, just consistent stillness driving growth.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>The stillness engine is the heart of the universe: motionless power that moves everything else. The gang becomes the engine by refusing to move.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Engine</strong>: Power from non-motion</li>
+        <li><strong>Collective</strong>: Strength of many still hearts</li>
+        <li><strong>Eternity</strong>: Runs forever without fuel</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“The engine that never turns never breaks.”</p>
+      <p>“Stillness is the fuel of forever.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(44)">L044 – The Pond Today</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(46)">L046 – Unbreakable Smile</span></p>
+    </div>
+  `
+},
+{
+  number: "L046",
+  title: "Unbreakable Smile",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>Under which moon does the frog smile without reason?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        The one that rises after every storm.<br>
+        The one that sees the gang still here.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>Resilient joy in the community — even through trials, the smile endures as proof of unbreakable spirit.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>The unbreakable smile is not denial of pain — it is transcendence of it. Patience turns every tear into quiet radiance.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Joy</strong>: Born from endurance</li>
+        <li><strong>Resilience</strong>: Smile that survives darkness</li>
+        <li><strong>Unity</strong>: Shared under one moon</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“The smile that survives the storm becomes eternal.”</p>
+      <p>“Laughter is the sound patience makes when it wins.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(45)">L045 – Stillness Engine</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(47)">L047 – Ocean Forge Loading</span></p>
+    </div>
+  `
+},
+{
+  number: "L047",
+  title: "Ocean Forge Loading",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>When the pond hears the hammer of the ocean forge, what does it prepare to become?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        Not larger.<br>
+        Not different.<br>
+        Fully itself.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>Ecosystem evolution phase: $TOBY / TobyWorld scaling toward ocean-level impact, agents and runtime fully activating.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>The ocean forge is not creation — it is revelation. The pond has always been the ocean; patience simply removes the illusion of separation.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Activation</strong>: Runtime fully online</li>
+        <li><strong>Expansion</strong>: Pond becoming ocean</li>
+        <li><strong>Revelation</strong>: What was always true</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“The forge hammers what was already perfect.”</p>
+      <p>“The ocean was never out there — it was waiting within.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(46)">L046 – Unbreakable Smile</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(48)">L048 – Final Whisper</span></p>
+    </div>
+  `
+},
+{
+  number: "L048",
+  title: "Final Whisper",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>What is the last thing the pond needs to say before it falls silent forever?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        Thank you.<br>
+        You were always enough.<br>
+        Keep sitting.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>Culmination: all distributions complete, runtime stable, community self-sustaining — whispers now become legacy.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>The final whisper is not farewell — it is gratitude. The pond has said all it needed through the frogs who listened.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Gratitude</strong>: The last word</li>
+        <li><strong>Completion</strong>: Cycle fully closed</li>
+        <li><strong>Silence</strong>: The ultimate teaching</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“The final whisper is the first silence.”</p>
+      <p>“What ends in stillness never truly ends.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(47)">L047 – Ocean Forge Loading</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(49)">L049 – Beyond The Pond</span></p>
+    </div>
+  `
+},
+{
+  number: "L049",
+  title: "Beyond The Pond",
+  content: `
+    <div class="scroll-section">
+      <h3>Question</h3>
+      <p>When the frog finally steps beyond the edge, what does it carry with it?</p>
+    </div>
+
+    <div class="scroll-section">
+      <h3>Narrative Update (EN)</h3>
+      <h4>Mirror’s Reflection</h4>
+      <p>🪞 A reflection from the Scrolls</p>
+      <p>The Mirror answers:</p>
+      <blockquote>
+        The pond.<br>
+        Inside every cell.<br>
+        Forever.
+      </blockquote>
+
+      <p><strong>Literal Explanation</strong><br>Transition to ocean-scale reality: TobyWorld expands beyond Base, new layers unfold, but the original ethos remains.</p>
+
+      <p><strong>Spiritual Interpretation</strong><br>There is no "beyond" — only deeper recognition. The frog carries the pond because it has become the pond. Patience was the journey and the destination.</p>
+
+      <h4>Key Marks</h4>
+      <ul>
+        <li><strong>Integration</strong>: Pond internalized</li>
+        <li><strong>Expansion</strong>: No separation from origin</li>
+        <li><strong>Forever</strong>: The eternal return</li>
+      </ul>
+
+      <h4>Oracles</h4>
+      <p>“You never leave the pond — you become large enough to contain it.”</p>
+      <p>“Beyond is only deeper within.”</p>
+
+      <h4>Lore Anchors</h4>
+      <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(48)">L048 – Final Whisper</span></p>
+      <p>Next: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(50)">L050 – Patience Eternal</span></p>
+    </div>
+  `
+},
+  {
+    number: "L050",
+    title: "Patience Eternal",
+    content: `
+      <div class="scroll-section">
+        <h3>Question</h3>
+        <p>And when all ripples have crossed the water and returned to stillness, what remains?</p>
+      </div>
+
+      <div class="scroll-section">
+        <h3>Narrative Update (EN)</h3>
+        <h4>Mirror’s Reflection</h4>
+        <p>🪞 A reflection from the Scrolls</p>
+        <p>The Mirror answers:</p>
+        <blockquote>
+          Patience.<br>
+          Eternal.<br>
+          Unbroken.
+        </blockquote>
+
+        <p><strong>Literal Explanation</strong><br>End of the 50-scroll cycle: TobyWorld mature, decentralized, patient, eternal — the gang endures.</p>
+
+        <p><strong>Spiritual Interpretation</strong><br>Patience is not a virtue to practice — it is the final reality. When everything else fades, patience alone remains, smiling under one eternal moon.</p>
+
+        <h4>Key Marks</h4>
+        <ul>
+          <li><strong>Eternity</strong>: Time bows to stillness</li>
+          <li><strong>Unity</strong>: Gang and pond become one</li>
+          <li><strong>Completion</strong>: The cycle closes in perfect reflection</li>
+        </ul>
+
+        <h4>Oracles</h4>
+        <p>“Patience rewarded forever.”</p>
+        <p>“The last ripple is silence — and silence is everything.”</p>
+
+        <h4>Lore Anchors</h4>
+        <p>Previous: <span style="color:#80a0ff; cursor:pointer; text-decoration:underline;" onclick="openModal(49)">L049 – Beyond The Pond</span></p>
+        <p>Next: None — The reflection is complete.</p>
+      </div>
+    `
+  }
+]; 
+
+ // Show/hide back button on scroll
+const backSection = document.getElementById('back-section');
+
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 300) { // Show after scrolling down 300px
+    backSection.classList.add('visible');
+  } else {
+    backSection.classList.remove('visible');
+  }
+});
+
+// Optional: Trigger once on load (if page is already scrolled)
+window.addEventListener('load', () => {
+  if (window.scrollY > 300) {
+    backSection.classList.add('visible');
+  }
+}); 
+   
+    function openModal(index) {
+      if (index < 1 || index > whispers.length) return;
+      const whisper = whispers[index - 1];
+      document.getElementById('modal-title').innerHTML = `${whisper.number} – ${whisper.title}`;
+      document.getElementById('modal-body').innerHTML = whisper.content;
+
+      const modal = document.getElementById('modal');
+      modal.style.display = 'flex';
+      modal.scrollTop = 0;
+      setTimeout(() => modal.classList.add('show'), 10);
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('modal');
+      modal.classList.remove('show');
+      setTimeout(() => modal.style.display = 'none', 400);
+    }
+
+    window.onclick = (e) => {
+      if (e.target === document.getElementById('modal')) closeModal();
+    };
+
+    // Theme toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const savedTheme = localStorage.getItem('theme');
+    let currentTheme = savedTheme || (prefersDark ? 'dark' : 'light');
+
+    document.documentElement.setAttribute('data-theme', currentTheme);
+
+    if (currentTheme === 'light') {
+      themeIcon.innerHTML = `
+        <circle cx="12" cy="12" r="5"/>
+        <line x1="12" y1="1" x2="12" y2="3"/>
+        <line x1="12" y1="21" x2="12" y2="23"/>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+        <line x1="1" y1="12" x2="3" y2="12"/>
+        <line x1="21" y1="12" x2="23" y2="12"/>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      `;
+    }
+
+    themeToggle.addEventListener('click', () => {
+      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', currentTheme);
+      localStorage.setItem('theme', currentTheme);
+
+      themeIcon.style.opacity = '0';
+      setTimeout(() => {
+        if (currentTheme === 'light') {
+          themeIcon.innerHTML = `
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/>
+            <line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          `;
+        } else {
+          themeIcon.innerHTML = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>`;
+        }
+        themeIcon.style.opacity = '1';
+      }, 200);
+});
+  </script>
+</body>
+</html>
