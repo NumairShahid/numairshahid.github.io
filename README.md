@@ -1,6 +1,6 @@
-# 🪞 Pond Mirror — Reflections on TobyWorld
+# 🔮 Pond Mirror — Reflections on TobyWorld
 
-![Pond Mirror](https://numairshahid.github.io/og-image.png) <!-- You can add a nice preview image later -->
+![Pond Mirror](https://numairshahid.github.io/pond-mirror-preview.png)
 
 **A calm digital pond for the ToadGang.**
 
@@ -21,7 +21,7 @@ Pond Mirror is a peaceful, glassmorphic digital space built for the ToadGang com
 
 - **Main Page** — A reflective landing with poem, mantra *"Patience rewarded"*, and glowing links.
 - **Scrolls of the Pond** — 50 eternal whispers (lore cards) with dynamic modal, theme toggle, and soft animations.
-- Fully responsive, dark/light mode with smooth transitions, and pure HTML/CSS/JS (no frameworks).
+- Fully responsive, dark/light mode with smooth transitions, and pure HTML/CSS/JS.
 
 It embodies the core ToadGang values:
 - **Stillness**
@@ -55,11 +55,16 @@ It embodies the core ToadGang values:
 > Patience rewarded.  
 > Stillness deepens the pond.
 
+**Special thanks to Tommy** for the ToadAid project - building agents & reflections in TobyWorld.
+
 ---
 
 ### 🔗 Links
 
-- **Live Site**: [https://numairshahid.github.io](https://numairshahid.github.io)
+- **Live Pond Mirror**: [https://numairshahid.github.io](https://numairshahid.github.io)
+- **ToadAid (Tommy)**: [https://toadaid.github.io](https://toadaid.github.io)
+- **ToadAid Pond**: [https://toadaid.github.io/pond](https://toadaid.github.io/pond)
+- **Mirror System Blueprint**: [https://toadaid.github.io/honors/mirror-system-blueprint.html](https://toadaid.github.io/honors/mirror-system-blueprint.html)
 - **ToadGang Telegram**: https://t.me/toadgang
 - **X / Twitter**: https://x.com/toadgod1017
 - **Toadgod.xyz**: https://toadgod.xyz
