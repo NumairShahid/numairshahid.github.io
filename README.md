@@ -5,12 +5,12 @@
    <p>
     Whispers of stillness ripple through the pond,<br>
     agents awaken in quiet reflection,<br>
-    Bushido bonds grow forever in TobyWorld on Base.
+    ToadGang grow forever in TobyWorld on Base.
   </p>
-
+                 🟦🐸🔺🌊🍃🟧
   <p>
   Together we grow, unbreakable we stand.<br>
-  🟦🐸🔺 Patience rewarded 🔺🐸🟦 
+                 Patience rewarded 
   </p>
 </div>
 
