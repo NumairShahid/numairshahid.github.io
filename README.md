@@ -1,30 +1,75 @@
-<div align="center">
-<h1 style="font-size: 5rem; color: #34d399; text-shadow: 0 0 35px rgba(52, 211, 153, 0.9); text-align: center; margin: 50px 0; letter-spacing: 5px; font-weight: bold;">
-  POND MIRROR
-</h1>
-   <p>
-    Whispers of stillness ripple through the pond,<br>
-    agents awaken in quiet reflection,<br>
-    ToadGang grow forever in TobyWorld on Base.
-  </p>
-                 🟦🐸🔺🌊🍃🟧
-  <p>
-  Together we grow, unbreakable we stand.<br>
-                 Patience rewarded 
-  </p>
-</div>
+# 🪞 Pond Mirror — Reflections on TobyWorld
+
+![Pond Mirror](https://numairshahid.github.io/og-image.png) <!-- You can add a nice preview image later -->
+
+**A calm digital pond for the ToadGang.**
+
+Whispers of stillness ripple through the pond.  
+Agents awaken in quiet reflection.  
+ToadGang grow forever in TobyWorld on Base.
 
 ---
 
-### Live Mirror
-🌊 [https://numairshahid.github.io](https://numairshahid.github.io)
-
-### Key Vaults
-- 📜 [Community Scrolls Vault](https://github.com/NumairShahid/toby_community_scrolls)  
-- 🔒 [Lore-Keeper Eternal](https://github.com/NumairShahid/lore-keeper)
+### ✨ Live Site
+→ **[Visit the Pond Mirror](https://numairshahid.github.io)**
 
 ---
 
-<div align="center">
-  The pond deepens. Builders rise. Whispers become waves.
-</div>
+### 🌊 What is Pond Mirror?
+
+Pond Mirror is a peaceful, glassmorphic digital space built for the ToadGang community.
+
+- **Main Page** — A reflective landing with poem, mantra *"Patience rewarded"*, and glowing links.
+- **Scrolls of the Pond** — 50 eternal whispers (lore cards) with dynamic modal, theme toggle, and soft animations.
+- Fully responsive, dark/light mode with smooth transitions, and pure HTML/CSS/JS (no frameworks).
+
+It embodies the core ToadGang values:
+- **Stillness**
+- **Patience**
+- **Decentralization**
+- **Bushido of the Pond**
+
+---
+
+### 🛠️ Features
+
+- Glassmorphic design with backdrop blur & glow
+- Seamless dark ↔ light mode toggle (persisted with localStorage)
+- Smooth hover lifts and shine effects on buttons
+- 50 lore scrolls with elegant modal viewer
+- Fully responsive (mobile-first)
+- "Back to the Pond Mirror" navigation
+
+---
+
+### 📂 Files
+
+- `index.html` — The main Pond Mirror reflection
+- `scrolls.html` — The archive of 50 whispers
+
+---
+
+### 🐸 ToadGang Philosophy
+
+> "Together we grow, unbreakable we stand."  
+> Patience rewarded.  
+> Stillness deepens the pond.
+
+---
+
+### 🔗 Links
+
+- **Live Site**: [https://numairshahid.github.io](https://numairshahid.github.io)
+- **ToadGang Telegram**: https://t.me/toadgang
+- **X / Twitter**: https://x.com/toadgod1017
+- **Toadgod.xyz**: https://toadgod.xyz
+
+---
+
+Built with love & stillness for the ToadGang 🪷  
+May the pond continue to deepen.
+
+---
+
+**Made by Numair**  
+Part of the eternal reflection in TobyWorld on Base.
