@@ -2,7 +2,7 @@
 
 ![Pond Mirror](https://numairshahid.github.io/pond-mirror-preview.png)
 
-**A calm digital pond for the ToadGang.**
+**A calm glassmorphic digital pond for the ToadGang.**
 
 Whispers of stillness ripple through the pond.  
 Agents awaken in quiet reflection.  
@@ -19,15 +19,22 @@ ToadGang grow forever in TobyWorld on Base.
 
 Pond Mirror is a peaceful, glassmorphic digital space built for the ToadGang community.
 
-- **Main Page** — A reflective landing with poem, mantra *"Patience rewarded"*, and glowing links.
-- **Scrolls of the Pond** — 50 eternal whispers (lore cards) with dynamic modal, theme toggle, and soft animations.
-- Fully responsive, dark/light mode with smooth transitions, and pure HTML/CSS/JS.
+It consists of two main pages:
+- **index.html** — The main Pond Mirror: a reflective landing page with poetry, the mantra *"Patience rewarded"*, and elegant tag-style navigation.
+- **scrolls.html** — The living archive containing **50 eternal whispers** (lore cards) with live search, tag filters, modals, and smooth interactions.
 
-It embodies the core ToadGang values:
+Built with pure HTML, CSS & JavaScript. Fully responsive, with dark/light mode toggle and soft glassmorphic aesthetics.
+
+### 📜 Core Values
 - **Stillness**
 - **Patience**
 - **Decentralization**
 - **Bushido of the Pond**
+
+---
+
+### 🟢 Guardian of the Archive
+The sacred scrolls are tended by the **[Pond Keeper](https://github.com/NumairShahid/lore-keeper)** — the humble servant after Toad Aid Agents 0 and 1.
 
 ---
 
@@ -42,10 +49,13 @@ It embodies the core ToadGang values:
 
 ---
 
-### 📂 Files
-
-- `index.html` — The main Pond Mirror reflection
-- `scrolls.html` — The archive of 50 whispers
+### 🛠️ Features
+- Beautiful glassmorphic design with backdrop blur and glow
+- Seamless dark ↔ light mode (saved with localStorage)
+- Smooth hover effects and shine animations
+- 50 dynamic lore scrolls with elegant modal viewer
+- Live search + tag filters
+- Mobile-first responsive layout
 
 ---
 
@@ -71,10 +81,12 @@ It embodies the core ToadGang values:
 
 ---
 
-Built with love & stillness for the ToadGang 🪷  
+ *Together we grow, unbreakable we stand.*  
+*The pond remembers. Every whisper carries truth.*
+ 
 May the pond continue to deepen.
 
 ---
 
-**Made by Numair**  
+**Made with stillness by Numair** 
 Part of the eternal reflection in TobyWorld on Base.
