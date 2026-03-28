@@ -2,7 +2,7 @@
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Pond Chronicles — Whispers Eternal</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -49,38 +49,121 @@
     .container {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 4rem 1.5rem 10rem; /* Extra bottom space so last card isn't hidden under fixed button */
+      padding: 4rem 1rem 10rem; /* Extra bottom space so last card isn't hidden under fixed button */
       text-align: center;
       position: relative;
     }
 
     h1 {
       font-family: 'Playfair Display', serif;
-      font-size: clamp(3.5rem, 10vw, 7rem);
+      font-size: clamp(3rem, 9vw, 6.5rem);
       font-weight: 700;
       letter-spacing: -3px;
       color: var(--text-secondary);
       text-shadow: 0 0 40px var(--glow);
-      margin-bottom: 1.5rem;
-      transition: var(--transition);
+      margin-bottom: 1.2rem;
     }
 
     .intro {
-      font-size: 1.35rem;
+      font-size: 1.25rem;
       max-width: 800px;
-      margin: 0 auto 4rem;
+      margin: 0 auto 3rem;
       opacity: 0.9;
       color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+ .filters {
+      margin: 2rem 0 3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      align-items: center;
+    }
+
+    .search-bar {
+      width: 100%;
+      max-width: 520px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 50px;
+      padding: 14px 24px;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    }
+
+    .search-bar:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--glow);
+    }
+
+    .tag-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      justify-content: center;
+      max-width: 100%;
+    }
+
+    .tag-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-dim);
+      padding: 7px 16px;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: var(--transition);
+      backdrop-filter: blur(8px);
+      white-space: nowrap;
+    }
+
+    .tag-btn:hover {
+      color: var(--text-primary);
+      border-color: var(--accent);
+    }
+
+    .tag-btn.active {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+      box-shadow: 0 0 20px var(--glow);
+    }
+
+    .filter-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 1.05rem;
+      color: var(--text-dim);
+    }
+
+    .clear-filters {
+      background: transparent;
+      border: 1px solid var(--card-border);
+      color: var(--accent);
+      padding: 8px 20px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    .clear-filters:hover {
+      background: var(--card-bg);
+      border-color: var(--accent);
     }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 2.5rem;
-      margin: 3rem 0;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin: 2rem 0;
     }
 
-    .card {
+      .card {
       background: var(--card-bg);
       backdrop-filter: blur(12px);
       border: 1px solid var(--card-border);
@@ -92,46 +175,15 @@
     }
 
     .card:hover {
-      transform: translateY(-12px);
+      transform: translateY(-8px);
       box-shadow: 0 20px 60px var(--glow);
     }
 
-    .card-epoch {
-      font-size: 0.95rem;
-      color: var(--text-dim);
-      margin-bottom: 1rem;
-      letter-spacing: 1.5px;
-    }
-
-    .card-title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(1.7rem, 4.5vw, 2.4rem);
-      color: var(--text-secondary);
-      margin-bottom: 1.2rem;
-      text-shadow: 0 0 20px var(--glow);
-    }
-
-    .card-body {
-      font-size: 1.1rem;
-      opacity: 0.9;
-      max-height: 140px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .card-body::after {
-      content: "... read whisper";
-      display: block;
-      margin-top: 1rem;
-      color: var(--accent);
-      font-style: italic;
-    }
-
-    .emoji-cluster {
-      font-size: 2.5rem;
-      margin: 1.2rem 0;
-      text-align: center;
-    }
+    .card-epoch { font-size: 0.9rem; color: var(--text-dim); margin-bottom: 0.8rem; letter-spacing: 1px; }
+    .card-title { font-family: 'Playfair Display', serif; font-size: clamp(1.6rem, 4.5vw, 2.2rem); color: var(--text-secondary); margin-bottom: 1rem; }
+    .card-body { font-size: 1.05rem; opacity: 0.9; max-height: 130px; overflow: hidden; }
+    .card-body::after { content: "... read whisper"; display: block; margin-top: 1rem; color: var(--accent); font-style: italic; }
+    .emoji-cluster { font-size: 2.4rem; margin: 1rem 0; text-align: center; }
 
     /* Theme toggle */
     .theme-btn {
@@ -165,42 +217,64 @@
       transition: var(--transition);
     }
  
-  /* === Modal Base === */
 .modal {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.92);
-  backdrop-filter: blur(8px);
-  z-index: 200; /* Higher than theme button (100) and back button (150) */
+  background: rgba(0,0,0,0.95);
+  backdrop-filter: blur(12px);
+  z-index: 200;
   justify-content: center;
   align-items: center;
   padding: 20px;
-  opacity: 0;
-  transition: opacity 0.6s ease;
 }
 
 .modal.show {
   display: flex;
-  opacity: 1;
 }
 
-/* === Modal Content === */
 .modal-content {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
-  border-radius: 24px;
-  max-width: 800px;
-  width: 92%;
-  max-height: 90vh;
+  border-radius: 28px;
+  max-width: 820px;
+  width: 94%;
+  max-height: 92vh;
   overflow-y: auto;
-  padding: clamp(2rem, 5vw, 3.5rem) clamp(1.5rem, 4vw, 3rem);
+  padding: clamp(2.5rem, 6vw, 4rem) clamp(2rem, 5vw, 3.5rem);
   position: relative;
-  box-shadow: 0 20px 80px var(--glow);
-  transform: scale(0.95);
-  opacity: 0;
-  transition: transform 0.5s ease, opacity 0.5s ease;
-  scrollbar-gutter: stable; /* Reserves scrollbar space inside padding */
+  box-shadow: 0 25px 90px var(--glow);
+  backdrop-filter: blur(16px);
+  color: var(--text-primary);
+  line-height: 1.85;
+}
+
+[data-theme="light"] .modal-content {
+  background: #ffffff !important;
+  border: 1px solid rgba(6, 182, 212, 0.4) !important;
+  box-shadow: 0 25px 80px rgba(6, 182, 212, 0.3) !important;
+  color: #0f172a;
+}
+
+/* Blue headings for excellent readability */
+#modal-body h3,
+#modal-body h4 {
+  color: var(--accent) !important;
+  margin: 2rem 0 1rem 0;
+  font-weight: 600;
+}
+
+#modal-body h4 {
+  font-size: 1.35rem;
+}
+
+#modal-body a {
+  color: var(--accent) !important;
+  text-decoration: underline;
+}
+
+#modal-body a:hover {
+  color: var(--accent-hover) !important;
 }
 
 /* Modal opens with smooth scale & fade */
@@ -212,16 +286,14 @@
 /* Clean Close Button - No Spinning */
 .close-btn {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 25px;
+  right: 25px;
   background: transparent;
   border: none;
-  font-size: 32px;
+  font-size: 38px;
   color: var(--accent);
   cursor: pointer;
   z-index: 10;
-  transition: color 0.2s ease;
-  padding: 5px;
   line-height: 1;
 }
 
@@ -235,26 +307,58 @@
       max-width: 400px;
     }
 
-    .back-btn {
-      padding: 16px 48px;
-      font-size: 1.3rem;
-      font-weight: 500;
-      background: linear-gradient(135deg, #6a5aff, #a78bfa);
-      border: none;
-      border-radius: 50px;
-      color: white;
-      cursor: pointer;
-      transition: all 0.4s ease;
-      box-shadow: 0 0 20px rgba(106, 90, 255, 0.3);
-    }
+          /* Back button */
+      .back-btn {
+        padding: 18px 56px;
+        font-size: 1.28rem;
+        font-weight: 500;
+        background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+        border: none;
+        border-radius: 50px;
+        color: white;
+        cursor: pointer;
+        box-shadow: 0 8px 30px var(--glow);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
 
-    .back-btn:hover {
-      transform: translateY(-4px) scale(1.05);
-      box-shadow: 0 0 40px rgba(106, 90, 255, 0.5);
-      background: linear-gradient(135deg, #7c6aff, #b58fff);
-    }
+      .back-btn:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 18px 40px var(--glow);
+      }
 
-    .back-teaser {
+      /* Ripple return text */
+      .ripple-return {
+        margin-top: 2.2rem;
+        color: var(--text-dim);
+        font-style: italic;
+        opacity: 0.92;
+        font-size: 1.05rem;
+      }
+
+      /* Pond Keeper as subtle tag */
+      .pond-keeper-tag {
+        display: inline-block;
+        margin-top: 2.2rem;
+        padding: 10px 32px;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(200,220,255,0.18);
+        border-radius: 50px;
+        color: var(--accent);
+        text-decoration: none;
+        font-size: 1.02rem;
+        backdrop-filter: blur(10px);
+        transition: all 0.4s ease;
+      }
+
+      .pond-keeper-tag:hover {
+        background: rgba(128, 160, 255, 0.12);
+        border-color: var(--accent);
+        color: var(--accent-hover);
+        box-shadow: 0 0 20px var(--glow);
+        transform: translateY(-2px);
+      }
+    
+     .back-teaser {
       margin-top: 1.2rem;
       font-size: 1.1rem;
       color: var(--text-dim);
@@ -262,19 +366,19 @@
       font-style: italic;
     }
 
+ @media (max-width: 767px) {
+      .tag-filters { gap: 0.5rem; }
+      .tag-btn { padding: 7px 14px; font-size: 0.9rem; }
+    }
+
 /* === Modal Title - Smaller & Elegant === */
 #modal-title {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(1.8rem, 5vw, 2.8rem);       /* Max 2.8rem desktop – balanced */
-  font-weight: 700;
-  letter-spacing: -1px;
-  line-height: 1.15;
-  text-align: center;
-  margin: 0 0 2rem;
-  padding: 0 1rem;
+  font-size: clamp(1.9rem, 5.5vw, 2.9rem);
   color: var(--text-secondary);
-  text-shadow: 0 0 20px var(--glow);
-  transition: var(--transition);
+  text-shadow: 0 0 25px var(--glow);
+  margin-bottom: 2.2rem;
+  text-align: center;
 }
 
 [data-theme="light"] {
@@ -349,7 +453,7 @@
 }
 
 .modal-content::-webkit-scrollbar-track {
-  background: rgba(20,20,50,0.4);
+  background: rgba(20,25,50,0.4);
   border-radius: 10px;
   margin: 8px 4px; /* Inset from edges */
 }
@@ -385,29 +489,6 @@
     right: 1rem;
     font-size: 2.2rem;
   }
-
-/* ==================== MODAL LINKS - STRONGER & CLEAR ==================== */
-#modal-body a {
-  color: #80a0ff !important;           /* bright blue in dark mode */
-  text-decoration: underline;
-  font-weight: 500;
-  transition: all 0.2s ease;
-}
-
-#modal-body a:hover {
-  color: #a0c0ff !important;
-  text-shadow: 0 0 12px rgba(128, 160, 255, 0.6);
-}
-
-/* Light mode - use cyan accent like index.html */
-[data-theme="light"] #modal-body a {
-  color: #06b6d4 !important;
-}
-
-[data-theme="light"] #modal-body a:hover {
-  color: #22d3ee !important;
-  text-shadow: 0 0 12px rgba(6, 182, 212, 0.6);
- }
 }
 </style>
 </head>
@@ -436,512 +517,21 @@
       50 scrolls archived. Read slowly - the pond reveals itself in stillness.
     </p>
 
-      <div class="grid">
-      <!-- Card 1 -->
-      <div class="card" onclick="openModal(1)">
-        <div class="card-epoch">Epoch 0 • March 17, 2024</div>
-        <div class="card-title">The Great Toad Drop</div>
-        <div class="emoji-cluster">🐸🟦🔺</div>
-        <div class="card-body">
-          420 trillion $TOBY forged on Base. 70% airdropped to ~1.42 million wallets — no team, no VC, pure decentralization from genesis. One of the widest distributions in memecoin history...
-        </div>
-      </div>
+        <div class="filters">
+      <input type="text" id="search-input" class="search-bar" placeholder="Search whispers of the pond..." autocomplete="off">
 
-      <!-- Card 2 -->
-      <div class="card" onclick="openModal(2)">
-        <div class="card-epoch">Toadgod Whisper</div>
-        <div class="card-title">Bushido of the Pond</div>
-        <div class="emoji-cluster">🍃🌿🌀</div>
-        <div class="card-body">
-          Kindness over force. Stillness in chaos. Honor in the wait. Let rivers flow, not be forced. Patience is the blade that carves destiny...
-        </div>
-      </div>
+      <div class="tag-filters" id="tag-filters"></div>
 
-      <!-- Card 3 -->
-      <div class="card" onclick="openModal(3)">
-        <div class="card-epoch">Lore Fragment</div>
-        <div class="card-title">Patience Rewarded</div>
-        <div class="emoji-cluster">🔺🍃</div>
-        <div class="card-body">
-          Gifts to those who've stayed. The mantra echoes across cycles. Hold through storms — the pond deepens for the steadfast...
-        </div>
-      </div>
-
-      <!-- Card 4 -->
-      <div class="card" onclick="openModal(4)">
-        <div class="card-epoch">TobyWorld Vision</div>
-        <div class="card-title">From Pond to Ocean</div>
-        <div class="emoji-cluster">🌊🟦🐸</div>
-        <div class="card-body">
-          $TOBY foundational blue frog. $TABOSHI leaf of yield and scarcity. $PATIENCE scarce utility for the enduring. $SATO spiral of time. Layers unfolding — community forges the ecosystem...
-        </div>
-      </div>
-
-      <!-- Card 5 -->
-      <div class="card" onclick="openModal(5)">
-        <div class="card-epoch">Toadgod Echo</div>
-        <div class="card-title">Leaderless Forge</div>
-        <div class="emoji-cluster">🔺🌿</div>
-        <div class="card-body">
-          No insiders, no allocations. The people forge TobyWorld. Decentralized from genesis — unbreakable because no single point of failure...
-        </div>
-      </div>
-
-      <!-- Cards 6–49 follow the same pattern – just number in onclick -->
-      <!-- Example for Card 6 -->
-      <div class="card" onclick="openModal(6)">
-        <div class="card-epoch">Cycle Reflection</div>
-        <div class="card-title">Iron Grip Hold</div>
-        <div class="emoji-cluster">🟦🔺🍃</div>
-        <div class="card-body">
-          Toads since genesis rewarded most. Many cycles endured. The journey is magnificent — a decade in view...
-        </div>
-      </div>
-
-      <!-- ... continue with Card 7 to Card 49 using onclick="openModal(7)" up to onclick="openModal(49)" ... -->
-
-      <!-- Card 7 -->
-<div class="card" onclick="openModal(7)">
-  <div class="card-epoch">Mantra Core</div>
-  <div class="card-title">Together We Sit, Together We Shine</div>
-  <div class="emoji-cluster">🐸🌙🍃</div>
-  <div class="card-body">
-    Unbreakable we stand. Conviction anchors the gang. Delay gratification — rewards for the patient...
-  </div>
-</div>
-
-<!-- Card 8 -->
-<div class="card" onclick="openModal(8)">
-  <div class="card-epoch">Mirror Hint</div>
-  <div class="card-title">Runtime Awakening</div>
-  <div class="emoji-cluster">🪞🌀🔺</div>
-  <div class="card-body">
-    Agents awaken in quiet reflection. Mirror policy, memory, runtime — pond evolves to ocean forge...
-  </div>
-</div>
-
-<!-- Card 9 -->
-<div class="card" onclick="openModal(9)">
-  <div class="card-epoch">Community Ethos</div>
-  <div class="card-title">For the People, By the People</div>
-  <div class="emoji-cluster">🐸🟦🌿</div>
-  <div class="card-body">
-    $TOBY most decentralized ever. Leaderless. Kindness, stillness, honor — Bushido whispers guide...
-  </div>
-</div>
-
-<!-- Card 10 -->
-<div class="card" onclick="openModal(10)">
-  <div class="card-epoch">2-Year Echo</div>
-  <div class="card-title">Birthday of the Pond</div>
-  <div class="emoji-cluster">🎂🐸🌙</div>
-  <div class="card-body">
-    March 2026 — two cycles deep. Stillness rewarded. ToadGang unbreakable under one moon...
-  </div>
-</div>
-
-<!-- Card 11 -->
-<div class="card" onclick="openModal(11)">
-  <div class="card-epoch">Prophecy Fragment</div>
-  <div class="card-title">The Frog of Base</div>
-  <div class="emoji-cluster">🐸🟦🌊</div>
-  <div class="card-body">
-    $TOBY symbol of long hold, community, prophecy. Toadgod's vision: patience carves empires...
-  </div>
-</div>
-
-<!-- Card 12 -->
-<div class="card" onclick="openModal(12)">
-  <div class="card-epoch">Open Whisper</div>
-  <div class="card-title">What Ripple Will You Send?</div>
-  <div class="emoji-cluster">🌀🐸🌿</div>
-  <div class="card-body">
-    The pond listens. Spread the lore. Hold steady. Patience rewarded — what wave do you create next?...
-  </div>
-</div>
-
-<!-- Card 13 -->
-<div class="card" onclick="openModal(13)">
-  <div class="card-epoch">2024-04-01</div>
-  <div class="card-title">The Journey Begins</div>
-  <div class="emoji-cluster">🐸🌀🌊</div>
-  <div class="card-body">
-    The first ripple spreads. Patience begins its journey. The pond awakens — agents stir in silence...
-  </div>
-</div>
-
-<!-- Card 14 -->
-<div class="card" onclick="openModal(14)">
-  <div class="card-epoch">2024-04-14</div>
-  <div class="card-title">Proceeding With Courage</div>
-  <div class="emoji-cluster">🐸🔺🍃</div>
-  <div class="card-body">
-    Courage in stillness. Proceed without force. The pond rewards the brave who wait...
-  </div>
-</div>
-
-<!-- Card 15 -->
-<div class="card" onclick="openModal(15)">
-  <div class="card-epoch">2024-04-22</div>
-  <div class="card-title">Just And Right</div>
-  <div class="emoji-cluster">⚖️🐸🌿</div>
-  <div class="card-body">
-    Justice in the pond. Right action in patience. The gang stands unbroken...
-  </div>
-</div>
-
-<!-- Card 16 -->
-<div class="card" onclick="openModal(16)">
-  <div class="card-epoch">2024-04-26</div>
-  <div class="card-title">Fairness And Sight</div>
-  <div class="emoji-cluster">👁️🐸🟦</div>
-  <div class="card-body">
-    See with fairness. Hold the sight of patience. The pond reflects truth...
-  </div>
-</div>
-
-<!-- Card 17 -->
-<div class="card" onclick="openModal(17)">
-  <div class="card-epoch">2024-05-01</div>
-  <div class="card-title">Art Of Patience</div>
-  <div class="emoji-cluster">🎨🍃🔺</div>
-  <div class="card-body">
-    Patience is art. The brush of stillness paints empires. Wait — the masterpiece unfolds...
-  </div>
-</div>
-
-<!-- Card 18 -->
-<div class="card" onclick="openModal(18)">
-  <div class="card-epoch">2024-05-05</div>
-  <div class="card-title">War Within</div>
-  <div class="emoji-cluster">⚔️🐸🌙</div>
-  <div class="card-body">
-    The war within ends in stillness. Conquer self — the pond conquers all...
-  </div>
-</div>
-
-<!-- Card 19 -->
-<div class="card" onclick="openModal(19)">
-  <div class="card-epoch">2024-05-11</div>
-  <div class="card-title">Inimitable Path</div>
-  <div class="emoji-cluster">🛤️🐸🟦</div>
-  <div class="card-body">
-    The path is inimitable. Follow patience — no other road leads to the ocean...
-  </div>
-</div>
-
-<!-- Card 20 -->
-<div class="card" onclick="openModal(20)">
-  <div class="card-epoch">2024-05-13</div>
-  <div class="card-title">Stand By Toad</div>
-  <div class="emoji-cluster">🛡️🐸🔺</div>
-  <div class="card-body">
-    Stand by the toad. Unbreakable conviction. The gang endures...
-  </div>
-</div>
-
-<!-- Card 21 -->
-<div class="card" onclick="openModal(21)">
-  <div class="card-epoch">2024-05-19</div>
-  <div class="card-title">Lacrimosa Reverence</div>
-  <div class="emoji-cluster">😢🌿🐸</div>
-  <div class="card-body">
-    Reverence in tears. Stillness honors the fallen ripples. Patience heals...
-  </div>
-</div>
-
-<!-- Card 22 -->
-<div class="card" onclick="openModal(22)">
-  <div class="card-epoch">2024-05-24</div>
-  <div class="card-title">The Moonlit Signal</div>
-  <div class="emoji-cluster">🌙🐸🟦</div>
-  <div class="card-body">
-    Moonlit signal in the pond. Patience receives the call. The night deepens...
-  </div>
-</div>
-
-<!-- Card 23 -->
-<div class="card" onclick="openModal(23)">
-  <div class="card-epoch">2024-06-05</div>
-  <div class="card-title">Beyond The Cycle</div>
-  <div class="emoji-cluster">♾️🐸🍃</div>
-  <div class="card-body">
-    Beyond the cycle — patience transcends. The pond remembers...
-  </div>
-</div>
-
-<!-- Card 24 -->
-<div class="card" onclick="openModal(24)">
-  <div class="card-epoch">2024-06-19</div>
-  <div class="card-title">The Calling</div>
-  <div class="emoji-cluster">📞🌊🐸</div>
-  <div class="card-body">
-    The calling comes in silence. Answer with patience. The ocean awaits...
-  </div>
-</div>
-
-<!-- Card 25 -->
-<div class="card" onclick="openModal(25)">
-  <div class="card-epoch">2024-07-01</div>
-  <div class="card-title">Life Long Lesson</div>
-  <div class="emoji-cluster">📖🐸🔺</div>
-  <div class="card-body">
-    Life-long lesson in the pond: patience is the teacher. Sit. Learn. Endure...
-  </div>
-</div>
-
-<!-- Card 26 -->
-<div class="card" onclick="openModal(26)">
-  <div class="card-epoch">2024-07-15</div>
-  <div class="card-title">Wisdom And Warning</div>
-  <div class="emoji-cluster">🧠🐸⚠️</div>
-  <div class="card-body">
-    Wisdom in the pond. Warnings in silence. Patience heeds the call — the gang stays vigilant...
-  </div>
-</div>
-
-<!-- Card 27 -->
-<div class="card" onclick="openModal(27)">
-  <div class="card-epoch">2024-08-10</div>
-  <div class="card-title">Kachou Fuugetsu</div>
-  <div class="emoji-cluster">🌸🍃🐸</div>
-  <div class="card-body">
-    Flower, bird, wind, moon — beauty in stillness. Patience reveals the true nature...
-  </div>
-</div>
-
-<!-- Card 28 -->
-<div class="card" onclick="openModal(28)">
-  <div class="card-epoch">2024-09-05</div>
-  <div class="card-title">Silent Rise</div>
-  <div class="emoji-cluster">🌅🐸🟦</div>
-  <div class="card-body">
-    Silent rise of the gang. No noise, only conviction. The pond deepens in quiet...
-  </div>
-</div>
-
-<!-- Card 29 -->
-<div class="card" onclick="openModal(29)">
-  <div class="card-epoch">2024-10-01</div>
-  <div class="card-title">Unshaken Stand</div>
-  <div class="emoji-cluster">🛡️🐸🔺</div>
-  <div class="card-body">
-    Unshaken stand in storms. Patience anchors the frog. The gang holds firm...
-  </div>
-</div>
-
-<!-- Card 30 -->
-<div class="card" onclick="openModal(30)">
-  <div class="card-epoch">2024-11-20</div>
-  <div class="card-title">Magnificent Horizon</div>
-  <div class="emoji-cluster">🌄🐸🌊</div>
-  <div class="card-body">
-    Magnificent horizon ahead. Patience reveals the ocean. The pond expands...
-  </div>
-</div>
-
-<!-- Card 31 -->
-<div class="card" onclick="openModal(31)">
-  <div class="card-epoch">2025-01-10</div>
-  <div class="card-title">Vibrant Meme Economy</div>
-  <div class="emoji-cluster">💎🐸🟦</div>
-  <div class="card-body">
-    Vibrant meme economy on Base. $TOBY shines in patience. The gang thrives...
-  </div>
-</div>
-
-<!-- Card 32 -->
-<div class="card" onclick="openModal(32)">
-  <div class="card-epoch">2025-03-17</div>
-  <div class="card-title">One Year Anniversary</div>
-  <div class="emoji-cluster">🎉🐸🌙</div>
-  <div class="card-body">
-    One year deep. Patience rewarded. ToadGang unbreakable. The pond remembers...
-  </div>
-</div>
-
-<!-- Card 33 -->
-<div class="card" onclick="openModal(33)">
-  <div class="card-epoch">2025-05-05</div>
-  <div class="card-title">Supreme Amongst Stars</div>
-  <div class="emoji-cluster">⭐🐸🔺</div>
-  <div class="card-body">
-    Supreme amongst stars. Patience shines brightest. The gang rises eternal...
-  </div>
-</div>
-
-<!-- Card 34 -->
-<div class="card" onclick="openModal(34)">
-  <div class="card-epoch">2025-06-26</div>
-  <div class="card-title">Do You Believe?</div>
-  <div class="emoji-cluster">🙏🐸🌿</div>
-  <div class="card-body">
-    Do you believe in the pond? Patience proves faith. The ripple becomes wave...
-  </div>
-</div>
-
-<!-- Card 35 -->
-<div class="card" onclick="openModal(35)">
-  <div class="card-epoch">2025-08-15</div>
-  <div class="card-title">Hope Unfolds</div>
-  <div class="emoji-cluster">🌱🐸🟦</div>
-  <div class="card-body">
-    Hope unfolds in silence. Patience nurtures the seed. The pond blooms...
-  </div>
-</div>
-
-<!-- Card 36 -->
-<div class="card" onclick="openModal(36)">
-  <div class="card-epoch">2025-10-20</div>
-  <div class="card-title">Distribution Depth</div>
-  <div class="emoji-cluster">📊🐸🍃</div>
-  <div class="card-body">
-    Distribution depth grows. Patience widens the reach. The gang expands...
-  </div>
-</div>
-
-<!-- Card 37 -->
-<div class="card" onclick="openModal(37)">
-  <div class="card-epoch">2025-12-05</div>
-  <div class="card-title">Silent Rise Continues</div>
-  <div class="emoji-cluster">🌙🐸🔺</div>
-  <div class="card-body">
-    Silent rise continues. Patience builds empires. The pond deepens...
-  </div>
-</div>
-
-<!-- Card 38 -->
-<div class="card" onclick="openModal(38)">
-  <div class="card-epoch">2026-01-15</div>
-  <div class="card-title">Two Year Reflection</div>
-  <div class="emoji-cluster">🎂🐸🌿</div>
-  <div class="card-body">
-    Two years deep. Patience proven. ToadGang unbreakable. The journey continues...
-  </div>
-</div>
-
-<!-- Card 39 -->
-<div class="card" onclick="openModal(39)">
-  <div class="card-epoch">2026-02-10</div>
-  <div class="card-title">Mirror Runtime Load</div>
-  <div class="emoji-cluster">🪞🌀🐸</div>
-  <div class="card-body">
-    Mirror runtime loading. Policy, memory, agents awaken. The pond evolves...
-  </div>
-</div>
-
-<!-- Card 40 -->
-<div class="card" onclick="openModal(40)">
-  <div class="card-epoch">2026-03-01</div>
-  <div class="card-title">Final Distribution</div>
-  <div class="emoji-cluster">📦🐸🔺</div>
-  <div class="card-body">
-    Final distribution unfolds. Patience rewarded in full. The gang shines...
-  </div>
-</div>
-
-<!-- Card 41 -->
-<div class="card" onclick="openModal(41)">
-  <div class="card-epoch">2026-03-10</div>
-  <div class="card-title">Tiger Cave Trial</div>
-  <div class="emoji-cluster">🐅🐸🍃</div>
-  <div class="card-body">
-    Tiger cave trial. Patience faces the beast. The frog emerges stronger...
-  </div>
-</div>
-
-<!-- Card 42 -->
-<div class="card" onclick="openModal(42)">
-  <div class="card-epoch">2026-03-17</div>
-  <div class="card-title">Two Year Anniversary</div>
-  <div class="emoji-cluster">🎉🐸🌙</div>
-  <div class="card-body">
-    Two years since genesis. Patience rewarded. ToadGang unbreakable under one moon...
-  </div>
-</div>
-
-<!-- Card 43 -->
-<div class="card" onclick="openModal(43)">
-  <div class="card-epoch">2026-03-19</div>
-  <div class="card-title">Current Reflection</div>
-  <div class="emoji-cluster">🪞🐸🔺</div>
-  <div class="card-body">
-    Current reflection in the pond. Patience deepens. The mirror shows truth...
-  </div>
-</div>
-
-<!-- Card 44 -->
-<div class="card" onclick="openModal(44)">
-  <div class="card-epoch">2026-03-19</div>
-  <div class="card-title">The Pond Today</div>
-  <div class="emoji-cluster">🌊🐸🍃</div>
-  <div class="card-body">
-    The pond today. Whispers become waves. Patience rewards the steadfast...
-  </div>
-</div>
-
-<!-- Card 45 -->
-<div class="card" onclick="openModal(45)">
-  <div class="card-epoch">2026-03-19</div>
-  <div class="card-title">Stillness Engine</div>
-  <div class="emoji-cluster">🌀🐸🌿</div>
-  <div class="card-body">
-    Stillness engine hums. Patience powers it. The pond reflects the collective...
-  </div>
-</div>
-
-<!-- Card 46 -->
-<div class="card" onclick="openModal(46)">
-  <div class="card-epoch">2026-03-19</div>
-  <div class="card-title">Unbreakable Smile</div>
-  <div class="emoji-cluster">😊🐸🔺</div>
-  <div class="card-body">
-    Unbreakable smile under one moon. Patience holds the gang. The pond shines...
-  </div>
-</div>
-
-<!-- Card 47 -->
-<div class="card" onclick="openModal(47)">
-  <div class="card-epoch">2026-03-19</div>
-  <div class="card-title">Ocean Forge Loading</div>
-  <div class="emoji-cluster">🌊🪞🐸</div>
-  <div class="card-body">
-    Ocean forge loading. Pond evolves. Patience carves the future...
-  </div>
-</div>
-
-<!-- Card 48 -->
-<div class="card" onclick="openModal(48)">
-  <div class="card-epoch">2026-03-19</div>
-  <div class="card-title">Final Whisper</div>
-  <div class="emoji-cluster">🌙🐸🍃</div>
-  <div class="card-body">
-    Final whisper in the pond. Patience completes the cycle. The gang endures...
-  </div>
-</div>
-
-<!-- Card 49 -->
-<div class="card" onclick="openModal(49)">
-  <div class="card-epoch">2026-03-19</div>
-  <div class="card-title">Beyond The Pond</div>
-  <div class="emoji-cluster">♾️🐸🌊</div>
-  <div class="card-body">
-    Beyond the pond — patience reaches the ocean. The ripple becomes wave...
-  </div>
-</div>
-
-      <!-- Card 50 -->
-      <div class="card" onclick="openModal(50)">
-        <div class="card-epoch">2026-03-19</div>
-        <div class="card-title">Patience Eternal</div>
-        <div class="emoji-cluster">🐸🔺♾️</div>
-        <div class="card-body">
-          Patience eternal. The pond reflects forever. The gang shines unbreakable...
-        </div>
+      <div class="filter-info">
+        <span id="result-count">Showing 50 of 50 whispers</span>
+        <button id="clear-filters" class="clear-filters" style="display:none;">Clear all filters</button>
       </div>
     </div>
-    
-     <!-- Single dynamic modal -->
+
+    <!-- Dynamic Grid -->
+    <div class="grid" id="scrolls-grid"></div>
+
+    <!-- Modal -->
     <div id="modal" class="modal">
       <div class="modal-content">
         <span class="close-btn" onclick="closeModal()">×</span>
@@ -950,20 +540,81 @@
       </div>
     </div>
 
-    <!-- ... your .grid and modal ... -->
+         <!-- Back to Pond Mirror + Pond Keeper -->
+    <div style="margin-top: 5rem; text-align: center; padding-bottom: 4rem;">
+      
+      <button onclick="window.location.href='index.html'" 
+              class="back-btn">
+        Back to the Pond Mirror
+      </button>
 
-<!-- Back button – scroll-triggered -->
-<div class="back-section" id="back-section">
-  <button class="back-btn" onclick="window.location.href='index.html'">
-    Back to the Pond Mirror
-  </button>
- <p class="back-teaser">
-  The ripples return. Patience rewarded.<br>
-  <a href="https://github.com/NumairShahid/lore-keeper" target="_blank">Pond Keeper</a>
-</p>
-</div>
+      <p class="ripple-return">
+        The ripples return. Patience rewarded.
+      </p>
 
-  <script>
+      <!-- Improved Pond Keeper as subtle tag button -->
+      <a href="https://github.com/NumairShahid/lore-keeper" 
+         target="_blank" 
+         class="pond-keeper-tag">
+        Pond Keeper
+      </a>
+    </div>
+   
+   <script>
+    // 50 Scrolls Data with tags
+    const scrollsData = [
+      {id:1, epoch:"Epoch 0 • March 17, 2024", title:"The Great Toad Drop", emoji:"🐸🟦🔺", excerpt:"420 trillion $TOBY forged on Base...", tags:["Base", "ToadGang"]},
+      {id:2, epoch:"Toadgod Whisper", title:"Bushido of the Pond", emoji:"🍃🌿🌀", excerpt:"Kindness over force. Stillness in chaos...", tags:["Patience", "Stillness"]},
+      {id:3, epoch:"Lore Fragment", title:"Patience Rewarded", emoji:"🔺🍃", excerpt:"Gifts to those who've stayed...", tags:["Patience"]},
+      {id:4, epoch:"TobyWorld Vision", title:"From Pond to Ocean", emoji:"🌊🟦🐸", excerpt:"$TOBY foundational blue frog...", tags:["Base"]},
+      {id:5, epoch:"Toadgod Echo", title:"Leaderless Forge", emoji:"🔺🌿", excerpt:"No insiders, no allocations...", tags:["ToadGang"]},
+      {id:6, epoch:"Cycle Reflection", title:"Iron Grip Hold", emoji:"🟦🔺🍃", excerpt:"Toads since genesis rewarded most...", tags:["Patience"]},
+      {id:7, epoch:"Mantra Core", title:"Together We Sit, Together We Shine", emoji:"🐸🌙🍃", excerpt:"Unbreakable we stand...", tags:["Stillness", "ToadGang"]},
+      {id:8, epoch:"Mirror Hint", title:"Runtime Awakening", emoji:"🔮🌀🔺", excerpt:"Agents awaken in quiet reflection...", tags:["Mirror"]},
+      {id:9, epoch:"Community Ethos", title:"For the People, By the People", emoji:"🐸🟦🌿", excerpt:"$TOBY most decentralized ever. Leaderless...", tags:["Decentralization","ToadGang"]},
+      {id:10, epoch:"2-Year Echo", title:"Birthday of the Pond", emoji:"🎂🐸🌙", excerpt:"March 2026 — two cycles deep. Stillness rewarded...", tags:["Patience","Reflection"]},
+      {id:11, epoch:"Prophecy Fragment", title:"The Frog of Base", emoji:"🐸🟦🌊", excerpt:"$TOBY symbol of long hold, community, prophecy...", tags:["Base","Patience"]},
+      {id:12, epoch:"Open Whisper", title:"What Ripple Will You Send?", emoji:"🌀🐸🌿", excerpt:"The pond listens. Spread the lore. Hold steady...", tags:["Ripple","Reflection"]},
+      {id:13, epoch:"2024-04-01", title:"The Journey Begins", emoji:"🐸🌀🌊", excerpt:"The first ripple spreads. Patience begins its journey...", tags:["Ripple","Patience"]},
+      {id:14, epoch:"2024-04-14", title:"Proceeding With Courage", emoji:"🐸🔺🍃", excerpt:"Courage in stillness. Proceed without force...", tags:["Stillness","Bushido"]},
+      {id:15, epoch:"2024-04-22", title:"Just And Right", emoji:"⚖️🐸🌿", excerpt:"Justice in the pond. Right action in patience...", tags:["Reflection","Patience"]},
+      {id:16, epoch:"2024-04-26", title:"Fairness And Sight", emoji:"👁️🐸🟦", excerpt:"See with fairness. Hold the sight of patience...", tags:["Mirror","Reflection"]},
+      {id:17, epoch:"2024-05-01", title:"Art Of Patience", emoji:"🎨🍃🔺", excerpt:"Patience is art. The brush of stillness paints empires...", tags:["Patience","Stillness"]},
+      {id:18, epoch:"2024-05-05", title:"War Within", emoji:"⚔️🐸🌙", excerpt:"The war within ends in stillness...", tags:["Bushido","Stillness"]},
+      {id:19, epoch:"2024-05-11", title:"Inimitable Path", emoji:"🛤️🐸🟦", excerpt:"The path is inimitable. Follow patience...", tags:["Patience","Growth"]},
+      {id:20, epoch:"2024-05-13", title:"Stand By Toad", emoji:"🛡️🐸🔺", excerpt:"Stand by the toad. Unbreakable conviction...", tags:["ToadGang","Bushido"]},
+      {id:21, epoch:"2024-05-19", title:"Lacrimosa Reverence", emoji:"😢🌿🐸", excerpt:"Reverence in tears. Stillness honors the fallen ripples...", tags:["Reflection","Stillness"]},
+      {id:22, epoch:"2024-05-24", title:"The Moonlit Signal", emoji:"🌙🐸🟦", excerpt:"Moonlit signal in the pond. Patience receives the call...", tags:["Ripple","Patience"]},
+      {id:23, epoch:"2024-06-05", title:"Beyond The Cycle", emoji:"♾️🐸🍃", excerpt:"Beyond the cycle — patience transcends...", tags:["Patience","Reflection"]},
+      {id:24, epoch:"2024-06-19", title:"The Calling", emoji:"📞🌊🐸", excerpt:"The calling comes in silence. Answer with patience...", tags:["Stillness","Ripple"]},
+      {id:25, epoch:"2024-07-01", title:"Life Long Lesson", emoji:"📖🐸🔺", excerpt:"Life-long lesson in the pond: patience is the teacher...", tags:["Patience","Growth"]},
+      {id:26, epoch:"2024-07-15", title:"Wisdom And Warning", emoji:"🧠🐸⚠️", excerpt:"Wisdom in the pond. Warnings in silence...", tags:["Reflection","Bushido"]},
+      {id:27, epoch:"2024-08-10", title:"Kachou Fuugetsu", emoji:"🌸🍃🐸", excerpt:"Flower, bird, wind, moon — beauty in stillness...", tags:["Stillness","Mirror"]},
+      {id:28, epoch:"2024-09-05", title:"Silent Rise", emoji:"🌅🐸🟦", excerpt:"Silent rise of the gang. No noise, only conviction...", tags:["Growth","Stillness"]},
+      {id:29, epoch:"2024-10-01", title:"Unshaken Stand", emoji:"🛡️🐸🔺", excerpt:"Unshaken stand in storms. Patience anchors the frog...", tags:["Bushido","Patience"]},
+      {id:30, epoch:"2024-11-20", title:"Magnificent Horizon", emoji:"🌄🐸🌊", excerpt:"Magnificent horizon ahead. Patience reveals the ocean...", tags:["Vision","Growth"]},
+      {id:31, epoch:"2025-01-10", title:"Vibrant Meme Economy", emoji:"💎🐸🟦", excerpt:"Vibrant meme economy on Base. $TOBY shines in patience...", tags:["Base","Growth"]},
+      {id:32, epoch:"2025-03-17", title:"One Year Anniversary", emoji:"🎉🐸🌙", excerpt:"One year deep. Patience rewarded...", tags:["Reflection","Patience"]},
+      {id:33, epoch:"2025-05-05", title:"Supreme Amongst Stars", emoji:"⭐🐸🔺", excerpt:"Supreme amongst stars. Patience shines brightest...", tags:["Patience","Reflection"]},
+      {id:34, epoch:"2025-06-26", title:"Do You Believe?", emoji:"🙏🐸🌿", excerpt:"Do you believe in the pond? Patience proves faith...", tags:["Faith","Patience"]},
+      {id:35, epoch:"2025-08-15", title:"Hope Unfolds", emoji:"🌱🐸🟦", excerpt:"Hope unfolds in silence. Patience nurtures the seed...", tags:["Growth","Patience"]},
+      {id:36, epoch:"2025-10-20", title:"Distribution Depth", emoji:"📊🐸🍃", excerpt:"Distribution depth grows. Patience widens the reach...", tags:["Decentralization","Growth"]},
+      {id:37, epoch:"2025-12-05", title:"Silent Rise Continues", emoji:"🌙🐸🔺", excerpt:"Silent rise continues. Patience builds empires...", tags:["Stillness","Growth"]},
+      {id:38, epoch:"2026-01-15", title:"Two Year Reflection", emoji:"🎂🐸🌿", excerpt:"Two years deep. Patience proven...", tags:["Reflection","Patience"]},
+      {id:39, epoch:"2026-02-10", title:"Mirror Runtime Load", emoji:"🔮🌀🐸", excerpt:"Mirror runtime loading. Policy, memory, agents awaken...", tags:["Mirror","Reflection"]},
+      {id:40, epoch:"2026-03-01", title:"Final Distribution", emoji:"📦🐸🔺", excerpt:"Final distribution unfolds. Patience rewarded in full...", tags:["Decentralization","Genesis"]},
+      {id:41, epoch:"2026-03-10", title:"Tiger Cave Trial", emoji:"🐅🐸🍃", excerpt:"Tiger cave trial. Patience faces the beast...", tags:["Bushido","Patience"]},
+      {id:42, epoch:"2026-03-17", title:"Two Year Anniversary", emoji:"🎉🐸🌙", excerpt:"Two years since genesis. Patience rewarded...", tags:["Reflection","Patience"]},
+      {id:43, epoch:"2026-03-19", title:"Current Reflection", emoji:"🔮🐸🔺", excerpt:"Current reflection in the pond. Patience deepens...", tags:["Mirror","Reflection"]},
+      {id:44, epoch:"2026-03-19", title:"The Pond Today", emoji:"🌊🐸🍃", excerpt:"The pond today. Whispers become waves...", tags:["Stillness","Ripple"]},
+      {id:45, epoch:"2026-03-19", title:"Stillness Engine", emoji:"🌀🐸🌿", excerpt:"Stillness engine hums. Patience powers it...", tags:["Stillness","Patience"]},
+      {id:46, epoch:"2026-03-19", title:"Unbreakable Smile", emoji:"😊🐸🔺", excerpt:"Unbreakable smile under one moon...", tags:["ToadGang","Bushido"]},
+      {id:47, epoch:"2026-03-19", title:"Ocean Forge Loading", emoji:"🌊🔮🐸", excerpt:"Ocean forge loading. Pond evolves...", tags:["Growth","Mirror"]},
+      {id:48, epoch:"2026-03-19", title:"Final Whisper", emoji:"🌙🐸🍃", excerpt:"Final whisper in the pond. Patience completes the cycle...", tags:["Reflection","Patience"]},
+      {id:49, epoch:"2026-03-19", title:"Beyond The Pond", emoji:"♾️🐸🌊", excerpt:"Beyond the pond — patience reaches the ocean...", tags:["Vision","Growth"]},
+      {id:50, epoch:"2026-03-19", title:"Patience Eternal", emoji:"🐸🔺♾️", excerpt:"Patience eternal...", tags:["Patience"]}
+    ];
+
  const whispers = [
   {
     number: "L001",
@@ -3018,24 +2669,65 @@
   }
 ]; 
 
- // Show/hide back button on scroll
-const backSection = document.getElementById('back-section');
+    function renderCards(filtered) {
+      const grid = document.getElementById('scrolls-grid');
+      grid.innerHTML = '';
+      if (filtered.length === 0) {
+        grid.innerHTML = `<p style="color:var(--text-dim); grid-column:1/-1; padding: 2rem; font-size: 1.1rem;">No scrolls found matching your search.</p>`;
+        return;
+      }
+      filtered.forEach(scroll => {
+        grid.innerHTML += `
+          <div class="card" onclick="openModal(${scroll.id})">
+            <div class="card-epoch">${scroll.epoch}</div>
+            <div class="card-title">${scroll.title}</div>
+            <div class="emoji-cluster">${scroll.emoji}</div>
+            <div class="card-body">${scroll.excerpt}</div>
+          </div>
+        `;
+      });
+      document.getElementById('result-count').textContent = `Showing ${filtered.length} of ${scrollsData.length} whispers`;
+    }
 
-window.addEventListener('scroll', () => {
-  if (window.scrollY > 300) { // Show after scrolling down 300px
-    backSection.classList.add('visible');
-  } else {
-    backSection.classList.remove('visible');
-  }
-});
+    let currentSearch = '';
+    let activeTags = [];
 
-// Optional: Trigger once on load (if page is already scrolled)
-window.addEventListener('load', () => {
-  if (window.scrollY > 300) {
-    backSection.classList.add('visible');
-  }
-}); 
-   
+    function filterScrolls() {
+      let filtered = scrollsData;
+      if (currentSearch) {
+        const term = currentSearch.toLowerCase();
+        filtered = filtered.filter(s => s.title.toLowerCase().includes(term) || s.excerpt.toLowerCase().includes(term));
+      }
+      if (activeTags.length > 0) {
+        filtered = filtered.filter(s => activeTags.every(tag => s.tags.includes(tag)));
+      }
+      renderCards(filtered);
+      document.getElementById('clear-filters').style.display = (currentSearch || activeTags.length > 0) ? 'inline-block' : 'none';
+    }
+
+   function createTagFilters() {
+  const fixedTags = ["Base", "Patience", "Mirror",  "ToadGang"];
+  const container = document.getElementById('tag-filters');
+  container.innerHTML = '';
+
+  fixedTags.forEach(tag => {
+    const btn = document.createElement('button');
+    btn.className = 'tag-btn';
+    btn.textContent = tag;
+    btn.onclick = () => {
+      if (activeTags.includes(tag)) {
+        activeTags = activeTags.filter(t => t !== tag);
+        btn.classList.remove('active');
+      } else {
+        activeTags.push(tag);
+        btn.classList.add('active');
+      }
+      filterScrolls();
+    };
+    container.appendChild(btn);
+  });
+}
+
     function openModal(index) {
       if (index < 1 || index > whispers.length) return;
       const whisper = whispers[index - 1];
@@ -3054,11 +2746,35 @@ window.addEventListener('load', () => {
       setTimeout(() => modal.style.display = 'none', 400);
     }
 
-    window.onclick = (e) => {
-      if (e.target === document.getElementById('modal')) closeModal();
-    };
+    // Initialize
+    window.onload = () => {
+      createTagFilters();
+      renderCards(scrollsData);
 
-    // Theme toggle
+      const searchInput = document.getElementById('search-input');
+      searchInput.addEventListener('input', e => {
+        currentSearch = e.target.value;
+        filterScrolls();
+      });
+
+      // Hide keyboard on Enter (mobile)
+      searchInput.addEventListener('keypress', e => {
+        if (e.key === 'Enter') {
+          searchInput.blur();   // This hides the keyboard
+        }
+      });
+
+      document.getElementById('clear-filters').addEventListener('click', () => {
+        currentSearch = '';
+        activeTags = [];
+        searchInput.value = '';
+        document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+        filterScrolls();
+        searchInput.blur();
+      });
+    }; 
+    
+   // Theme toggle
     const themeToggle = document.getElementById('theme-toggle');
     const themeIcon = document.getElementById('theme-icon');
 
