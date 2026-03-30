@@ -193,6 +193,18 @@
       box-shadow: 0 0 36px var(--glow);
     }
 
+  .theme-btn svg {
+  width: 26px;
+  height: 26px;
+  stroke: var(--accent);        /* Makes moon and sun blue */
+  stroke-width: 2.2;
+  transition: all 0.3s ease;
+}
+
+.theme-btn:hover svg {
+  stroke: var(--accent-hover);
+}
+
     .mirror-footer {
       margin-top: 3.2rem;
       padding-top: 2.6rem;
@@ -268,7 +280,7 @@
       <h2 class="teaser-title">Ripples in the Pond</h2>
       <p class="teaser-text">
         The lore unfolds in silence.<br>
-        50 scrolls so far — each a reflection,<br>
+        50 scrolls so far - each a reflection,<br>
         each deepening the pond.
       </p>
 
