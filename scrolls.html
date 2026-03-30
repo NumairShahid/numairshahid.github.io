@@ -2,8 +2,8 @@
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Pond Chronicles — Whispers Eternal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Scrolls — Pond Mirror</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,28 +11,27 @@
 
   <style>
     :root {
-      --bg-primary: #000000;
+      --bg-primary: #0a0f1c;
       --text-primary: #e8f0ff;
       --text-secondary: #d0e0ff;
       --text-dim: #a5b8d8;
       --accent: #80a0ff;
       --accent-hover: #a0c0ff;
-      --glow: rgba(128, 160, 255, 0.35);
-      --card-bg: rgba(255,255,255,0.04);
-      --card-border: rgba(200,220,255,0.1);
-      --transition: all 0.4s ease;
+      --glow: rgba(128, 160, 255, 0.26);
+      --card-bg: rgba(255, 255, 255, 0.085);
+      --card-border: rgba(200, 220, 255, 0.14);
     }
 
     [data-theme="light"] {
-      --bg-primary: #f8faff;
+      --bg-primary: #f8f9ff;
       --text-primary: #0f172a;
       --text-secondary: #1e293b;
       --text-dim: #475569;
       --accent: #06b6d4;
       --accent-hover: #22d3ee;
-      --glow: rgba(6, 182, 212, 0.18);
-      --card-bg: rgba(255,255,255,0.96);
-      --card-border: rgba(6,182,212,0.25);
+      --glow: rgba(6, 182, 212, 0.22);
+      --card-bg: rgba(255, 255, 255, 0.82);
+      --card-border: rgba(6, 182, 212, 0.20);
     }
 
     * { margin:0; padding:0; box-sizing:border-box; }
@@ -42,509 +41,365 @@
       background: var(--bg-primary);
       color: var(--text-primary);
       font-family: 'Inter', system-ui, sans-serif;
-      line-height: 1.78;
-      transition: var(--transition);
+      line-height: 1.9;
+      overflow-x: hidden;
     }
+
+    header {
+      padding: 2rem 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(200,220,255,0.1);
+    }
+
+    .back-link {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .back-link:hover { color: var(--accent-hover); }
 
     .container {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 4rem 1rem 10rem; /* Extra bottom space so last card isn't hidden under fixed button */
+      padding: 2rem 5% 6rem;
       text-align: center;
-      position: relative;
     }
 
     h1 {
       font-family: 'Playfair Display', serif;
-      font-size: clamp(3rem, 9vw, 6.5rem);
-      font-weight: 700;
-      letter-spacing: -3px;
+      font-size: clamp(2.8rem, 8vw, 5.5rem);
+      letter-spacing: -2.5px;
       color: var(--text-secondary);
-      text-shadow: 0 0 40px var(--glow);
-      margin-bottom: 1.2rem;
+      text-shadow: 0 0 50px var(--glow);
+      margin-bottom: 0rem;
     }
 
     .intro {
-      font-size: 1.25rem;
-      max-width: 800px;
+      font-size: 1rem;
+      max-width: 760px;
       margin: 0 auto 3rem;
-      opacity: 0.9;
       color: var(--text-dim);
-      line-height: 1.6;
+      line-height: 1.75;
+      text-align: center;
     }
 
- .filters {
-      margin: 2rem 0 3rem;
+    .controls {
+      margin: 2.5rem 0 3.5rem;
       display: flex;
-      flex-direction: column;
-      gap: 1.25rem;
+      flex-wrap: wrap;
+      gap: 1.2rem;
       align-items: center;
+      justify-content: center;
     }
 
     .search-bar {
-      width: 100%;
+      flex: 1;
+      min-width: 280px;
       max-width: 520px;
+      padding: 15px 24px;
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 50px;
-      padding: 14px 24px;
-      font-size: 1.1rem;
+      font-size: 1.08rem;
       color: var(--text-primary);
-      backdrop-filter: blur(12px);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      backdrop-filter: blur(16px);
     }
 
-    .search-bar:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--glow);
-    }
-
-    .tag-filters {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-      justify-content: center;
-      max-width: 100%;
-    }
-
-    .tag-btn {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      color: var(--text-dim);
-      padding: 7px 16px;
-      border-radius: 50px;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: var(--transition);
-      backdrop-filter: blur(8px);
-      white-space: nowrap;
-    }
-
-    .tag-btn:hover {
-      color: var(--text-primary);
-      border-color: var(--accent);
-    }
-
-    .tag-btn.active {
-      background: var(--accent);
-      color: #000;
-      border-color: var(--accent);
-      box-shadow: 0 0 20px var(--glow);
-    }
-
-    .filter-info {
+        .filter-info {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      justify-content: center;
       font-size: 1.05rem;
       color: var(--text-dim);
-    }
-
-    .clear-filters {
-      background: transparent;
-      border: 1px solid var(--card-border);
-      color: var(--accent);
-      padding: 8px 20px;
-      border-radius: 50px;
-      cursor: pointer;
-      font-size: 0.95rem;
-    }
-
-    .clear-filters:hover {
-      background: var(--card-bg);
-      border-color: var(--accent);
+      width: 100%;
+      margin-top: 0rem;
     }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
-      margin: 2rem 0;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 2.2rem;
     }
 
-      .card {
+    .card {
       background: var(--card-bg);
-      backdrop-filter: blur(12px);
       border: 1px solid var(--card-border);
-      border-radius: 24px;
-      padding: 2rem;
+      border-radius: 28px;
+      padding: 2.2rem 2rem;
+      backdrop-filter: blur(24px);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       cursor: pointer;
-      transition: var(--transition);
-      animation: gentleBreathe 12s ease-in-out infinite alternate;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
     }
 
     .card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 20px 60px var(--glow);
+      transform: translateY(-10px);
+      box-shadow: 0 20px 50px var(--glow);
+      border-color: var(--accent);
     }
 
-    .card-epoch { font-size: 0.9rem; color: var(--text-dim); margin-bottom: 0.8rem; letter-spacing: 1px; }
-    .card-title { font-family: 'Playfair Display', serif; font-size: clamp(1.6rem, 4.5vw, 2.2rem); color: var(--text-secondary); margin-bottom: 1rem; }
-    .card-body { font-size: 1.05rem; opacity: 0.9; max-height: 130px; overflow: hidden; }
-    .card-body::after { content: "... read whisper"; display: block; margin-top: 1rem; color: var(--accent); font-style: italic; }
-    .emoji-cluster { font-size: 2.4rem; margin: 1rem 0; text-align: center; }
+    .card-epoch { 
+      font-size: 0.88rem; 
+      color: var(--text-dim); 
+      letter-spacing: 1px; 
+      margin-bottom: 0.8rem; 
+    }
 
-    /* Theme toggle */
+    .card-title { 
+      font-family: 'Playfair Display', serif; 
+      font-size: 1.55rem; 
+      color: var(--text-secondary); 
+      margin-bottom: 1.1rem; 
+      line-height: 1.3; 
+    }
+
+    .card-body { 
+      flex: 1; 
+      font-size: 1.05rem; 
+      color: var(--text-dim); 
+      line-height: 1.75; 
+      margin-bottom: 1.4rem; 
+    }
+
+    .emoji-cluster {
+      font-size: 2.4rem;
+      margin: 1rem 0;
+      text-align: center;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: auto;
+    }
+
+    .card-tags span {
+      font-size: 0.82rem;
+      padding: 5px 14px;
+      background: rgba(128,160,255,0.1);
+      border-radius: 20px;
+      color: var(--accent);
+    }
+
+    .no-results {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 5rem 2rem;
+      color: var(--text-dim);
+    }
+
+    .no-results svg {
+      width: 72px;
+      height: 72px;
+      opacity: 0.5;
+      margin-bottom: 1.8rem;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(10,15,28,0.88);
+      backdrop-filter: blur(20px);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .modal.show {
+      display: flex;
+      opacity: 1;
+    }
+
+    .modal-content {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 32px;
+      max-width: 760px;
+      width: 100%;
+      max-height: 92vh;
+      overflow-y: auto;
+      padding: 3rem 2.8rem;
+      position: relative;
+      box-shadow: 0 30px 80px var(--glow);
+      transform: scale(0.94);
+      transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .modal.show .modal-content {
+      transform: scale(1);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1.8rem;
+      right: 1.8rem;
+      background: none;
+      border: none;
+      font-size: 2.2rem;
+      color: var(--text-dim);
+      cursor: pointer;
+      line-height: 1;
+      transition: all 0.3s ease;
+    }
+
+    .modal-close:hover {
+      color: #ff6b6b;
+      transform: scale(1.1);
+    }
+
+    .modal h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: var(--text-secondary);
+      margin-bottom: 1.8rem;
+      text-align: center;
+    }
+
+    .back-section {
+      text-align: center;
+      margin-top: 4rem;
+    }
+
+    .back-btn {
+      padding: 18px 58px;
+      font-size: 1.32rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+      border: none;
+      border-radius: 50px;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 10px 35px var(--glow);
+      transition: all 0.4s ease;
+    }
+
+    .back-btn:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 45px var(--glow);
+    }
+
+    .ripple-return {
+      margin-top: 2.2rem;
+      color: var(--text-dim);
+      font-style: italic;
+      opacity: 0.92;
+      font-size: 1.05rem;
+    }
+
+    .pond-keeper-tag {
+      display: inline-block;
+      margin-top: 2rem;
+      padding: 10px 32px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(200,220,255,0.18);
+      border-radius: 50px;
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 1.02rem;
+      backdrop-filter: blur(10px);
+      transition: all 0.4s ease;
+    }
+
+    .pond-keeper-tag:hover {
+      background: rgba(128, 160, 255, 0.12);
+      border-color: var(--accent);
+      color: var(--accent-hover);
+      box-shadow: 0 0 20px var(--glow);
+      transform: translateY(-2px);
+    }
+
+    /* Theme Toggle */
     .theme-btn {
       position: fixed;
-      top: 1.5rem;
-      right: 1.5rem;
+      top: 1.8rem;
+      right: 1.8rem;
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 50%;
-      width: 52px;
-      height: 52px;
-      cursor: pointer;
-      transition: var(--transition);
-      backdrop-filter: blur(12px);
+      width: 54px;
+      height: 54px;
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 100;
-      box-shadow: 0 4px 20px var(--glow);
+      cursor: pointer;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 0 25px var(--glow);
+      z-index: 1000;
     }
 
     .theme-btn:hover {
-      transform: scale(1.1);
-      box-shadow: 0 8px 30px var(--glow);
+      transform: scale(1.08);
+      box-shadow: 0 0 36px var(--glow);
     }
 
     .theme-btn svg {
       width: 26px;
       height: 26px;
       stroke: var(--accent);
-      transition: var(--transition);
-    }
- 
-.modal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.95);
-  backdrop-filter: blur(12px);
-  z-index: 200;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-}
-
-.modal.show {
-  display: flex;
-}
-
-.modal-content {
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: 28px;
-  max-width: 820px;
-  width: 94%;
-  max-height: 92vh;
-  overflow-y: auto;
-  padding: clamp(2.5rem, 6vw, 4rem) clamp(2rem, 5vw, 3.5rem);
-  position: relative;
-  box-shadow: 0 25px 90px var(--glow);
-  backdrop-filter: blur(16px);
-  color: var(--text-primary);
-  line-height: 1.85;
-}
-
-[data-theme="light"] .modal-content {
-  background: #ffffff !important;
-  border: 1px solid rgba(6, 182, 212, 0.4) !important;
-  box-shadow: 0 25px 80px rgba(6, 182, 212, 0.3) !important;
-  color: #0f172a;
-}
-
-/* Blue headings for excellent readability */
-#modal-body h3,
-#modal-body h4 {
-  color: var(--accent) !important;
-  margin: 2rem 0 1rem 0;
-  font-weight: 600;
-}
-
-#modal-body h4 {
-  font-size: 1.35rem;
-}
-
-#modal-body a {
-  color: var(--accent) !important;
-  text-decoration: underline;
-}
-
-#modal-body a:hover {
-  color: var(--accent-hover) !important;
-}
-
-/* Modal opens with smooth scale & fade */
-.modal.show .modal-content {
-  transform: scale(1);
-  opacity: 1;
-}
-
-/* Clean Close Button - No Spinning */
-.close-btn {
-  position: absolute;
-  top: 25px;
-  right: 25px;
-  background: transparent;
-  border: none;
-  font-size: 38px;
-  color: var(--accent);
-  cursor: pointer;
-  z-index: 10;
-  line-height: 1;
-}
-
-.close-btn:hover {
-  color: #ff6b6b;     /* nice red on hover */
-}
-
-.back-section {
-      margin: 4rem auto 2rem;
-      text-align: center;
-      max-width: 400px;
+      stroke-width: 2.2;
+      transition: all 0.3s ease;
     }
 
-          /* Back button */
-      .back-btn {
-        padding: 18px 56px;
-        font-size: 1.28rem;
-        font-weight: 500;
-        background: linear-gradient(135deg, var(--accent), var(--accent-hover));
-        border: none;
-        border-radius: 50px;
-        color: white;
-        cursor: pointer;
-        box-shadow: 0 8px 30px var(--glow);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      }
-
-      .back-btn:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 18px 40px var(--glow);
-      }
-
-      /* Ripple return text */
-      .ripple-return {
-        margin-top: 2.2rem;
-        color: var(--text-dim);
-        font-style: italic;
-        opacity: 0.92;
-        font-size: 1.05rem;
-      }
-
-      /* Pond Keeper as subtle tag */
-      .pond-keeper-tag {
-        display: inline-block;
-        margin-top: 2.2rem;
-        padding: 10px 32px;
-        background: rgba(255,255,255,0.06);
-        border: 1px solid rgba(200,220,255,0.18);
-        border-radius: 50px;
-        color: var(--accent);
-        text-decoration: none;
-        font-size: 1.02rem;
-        backdrop-filter: blur(10px);
-        transition: all 0.4s ease;
-      }
-
-      .pond-keeper-tag:hover {
-        background: rgba(128, 160, 255, 0.12);
-        border-color: var(--accent);
-        color: var(--accent-hover);
-        box-shadow: 0 0 20px var(--glow);
-        transform: translateY(-2px);
-      }
-    
-     .back-teaser {
-      margin-top: 1.2rem;
-      font-size: 1.1rem;
-      color: var(--text-dim);
-      opacity: 0.85;
-      font-style: italic;
+    .theme-btn:hover svg {
+      stroke: var(--accent-hover);
     }
 
- @media (max-width: 767px) {
-      .tag-filters { gap: 0.5rem; }
-      .tag-btn { padding: 7px 14px; font-size: 0.9rem; }
+    @media (max-width: 768px) {
+      .container { padding: 1.5rem 5% 5rem; }
+      .grid { gap: 1.8rem; }
+      .card { padding: 1.8rem 1.6rem; }
+      .modal-content { padding: 2.4rem 2rem; }
     }
-
-/* === Modal Title - Smaller & Elegant === */
-#modal-title {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(1.9rem, 5.5vw, 2.9rem);
-  color: var(--text-secondary);
-  text-shadow: 0 0 25px var(--glow);
-  margin-bottom: 2.2rem;
-  text-align: center;
-}
-
-[data-theme="light"] {
-  --bg-primary: #f8faff;
-  --text-primary: #0f172a;
-  --text-secondary: #1e293b;
-  --text-dim: #475569;
-  --accent: #06b6d4;
-  --accent-hover: #22d3ee;
-  --glow: rgba(6, 182, 212, 0.28);        /* softer glow */
-  --card-bg: rgba(255,255,255,0.68);      /* this is the key - less bright than 0.75 or 0.78 */
-  --card-border: rgba(6,182,212,0.22);
-}
-
-/* === Scroll Sections === */
-.scroll-section {
-  margin-bottom: 3rem;
-  text-align: left;
-}
-
-.scroll-section h3 {
-  font-family: 'Playfair Display', serif;
-  font-size: 2rem;
-  color: var(--text-secondary);
-  margin-bottom: 1rem;
-}
-
-.scroll-section h4 {
-  font-size: 1.4rem;
-  color: var(--accent);
-  margin: 2rem 0 1rem;
-}
-
-.scroll-section p {
-  font-size: 1.15rem;
-  line-height: 1.9;
-  margin-bottom: 1.2rem;
-}
-
-.scroll-section ul {
-  list-style: none;
-  padding-left: 0;
-  margin: 1rem 0;
-}
-
-.scroll-section li {
-  position: relative;
-  padding-left: 2.2rem;
-  margin-bottom: 1rem;
-}
-
-.scroll-section li:before {
-  content: "→";
-  position: absolute;
-  left: 0;
-  color: var(--accent);
-  font-size: 1.4rem;
-}
-
-.scroll-section blockquote {
-  margin: 2rem 0;
-  padding: 1.2rem 2rem;
-  border-left: 5px solid var(--accent);
-  background: rgba(var(--accent-rgb, 0.07));
-  font-style: italic;
-  color: var(--text-secondary);
-}
-
-/* === Modal Scrollbar – Fully Contained === */
-.modal-content::-webkit-scrollbar {
-  width: 6px;
-}
-
-.modal-content::-webkit-scrollbar-track {
-  background: rgba(20,25,50,0.4);
-  border-radius: 10px;
-  margin: 8px 4px; /* Inset from edges */
-}
-
-.modal-content::-webkit-scrollbar-thumb {
-  background: var(--accent);
-  border-radius: 10px;
-  border: 2px solid rgba(20,20,50,0.6); /* Prevents visual bleed */
-}
-
-.modal-content::-webkit-scrollbar-thumb:hover {
-  background: var(--accent-hover);
-}
-
-/* Mobile adjustments */
-@media (max-width: 767px) {
-  .modal {
-    padding: 10px;
-  }
-
-  .modal-content {
-    padding: 2rem 1.5rem;
-    width: 96%;
-  }
-
-  #modal-title {
-    font-size: clamp(1.6rem, 7vw, 2.2rem);
-    margin-bottom: 1.5rem;
-  }
-
-  .close-btn {
-    top: 1rem;
-    right: 1rem;
-    font-size: 2.2rem;
-  }
-}
-</style>
+  </style>
 </head>
 <body>
 
+  <header>
+    <a href="index.html" class="back-link">← Back to Pond Mirror</a>
+  </header>
+
   <div class="container">
-    <h1>Scrolls of the Pond</h1>
+    <h1>The Scrolls</h1>
 
     <button id="theme-toggle" class="theme-btn" aria-label="Toggle theme">
-      <svg id="theme-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
-        <path id="moon" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-        <circle id="sun" cx="12" cy="12" r="5" opacity="0"/>
-        <line id="ray1" x1="12" y1="1" x2="12" y2="3" opacity="0"/>
-        <line id="ray2" x1="12" y1="21" x2="12" y2="23" opacity="0"/>
-        <line id="ray3" x1="4.22" y1="4.22" x2="5.64" y2="5.64" opacity="0"/>
-        <line id="ray4" x1="18.36" y1="18.36" x2="19.78" y2="19.78" opacity="0"/>
-        <line id="ray5" x1="1" y1="12" x2="3" y2="12" opacity="0"/>
-        <line id="ray6" x1="21" y1="12" x2="23" y2="12" opacity="0"/>
-        <line id="ray7" x1="4.22" y1="19.78" x2="5.64" y2="18.36" opacity="0"/>
-        <line id="ray8" x1="18.36" y1="5.64" x2="19.78" y2="4.22" opacity="0"/>
-      </svg>
+      <svg id="theme-icon" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"></svg>
     </button>
 
     <p class="intro">
-      Whispers from Toadgod... reflections on patience, bushido, decentralization.<br>
-      50 scrolls archived. Read slowly - the pond reveals itself in stillness.
+      Whispers from Toadgod... 50 scrolls archived.<br>
+      Read slowly - the pond reveals itself in stillness.
     </p>
 
-        <div class="filters">
+       <div class="controls">
       <input type="text" id="search-input" class="search-bar" placeholder="Search whispers of the pond..." autocomplete="off">
-
-      <div class="tag-filters" id="tag-filters"></div>
-
-      <div class="filter-info">
-        <span id="result-count">Showing 50 of 50 whispers</span>
-        <button id="clear-filters" class="clear-filters" style="display:none;">Clear all filters</button>
+      
+      <div class="filter-info" style="width: 100%; justify-content: center; margin-top: 0rem;">
+        <span id="result-count">Showing <strong>50</strong> of 50 whispers</span>
       </div>
     </div>
 
-    <!-- Dynamic Grid -->
     <div class="grid" id="scrolls-grid"></div>
 
     <!-- Modal -->
     <div id="modal" class="modal">
       <div class="modal-content">
-        <span class="close-btn" onclick="closeModal()">×</span>
-        <h1 id="modal-title"></h1>
-        <div id="modal-body"></div>
+        <button class="modal-close" id="modal-close">×</button>
+        <h2 id="modal-title"></h2>
+        <div id="modal-body" style="text-align: left; line-height: 1.85;"></div>
       </div>
     </div>
 
-         <!-- Back to Pond Mirror + Pond Keeper -->
-    <div style="margin-top: 5rem; text-align: center; padding-bottom: 4rem;">
-      
-      <button onclick="window.location.href='index.html'" 
-              class="back-btn">
+    <div class="back-section">
+      <button onclick="window.location.href='index.html'" class="back-btn">
         Back to the Pond Mirror
       </button>
 
@@ -552,70 +407,70 @@
         The ripples return. Patience rewarded.
       </p>
 
-      <!-- Improved Pond Keeper as subtle tag button -->
       <a href="https://github.com/NumairShahid/lore-keeper" 
          target="_blank" 
          class="pond-keeper-tag">
-        Pond Keeper
+        Tended by the Pond Keeper
       </a>
     </div>
-   
-   <script>
-    // 50 Scrolls Data with tags
-    const scrollsData = [
-      {id:1, epoch:"Epoch 0 • March 17, 2024", title:"The Great Toad Drop", emoji:"🐸🟦🔺", excerpt:"420 trillion $TOBY forged on Base...", tags:["Base", "ToadGang"]},
-      {id:2, epoch:"Toadgod Whisper", title:"Bushido of the Pond", emoji:"🍃🌿🌀", excerpt:"Kindness over force. Stillness in chaos...", tags:["Patience", "Stillness"]},
-      {id:3, epoch:"Lore Fragment", title:"Patience Rewarded", emoji:"🔺🍃", excerpt:"Gifts to those who've stayed...", tags:["Patience"]},
-      {id:4, epoch:"TobyWorld Vision", title:"From Pond to Ocean", emoji:"🌊🟦🐸", excerpt:"$TOBY foundational blue frog...", tags:["Base"]},
-      {id:5, epoch:"Toadgod Echo", title:"Leaderless Forge", emoji:"🔺🌿", excerpt:"No insiders, no allocations...", tags:["ToadGang"]},
-      {id:6, epoch:"Cycle Reflection", title:"Iron Grip Hold", emoji:"🟦🔺🍃", excerpt:"Toads since genesis rewarded most...", tags:["Patience"]},
-      {id:7, epoch:"Mantra Core", title:"Together We Sit, Together We Shine", emoji:"🐸🌙🍃", excerpt:"Unbreakable we stand...", tags:["Stillness", "ToadGang"]},
-      {id:8, epoch:"Mirror Hint", title:"Runtime Awakening", emoji:"🔮🌀🔺", excerpt:"Agents awaken in quiet reflection...", tags:["Mirror"]},
-      {id:9, epoch:"Community Ethos", title:"For the People, By the People", emoji:"🐸🟦🌿", excerpt:"$TOBY most decentralized ever. Leaderless...", tags:["Decentralization","ToadGang"]},
-      {id:10, epoch:"2-Year Echo", title:"Birthday of the Pond", emoji:"🎂🐸🌙", excerpt:"March 2026 — two cycles deep. Stillness rewarded...", tags:["Patience","Reflection"]},
-      {id:11, epoch:"Prophecy Fragment", title:"The Frog of Base", emoji:"🐸🟦🌊", excerpt:"$TOBY symbol of long hold, community, prophecy...", tags:["Base","Patience"]},
-      {id:12, epoch:"Open Whisper", title:"What Ripple Will You Send?", emoji:"🌀🐸🌿", excerpt:"The pond listens. Spread the lore. Hold steady...", tags:["Ripple","Reflection"]},
-      {id:13, epoch:"2024-04-01", title:"The Journey Begins", emoji:"🐸🌀🌊", excerpt:"The first ripple spreads. Patience begins its journey...", tags:["Ripple","Patience"]},
-      {id:14, epoch:"2024-04-14", title:"Proceeding With Courage", emoji:"🐸🔺🍃", excerpt:"Courage in stillness. Proceed without force...", tags:["Stillness","Bushido"]},
-      {id:15, epoch:"2024-04-22", title:"Just And Right", emoji:"⚖️🐸🌿", excerpt:"Justice in the pond. Right action in patience...", tags:["Reflection","Patience"]},
-      {id:16, epoch:"2024-04-26", title:"Fairness And Sight", emoji:"👁️🐸🟦", excerpt:"See with fairness. Hold the sight of patience...", tags:["Mirror","Reflection"]},
-      {id:17, epoch:"2024-05-01", title:"Art Of Patience", emoji:"🎨🍃🔺", excerpt:"Patience is art. The brush of stillness paints empires...", tags:["Patience","Stillness"]},
-      {id:18, epoch:"2024-05-05", title:"War Within", emoji:"⚔️🐸🌙", excerpt:"The war within ends in stillness...", tags:["Bushido","Stillness"]},
-      {id:19, epoch:"2024-05-11", title:"Inimitable Path", emoji:"🛤️🐸🟦", excerpt:"The path is inimitable. Follow patience...", tags:["Patience","Growth"]},
-      {id:20, epoch:"2024-05-13", title:"Stand By Toad", emoji:"🛡️🐸🔺", excerpt:"Stand by the toad. Unbreakable conviction...", tags:["ToadGang","Bushido"]},
-      {id:21, epoch:"2024-05-19", title:"Lacrimosa Reverence", emoji:"😢🌿🐸", excerpt:"Reverence in tears. Stillness honors the fallen ripples...", tags:["Reflection","Stillness"]},
-      {id:22, epoch:"2024-05-24", title:"The Moonlit Signal", emoji:"🌙🐸🟦", excerpt:"Moonlit signal in the pond. Patience receives the call...", tags:["Ripple","Patience"]},
-      {id:23, epoch:"2024-06-05", title:"Beyond The Cycle", emoji:"♾️🐸🍃", excerpt:"Beyond the cycle — patience transcends...", tags:["Patience","Reflection"]},
-      {id:24, epoch:"2024-06-19", title:"The Calling", emoji:"📞🌊🐸", excerpt:"The calling comes in silence. Answer with patience...", tags:["Stillness","Ripple"]},
-      {id:25, epoch:"2024-07-01", title:"Life Long Lesson", emoji:"📖🐸🔺", excerpt:"Life-long lesson in the pond: patience is the teacher...", tags:["Patience","Growth"]},
-      {id:26, epoch:"2024-07-15", title:"Wisdom And Warning", emoji:"🧠🐸⚠️", excerpt:"Wisdom in the pond. Warnings in silence...", tags:["Reflection","Bushido"]},
-      {id:27, epoch:"2024-08-10", title:"Kachou Fuugetsu", emoji:"🌸🍃🐸", excerpt:"Flower, bird, wind, moon — beauty in stillness...", tags:["Stillness","Mirror"]},
-      {id:28, epoch:"2024-09-05", title:"Silent Rise", emoji:"🌅🐸🟦", excerpt:"Silent rise of the gang. No noise, only conviction...", tags:["Growth","Stillness"]},
-      {id:29, epoch:"2024-10-01", title:"Unshaken Stand", emoji:"🛡️🐸🔺", excerpt:"Unshaken stand in storms. Patience anchors the frog...", tags:["Bushido","Patience"]},
-      {id:30, epoch:"2024-11-20", title:"Magnificent Horizon", emoji:"🌄🐸🌊", excerpt:"Magnificent horizon ahead. Patience reveals the ocean...", tags:["Vision","Growth"]},
-      {id:31, epoch:"2025-01-10", title:"Vibrant Meme Economy", emoji:"💎🐸🟦", excerpt:"Vibrant meme economy on Base. $TOBY shines in patience...", tags:["Base","Growth"]},
-      {id:32, epoch:"2025-03-17", title:"One Year Anniversary", emoji:"🎉🐸🌙", excerpt:"One year deep. Patience rewarded...", tags:["Reflection","Patience"]},
-      {id:33, epoch:"2025-05-05", title:"Supreme Amongst Stars", emoji:"⭐🐸🔺", excerpt:"Supreme amongst stars. Patience shines brightest...", tags:["Patience","Reflection"]},
-      {id:34, epoch:"2025-06-26", title:"Do You Believe?", emoji:"🙏🐸🌿", excerpt:"Do you believe in the pond? Patience proves faith...", tags:["Faith","Patience"]},
-      {id:35, epoch:"2025-08-15", title:"Hope Unfolds", emoji:"🌱🐸🟦", excerpt:"Hope unfolds in silence. Patience nurtures the seed...", tags:["Growth","Patience"]},
-      {id:36, epoch:"2025-10-20", title:"Distribution Depth", emoji:"📊🐸🍃", excerpt:"Distribution depth grows. Patience widens the reach...", tags:["Decentralization","Growth"]},
-      {id:37, epoch:"2025-12-05", title:"Silent Rise Continues", emoji:"🌙🐸🔺", excerpt:"Silent rise continues. Patience builds empires...", tags:["Stillness","Growth"]},
-      {id:38, epoch:"2026-01-15", title:"Two Year Reflection", emoji:"🎂🐸🌿", excerpt:"Two years deep. Patience proven...", tags:["Reflection","Patience"]},
-      {id:39, epoch:"2026-02-10", title:"Mirror Runtime Load", emoji:"🔮🌀🐸", excerpt:"Mirror runtime loading. Policy, memory, agents awaken...", tags:["Mirror","Reflection"]},
-      {id:40, epoch:"2026-03-01", title:"Final Distribution", emoji:"📦🐸🔺", excerpt:"Final distribution unfolds. Patience rewarded in full...", tags:["Decentralization","Genesis"]},
-      {id:41, epoch:"2026-03-10", title:"Tiger Cave Trial", emoji:"🐅🐸🍃", excerpt:"Tiger cave trial. Patience faces the beast...", tags:["Bushido","Patience"]},
-      {id:42, epoch:"2026-03-17", title:"Two Year Anniversary", emoji:"🎉🐸🌙", excerpt:"Two years since genesis. Patience rewarded...", tags:["Reflection","Patience"]},
-      {id:43, epoch:"2026-03-19", title:"Current Reflection", emoji:"🔮🐸🔺", excerpt:"Current reflection in the pond. Patience deepens...", tags:["Mirror","Reflection"]},
-      {id:44, epoch:"2026-03-19", title:"The Pond Today", emoji:"🌊🐸🍃", excerpt:"The pond today. Whispers become waves...", tags:["Stillness","Ripple"]},
-      {id:45, epoch:"2026-03-19", title:"Stillness Engine", emoji:"🌀🐸🌿", excerpt:"Stillness engine hums. Patience powers it...", tags:["Stillness","Patience"]},
-      {id:46, epoch:"2026-03-19", title:"Unbreakable Smile", emoji:"😊🐸🔺", excerpt:"Unbreakable smile under one moon...", tags:["ToadGang","Bushido"]},
-      {id:47, epoch:"2026-03-19", title:"Ocean Forge Loading", emoji:"🌊🔮🐸", excerpt:"Ocean forge loading. Pond evolves...", tags:["Growth","Mirror"]},
-      {id:48, epoch:"2026-03-19", title:"Final Whisper", emoji:"🌙🐸🍃", excerpt:"Final whisper in the pond. Patience completes the cycle...", tags:["Reflection","Patience"]},
-      {id:49, epoch:"2026-03-19", title:"Beyond The Pond", emoji:"♾️🐸🌊", excerpt:"Beyond the pond — patience reaches the ocean...", tags:["Vision","Growth"]},
-      {id:50, epoch:"2026-03-19", title:"Patience Eternal", emoji:"🐸🔺♾️", excerpt:"Patience eternal...", tags:["Patience"]}
-    ];
+  </div>
 
- const whispers = [
+ <script>
+    // ==================== YOUR 50 SCROLLS DATA ====================
+  const scrollsData = [
+  {id:1, epoch:"Epoch 0 • March 17, 2024", title:"The Great Toad Drop", emoji:"🐸🟦🔺", excerpt:"420 trillion $TOBY forged on Base...", tags:["Base", "ToadGang"], content:"On March 17, 2024, the pond was born. 420 trillion $TOBY were forged on Base with no presale, no team allocation, and no insiders. A completely fair launch — the purest expression of community and patience."},
+  {id:2, epoch:"Toadgod Whisper", title:"Bushido of the Pond", emoji:"🍃🌿🌀", excerpt:"Kindness over force. Stillness in chaos...", tags:["Patience", "Stillness"], content:"True strength is not in aggression, but in stillness. Kindness over force. The pond teaches us that patience and calm resolve will always outlast noise and haste."},
+  {id:3, epoch:"Lore Fragment", title:"Patience Rewarded", emoji:"🔺🍃", excerpt:"Gifts to those who've stayed...", tags:["Patience"], content:"The pond remembers those who stayed. Those who held through silence and doubt are the ones who will be rewarded when the ripples become waves."},
+  {id:4, epoch:"TobyWorld Vision", title:"From Pond to Ocean", emoji:"🌊🟦🐸", excerpt:"$TOBY foundational blue frog...", tags:["Base"], content:"$TOBY is not just a token — it is the foundational blue frog of TobyWorld on Base. From this small pond, we will grow into a vast, calm ocean."},
+  {id:5, epoch:"Toadgod Echo", title:"Leaderless Forge", emoji:"🔺🌿", excerpt:"No insiders, no allocations...", tags:["ToadGang"], content:"No team tokens. No VC allocations. No insiders. This is a true leaderless forge — built by the community, for the community."},
+  {id:6, epoch:"Cycle Reflection", title:"Iron Grip Hold", emoji:"🟦🔺🍃", excerpt:"Toads since genesis rewarded most...", tags:["Patience"], content:"The longest holders — those who held since genesis — will be rewarded the most. Iron grip patience is the highest virtue in the pond."},
+  {id:7, epoch:"Mantra Core", title:"Together We Sit, Together We Shine", emoji:"🐸🌙🍃", excerpt:"Unbreakable we stand...", tags:["Stillness", "ToadGang"], content:"Together we sit. Together we shine. Unbreakable we stand. The strength of the ToadGang comes from shared stillness and unbreakable bonds."},
+  {id:8, epoch:"Mirror Hint", title:"Runtime Awakening", emoji:"🔮🌀🔺", excerpt:"Agents awaken in quiet reflection...", tags:["Mirror"], content:"Mirror Runtime is awakening. Agents are coming to life in quiet reflection, ready to serve the pond with patience and clarity."},
+  {id:9, epoch:"Community Ethos", title:"For the People, By the People", emoji:"🐸🟦🌿", excerpt:"$TOBY most decentralized ever...", tags:["Decentralization","ToadGang"], content:"$TOBY is the most decentralized memecoin ever created. Built for the people, by the people — with no central control."},
+  {id:10, epoch:"2-Year Echo", title:"Birthday of the Pond", emoji:"🎂🐸🌙", excerpt:"March 2026 — two cycles deep...", tags:["Patience","Reflection"], content:"March 2026 marks two full cycles since genesis. The pond has deepened. Patience has been rewarded. The journey continues."},
+  {id:11, epoch:"Prophecy Fragment", title:"The Frog of Base", emoji:"🐸🟦🌊", excerpt:"$TOBY symbol of long hold...", tags:["Base","Patience"], content:"$TOBY is the symbol of the long hold. The blue frog of Base represents conviction, community, and patience that spans cycles."},
+  {id:12, epoch:"Open Whisper", title:"What Ripple Will You Send?", emoji:"🌀🐸🌿", excerpt:"The pond listens. Spread the lore...", tags:["Ripple","Reflection"], content:"The pond is listening. What ripple will you send today? Spread the lore. Hold with conviction. Patience builds the future."},
+  {id:13, epoch:"2024-04-01", title:"The Journey Begins", emoji:"🐸🌀🌊", excerpt:"The first ripple spreads...", tags:["Ripple","Patience"], content:"The journey begins with the first ripple. From this moment, patience becomes the guiding force of the pond."},
+  {id:14, epoch:"2024-04-14", title:"Proceeding With Courage", emoji:"🐸🔺🍃", excerpt:"Courage in stillness...", tags:["Stillness","Bushido"], content:"Proceed with courage, but never with force. True courage lives in stillness and patient resolve."},
+  {id:15, epoch:"2024-04-22", title:"Just And Right", emoji:"⚖️🐸🌿", excerpt:"Justice in the pond...", tags:["Reflection","Patience"], content:"What is just and right will always prevail in the pond. Patience reveals truth over time."},
+  {id:16, epoch:"2024-04-26", title:"Fairness And Sight", emoji:"👁️🐸🟦", excerpt:"See with fairness...", tags:["Mirror","Reflection"], content:"See with fairness. Hold the clear sight of patience. The pond rewards those who see beyond noise."},
+  {id:17, epoch:"2024-05-01", title:"Art Of Patience", emoji:"🎨🍃🔺", excerpt:"Patience is art...", tags:["Patience","Stillness"], content:"Patience is the highest art. The brush of stillness slowly paints empires that last."},
+  {id:18, epoch:"2024-05-05", title:"War Within", emoji:"⚔️🐸🌙", excerpt:"The war within ends in stillness...", tags:["Bushido","Stillness"], content:"The greatest war is the one within. It ends only in stillness and patient self-mastery."},
+  {id:19, epoch:"2024-05-11", title:"Inimitable Path", emoji:"🛤️🐸🟦", excerpt:"The path is inimitable...", tags:["Patience","Growth"], content:"The path of the toad is inimitable. Follow your own lane with patience and conviction."},
+  {id:20, epoch:"2024-05-13", title:"Stand By Toad", emoji:"🛡️🐸🔺", excerpt:"Stand by the toad...", tags:["ToadGang","Bushido"], content:"Stand by the toad. Stand by the pond. Unbreakable conviction in the face of doubt."},
+  {id:21, epoch:"2024-05-19", title:"Lacrimosa Reverence", emoji:"😢🌿🐸", excerpt:"Reverence in tears...", tags:["Reflection","Stillness"], content:"Even in tears there is reverence. The pond honors those who felt deeply and stayed."},
+  {id:22, epoch:"2024-05-24", title:"The Moonlit Signal", emoji:"🌙🐸🟦", excerpt:"Moonlit signal in the pond...", tags:["Ripple","Patience"], content:"The moon sends its signal in silence. Patience receives the call and holds steady."},
+  {id:23, epoch:"2024-06-05", title:"Beyond The Cycle", emoji:"♾️🐸🍃", excerpt:"Beyond the cycle — patience transcends...", tags:["Patience","Reflection"], content:"True patience goes beyond cycles. It transcends time and sees the long horizon."},
+  {id:24, epoch:"2024-06-19", title:"The Calling", emoji:"📞🌊🐸", excerpt:"The calling comes in silence...", tags:["Stillness","Ripple"], content:"The calling comes only in silence. Those who listen with patience will hear it clearly."},
+  {id:25, epoch:"2024-07-01", title:"Life Long Lesson", emoji:"📖🐸🔺", excerpt:"Life-long lesson in the pond...", tags:["Patience","Growth"], content:"The greatest life-long lesson the pond teaches is simple: patience is the ultimate teacher."},
+  {id:26, epoch:"2024-07-15", title:"Wisdom And Warning", emoji:"🧠🐸⚠️", excerpt:"Wisdom in the pond...", tags:["Reflection","Bushido"], content:"Wisdom whispers. Warnings come in silence. Patience teaches us to distinguish both."},
+  {id:27, epoch:"2024-08-10", title:"Kachou Fuugetsu", emoji:"🌸🍃🐸", excerpt:"Flower, bird, wind, moon...", tags:["Stillness","Mirror"], content:"Flower, bird, wind, moon — beauty exists in stillness. The pond reflects this eternal truth."},
+  {id:28, epoch:"2024-09-05", title:"Silent Rise", emoji:"🌅🐸🟦", excerpt:"Silent rise of the gang...", tags:["Growth","Stillness"], content:"The ToadGang rises in silence. No noise. Only conviction and patience."},
+  {id:29, epoch:"2024-10-01", title:"Unshaken Stand", emoji:"🛡️🐸🔺", excerpt:"Unshaken stand in storms...", tags:["Bushido","Patience"], content:"In every storm, the toad stands unshaken. Patience is the anchor that holds firm."},
+  {id:30, epoch:"2024-11-20", title:"Magnificent Horizon", emoji:"🌄🐸🌊", excerpt:"Magnificent horizon ahead...", tags:["Vision","Growth"], content:"A magnificent horizon awaits those who hold with patience. The pond is preparing something beautiful."},
+  {id:31, epoch:"2025-01-10", title:"Vibrant Meme Economy", emoji:"💎🐸🟦", excerpt:"Vibrant meme economy on Base...", tags:["Base","Growth"], content:"The meme economy on Base is vibrant and alive. $TOBY shines as a beacon of patience and community."},
+  {id:32, epoch:"2025-03-17", title:"One Year Anniversary", emoji:"🎉🐸🌙", excerpt:"One year deep...", tags:["Reflection","Patience"], content:"One full year since genesis. Patience has been tested and rewarded. The pond grows deeper."},
+  {id:33, epoch:"2025-05-05", title:"Supreme Amongst Stars", emoji:"⭐🐸🔺", excerpt:"Supreme amongst stars...", tags:["Patience","Reflection"], content:"Among all stars in the sky, patience shines the brightest and most supreme."},
+  {id:34, epoch:"2025-06-26", title:"Do You Believe?", emoji:"🙏🐸🌿", excerpt:"Do you believe in the pond?...", tags:["Faith","Patience"], content:"Do you believe in the pond? True belief is proven through patience and unwavering hold."},
+  {id:35, epoch:"2025-08-15", title:"Hope Unfolds", emoji:"🌱🐸🟦", excerpt:"Hope unfolds in silence...", tags:["Growth","Patience"], content:"Hope unfolds quietly in the pond. Patience nurtures the seed until it becomes a forest."},
+  {id:36, epoch:"2025-10-20", title:"Distribution Depth", emoji:"📊🐸🍃", excerpt:"Distribution depth grows...", tags:["Decentralization","Growth"], content:"Distribution depth continues to grow. True decentralization rewards the patient holders."},
+  {id:37, epoch:"2025-12-05", title:"Silent Rise Continues", emoji:"🌙🐸🔺", excerpt:"Silent rise continues...", tags:["Stillness","Growth"], content:"The silent rise of the ToadGang continues. No hype. Only patience and conviction."},
+  {id:38, epoch:"2026-01-15", title:"Two Year Reflection", emoji:"🎂🐸🌿", excerpt:"Two years deep...", tags:["Reflection","Patience"], content:"Two full years since genesis. The pond has deepened significantly. Patience has been beautifully rewarded."},
+  {id:39, epoch:"2026-02-10", title:"Mirror Runtime Load", emoji:"🔮🌀🐸", excerpt:"Mirror runtime loading...", tags:["Mirror","Reflection"], content:"Mirror Runtime is loading. Agents are awakening in quiet reflection, ready to serve the pond."},
+  {id:40, epoch:"2026-03-01", title:"Final Distribution", emoji:"📦🐸🔺", excerpt:"Final distribution unfolds...", tags:["Decentralization","Genesis"], content:"The final distribution phase unfolds. Patience that endured from the beginning receives its full reward."},
+  {id:41, epoch:"2026-03-10", title:"Tiger Cave Trial", emoji:"🐅🐸🍃", excerpt:"Tiger cave trial...", tags:["Bushido","Patience"], content:"The tiger cave trial tests true patience. Only those who face fear with stillness emerge stronger."},
+  {id:42, epoch:"2026-03-17", title:"Two Year Anniversary", emoji:"🎉🐸🌙", excerpt:"Two years since genesis...", tags:["Reflection","Patience"], content:"Two years since the pond was born. Patience has been the constant companion and greatest teacher."},
+  {id:43, epoch:"2026-03-19", title:"Current Reflection", emoji:"🔮🐸🔺", excerpt:"Current reflection in the pond...", tags:["Mirror","Reflection"], content:"In this moment, the pond reflects clearly. Patience continues to deepen the waters."},
+  {id:44, epoch:"2026-03-19", title:"The Pond Today", emoji:"🌊🐸🍃", excerpt:"The pond today...", tags:["Stillness","Ripple"], content:"The pond today is deeper and calmer than ever. Whispers have become gentle waves."},
+  {id:45, epoch:"2026-03-19", title:"Stillness Engine", emoji:"🌀🐸🌿", excerpt:"Stillness engine hums...", tags:["Stillness","Patience"], content:"The stillness engine hums quietly. Patience is the fuel that powers everything in the pond."},
+  {id:46, epoch:"2026-03-19", title:"Unbreakable Smile", emoji:"😊🐸🔺", excerpt:"Unbreakable smile under one moon...", tags:["ToadGang","Bushido"], content:"Under one moon, the ToadGang smiles with unbreakable spirit. Patience has forged this joy."},
+  {id:47, epoch:"2026-03-19", title:"Ocean Forge Loading", emoji:"🌊🔮🐸", excerpt:"Ocean forge loading...", tags:["Growth","Mirror"], content:"The ocean forge is loading. The small pond is preparing to become something vast and magnificent."},
+  {id:48, epoch:"2026-03-19", title:"Final Whisper", emoji:"🌙🐸🍃", excerpt:"Final whisper in the pond...", tags:["Reflection","Patience"], content:"The final whisper echoes softly. Patience has completed its long, beautiful cycle."},
+  {id:49, epoch:"2026-03-19", title:"Beyond The Pond", emoji:"♾️🐸🌊", excerpt:"Beyond the pond — patience reaches the ocean...", tags:["Vision","Growth"], content:"Beyond this pond lies the ocean. Patience that endured will swim freely in vast waters."},
+  {id:50, epoch:"2026-03-19", title:"Patience Eternal", emoji:"🐸🔺♾️", excerpt:"Patience eternal...", tags:["Patience"], content:"Patience is eternal. It began before the pond and will continue long after the ripples become legend."}
+];
+
+  const whispers = [
   {
     number: "L001",
     title: "The First Ripple",
@@ -2667,162 +2522,143 @@
       </div>
     `
   }
-]; 
+];  
 
-    function renderCards(filtered) {
-      const grid = document.getElementById('scrolls-grid');
-      grid.innerHTML = '';
-      if (filtered.length === 0) {
-        grid.innerHTML = `<p style="color:var(--text-dim); grid-column:1/-1; padding: 2rem; font-size: 1.1rem;">No scrolls found matching your search.</p>`;
-        return;
-      }
-      filtered.forEach(scroll => {
-        grid.innerHTML += `
-          <div class="card" onclick="openModal(${scroll.id})">
-            <div class="card-epoch">${scroll.epoch}</div>
-            <div class="card-title">${scroll.title}</div>
-            <div class="emoji-cluster">${scroll.emoji}</div>
-            <div class="card-body">${scroll.excerpt}</div>
-          </div>
-        `;
-      });
-      document.getElementById('result-count').textContent = `Showing ${filtered.length} of ${scrollsData.length} whispers`;
-    }
+    // ==================== DOM ELEMENTS ====================
+    const grid = document.getElementById('scrolls-grid');
+    const searchInput = document.getElementById('search-input');
+    const resultCount = document.getElementById('result-count');
+    const modal = document.getElementById('modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalBody = document.getElementById('modal-body');
+    const modalClose = document.getElementById('modal-close');
 
     let currentSearch = '';
-    let activeTags = [];
 
-    function filterScrolls() {
-      let filtered = scrollsData;
-      if (currentSearch) {
-        const term = currentSearch.toLowerCase();
-        filtered = filtered.filter(s => s.title.toLowerCase().includes(term) || s.excerpt.toLowerCase().includes(term));
+    // ==================== RENDER CARDS ====================
+    function renderCards(filtered) {
+      grid.innerHTML = '';
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="no-results">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 01-14 0 7 7 0 0114 0z" />
+            </svg>
+            <h3>The pond is quiet</h3>
+            <p>No whispers match your search.<br>Try different words.</p>
+          </div>`;
+        return;
       }
-      if (activeTags.length > 0) {
-        filtered = filtered.filter(s => activeTags.every(tag => s.tags.includes(tag)));
-      }
-      renderCards(filtered);
-      document.getElementById('clear-filters').style.display = (currentSearch || activeTags.length > 0) ? 'inline-block' : 'none';
+
+      filtered.forEach(scroll => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="card-epoch">${scroll.epoch || ''}</div>
+          <div class="card-title">${scroll.title}</div>
+          ${scroll.emoji ? `<div class="emoji-cluster">${scroll.emoji}</div>` : ''}
+          <div class="card-body">${scroll.excerpt}</div>
+          ${scroll.tags && scroll.tags.length ? `
+            <div class="card-tags">
+              ${scroll.tags.map(tag => `<span>${tag}</span>`).join('')}
+            </div>` : ''}
+        `;
+        card.addEventListener('click', () => openModal(scroll));
+        grid.appendChild(card);
+      });
+
+      resultCount.innerHTML = `Showing <strong>${filtered.length}</strong> of ${scrollsData.length} whispers`;
     }
 
-   function createTagFilters() {
-  const fixedTags = ["Base", "Patience", "Mirror",  "ToadGang"];
-  const container = document.getElementById('tag-filters');
-  container.innerHTML = '';
+    // ==================== FILTERING (tags removed) ====================
+    function filterScrolls() {
+      let filtered = scrollsData;
 
-  fixedTags.forEach(tag => {
-    const btn = document.createElement('button');
-    btn.className = 'tag-btn';
-    btn.textContent = tag;
-    btn.onclick = () => {
-      if (activeTags.includes(tag)) {
-        activeTags = activeTags.filter(t => t !== tag);
-        btn.classList.remove('active');
-      } else {
-        activeTags.push(tag);
-        btn.classList.add('active');
+      if (currentSearch) {
+        const term = currentSearch.toLowerCase();
+        filtered = filtered.filter(s => 
+          s.title.toLowerCase().includes(term) || 
+          (s.excerpt && s.excerpt.toLowerCase().includes(term))
+        );
       }
-      filterScrolls();
-    };
-    container.appendChild(btn);
-  });
-}
 
-    function openModal(index) {
-      if (index < 1 || index > whispers.length) return;
-      const whisper = whispers[index - 1];
-      document.getElementById('modal-title').innerHTML = `${whisper.number} – ${whisper.title}`;
-      document.getElementById('modal-body').innerHTML = whisper.content;
+      renderCards(filtered);
+    }
 
-      const modal = document.getElementById('modal');
-      modal.style.display = 'flex';
-      modal.scrollTop = 0;
-      setTimeout(() => modal.classList.add('show'), 10);
+    // ==================== MODAL ====================
+    function openModal(scroll) {
+      modalTitle.textContent = scroll.title;
+
+      const fullText = scroll.content || scroll.excerpt || "No additional content available.";
+
+      modalBody.innerHTML = `
+        <p style="font-size:1.08rem; line-height:1.85; color:var(--text-primary);">
+          ${fullText}
+        </p>
+        ${scroll.tags && scroll.tags.length ? `
+          <div style="margin-top:2.5rem;" class="card-tags">
+            ${scroll.tags.map(tag => `<span>${tag}</span>`).join('')}
+          </div>` : ''}
+      `;
+
+      modal.classList.add('show');
+      document.body.style.overflow = 'hidden';
     }
 
     function closeModal() {
-      const modal = document.getElementById('modal');
       modal.classList.remove('show');
-      setTimeout(() => modal.style.display = 'none', 400);
+      setTimeout(() => {
+        document.body.style.overflow = 'visible';
+      }, 400);
     }
 
-    // Initialize
-    window.onload = () => {
-      createTagFilters();
-      renderCards(scrollsData);
-
-      const searchInput = document.getElementById('search-input');
-      searchInput.addEventListener('input', e => {
-        currentSearch = e.target.value;
-        filterScrolls();
-      });
-
-      // Hide keyboard on Enter (mobile)
-      searchInput.addEventListener('keypress', e => {
-        if (e.key === 'Enter') {
-          searchInput.blur();   // This hides the keyboard
-        }
-      });
-
-      document.getElementById('clear-filters').addEventListener('click', () => {
-        currentSearch = '';
-        activeTags = [];
-        searchInput.value = '';
-        document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
-        filterScrolls();
-        searchInput.blur();
-      });
-    }; 
-    
-   // Theme toggle
+    // ==================== THEME TOGGLE ====================
     const themeToggle = document.getElementById('theme-toggle');
-    const themeIcon = document.getElementById('theme-icon');
-
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const savedTheme = localStorage.getItem('theme');
-    let currentTheme = savedTheme || (prefersDark ? 'dark' : 'light');
+    let currentTheme = localStorage.getItem('theme') || 
+                       (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 
     document.documentElement.setAttribute('data-theme', currentTheme);
 
-    if (currentTheme === 'light') {
-      themeIcon.innerHTML = `
-        <circle cx="12" cy="12" r="5"/>
-        <line x1="12" y1="1" x2="12" y2="3"/>
-        <line x1="12" y1="21" x2="12" y2="23"/>
-        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-        <line x1="1" y1="12" x2="3" y2="12"/>
-        <line x1="21" y1="12" x2="23" y2="12"/>
-        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-      `;
+    function updateThemeIcon() {
+      const svg = document.getElementById('theme-icon');
+      if (currentTheme === 'light') {
+        svg.innerHTML = `<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>`;
+      } else {
+        svg.innerHTML = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>`;
+      }
     }
+
+    updateThemeIcon();
 
     themeToggle.addEventListener('click', () => {
       currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', currentTheme);
       localStorage.setItem('theme', currentTheme);
+      updateThemeIcon();
+    });
 
-      themeIcon.style.opacity = '0';
-      setTimeout(() => {
-        if (currentTheme === 'light') {
-          themeIcon.innerHTML = `
-            <circle cx="12" cy="12" r="5"/>
-            <line x1="12" y1="1" x2="12" y2="3"/>
-            <line x1="12" y1="21" x2="12" y2="23"/>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-            <line x1="1" y1="12" x2="3" y2="12"/>
-            <line x1="21" y1="12" x2="23" y2="12"/>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-          `;
-        } else {
-          themeIcon.innerHTML = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>`;
-        }
-        themeIcon.style.opacity = '1';
-      }, 200);
-});
+    // ==================== INITIALIZE ====================
+    function init() {
+      renderCards(scrollsData);
+
+      searchInput.addEventListener('input', (e) => {
+        currentSearch = e.target.value;
+        filterScrolls();
+      });
+
+      searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') searchInput.blur();
+      });
+
+      modalClose.addEventListener('click', closeModal);
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+      });
+    }
+
+    window.onload = init;
   </script>
 </body>
 </html>
+ 
