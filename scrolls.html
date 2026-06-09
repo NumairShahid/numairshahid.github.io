@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>The Scrolls — Pond Mirror</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- ethers.js 5.7 — jsDelivr primary, unpkg fallback -->
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  <script>
+    if (typeof ethers === 'undefined') {
+      document.write('<scr'+'ipt src="https://unpkg.com/ethers@5.7.2/dist/ethers.umd.min.js"><\/scr'+'ipt>');
+    }
+  </script>
+
+  <style>
+    :root {
+      --void:        #030508;
+      --deep:        #060d18;
+      --surface:     #0b1626;
+      --bio:         #00e5b0;
+      --bio-mid:     rgba(0,229,176,0.22);
+      --bio-glow:    rgba(0,229,176,0.38);
+      --moon:        #c8d8f0;
+      --moon-dim:    #6a8fb5;
+      --amber:       #f0b84a;
+      --amber-dim:   rgba(240,184,74,0.18);
+      --glass:       rgba(11,22,38,0.72);
+      --border:      rgba(0,229,176,0.13);
+      --border-hi:   rgba(0,229,176,0.55);
+      --sel:         rgba(0,229,176,0.22);
+      --tag-bg:      rgba(0,229,176,0.06);
+    }
+    [data-theme="light"] {
+      --void:        #f0f5fb;
+      --deep:        #e3ecf7;
+      --surface:     #d6e5f5;
+      --bio:         #0062c4;
+      --bio-mid:     rgba(0,98,196,0.12);
+      --bio-glow:    rgba(0,98,196,0.28);
+      --moon:        #0d1e36;
+      --moon-dim:    #3d5e84;
+      --amber:       #b85f12;
+      --amber-dim:   rgba(184,95,18,0.12);
+      --glass:       rgba(255,255,255,0.78);
+      --border:      rgba(0,98,196,0.18);
+      --border-hi:   rgba(0,98,196,0.55);
+      --sel:         rgba(0,98,196,0.18);
+      --tag-bg:      rgba(0,98,196,0.07);
+    }
+
+    *, *::before, *::after {
+      margin: 0; padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    ::selection { background: var(--sel); color: var(--moon); }
+    html { scroll-behavior: smooth; }
+
+    body {
+      min-height: 100vh;
+      background: var(--void);
+      color: var(--moon);
+      font-family: 'Syne', system-ui, sans-serif;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      cursor: crosshair;
+    }
+
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9000;
+      opacity: 0.45; mix-blend-mode: overlay;
+    }
+
+    #pond-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+    .spore-container { position: fixed; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; }
+    .spore {
+      position: absolute; border-radius: 50%;
+      animation: spore-rise var(--d) var(--dl) ease-in-out infinite;
+    }
+    @keyframes spore-rise {
+      0%   { transform: translateY(105vh) translateX(0) scale(0.3); opacity: 0; }
+      8%   { opacity: var(--op); }
+      50%  { transform: translateY(50vh) translateX(var(--drift)) scale(1); }
+      92%  { opacity: var(--op); }
+      100% { transform: translateY(-10vh) translateX(calc(var(--drift)*1.4)) scale(0.5); opacity: 0; }
+    }
+
+    .wrap { position: relative; z-index: 10; min-height: 100vh; display: flex; flex-direction: column; }
+
+    .hdr {
+      padding: 2.2rem 4rem;
+      display: flex; justify-content: space-between; align-items: center;
+      position: sticky; top: 0; z-index: 500;
+      background: rgba(3,5,8,0.76);
+      backdrop-filter: blur(28px); -webkit-backdrop-filter: blur(28px);
+    }
+    [data-theme="light"] .hdr { background: rgba(240,245,251,0.82); }
+    .hdr::after {
+      content: ''; position: absolute; bottom: 0; left: 4rem; right: 4rem; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+    }
+    .hdr-left { display: flex; align-items: center; gap: 1.8rem; }
+    .back-link {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--moon-dim); text-decoration: none;
+      display: inline-flex; align-items: center; gap: 9px;
+    }
+    .back-link svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+    .back-link:hover { color: var(--bio); }
+    .hdr-brand {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.55em; text-transform: uppercase;
+      color: var(--bio); opacity: 0.75;
+    }
+    .hdr-right { display: flex; align-items: center; gap: 1rem; }
+
+    .wallet-btn {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      padding: 10px 22px;
+      background: transparent;
+      border: 1px solid var(--bio);
+      color: var(--bio);
+      cursor: pointer;
+      position: relative; overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+      white-space: nowrap;
+    }
+    .wallet-btn:hover {
+      background: var(--bio-mid);
+      box-shadow: 0 0 15px var(--bio-mid);
+      color: var(--moon);
+    }
+    .wallet-btn.connected {
+      border-color: var(--border-hi);
+      color: var(--moon-dim);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+    }
+    .wallet-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    .theme-btn {
+      width: 46px; height: 46px;
+      background: var(--glass); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; backdrop-filter: blur(10px);
+    }
+    .theme-btn svg { width: 20px; height: 20px; stroke: var(--bio); stroke-width: 2; fill: none; }
+
+    /* Toast */
+    .toast {
+      position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(0);
+      padding: 14px 30px; font-family: 'Syne', sans-serif;
+      font-size: 0.82rem; font-weight: 600; letter-spacing: 0.04em;
+      z-index: 99999; border-radius: 0;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.16,1,0.3,1);
+      white-space: nowrap; max-width: 90vw; text-align: center;
+      box-shadow: 0 14px 40px rgba(0,0,0,0.5);
+    }
+    .toast.show {
+      opacity: 1; pointer-events: auto;
+      transform: translateX(-50%) translateY(-6px);
+    }
+    .toast.success { background: var(--bio); color: var(--void); }
+    .toast.error   { background: #e05050; color: #fff; }
+    .toast.info    { background: var(--glass); color: var(--moon); border: 1px solid var(--border); backdrop-filter: blur(20px); }
+    .toast.pending { background: var(--amber); color: var(--void); }
+
+    /* Mint btn states */
+    .mint-btn-wrap { position: relative; display: inline-block; }
+    .cta-btn.minting { opacity: 0.7; cursor: not-allowed; pointer-events: none; }
+    .cta-btn.minted  { background: transparent; border: 1px solid var(--bio); color: var(--bio); cursor: default; pointer-events: none; }
+
+    #cursor-ring {
+      position: fixed; width: 38px; height: 38px;
+      border: 1px solid rgba(0,229,176,0.45); border-radius: 50%;
+      pointer-events: none; z-index: 9998;
+      transform: translate(-50%,-50%);
+      mix-blend-mode: screen; opacity: 0;
+    }
+    #cursor-dot {
+      position: fixed; width: 4px; height: 4px;
+      background: var(--bio); border-radius: 50%;
+      pointer-events: none; z-index: 9999;
+      transform: translate(-50%,-50%);
+    }
+
+    .main-content {
+      flex: 1;
+      padding: clamp(3.5rem, 8vw, 6rem) clamp(1.8rem, 5vw, 4rem) 6rem;
+      max-width: 1380px; width: 100%; margin: 0 auto;
+    }
+
+    .page-hero { text-align: center; margin-bottom: clamp(3rem, 6vw, 5.5rem); }
+    .eyebrow {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.68rem; font-weight: 600;
+      letter-spacing: 0.65em; text-transform: uppercase;
+      color: var(--bio); opacity: 0;
+      margin-bottom: 2rem;
+      animation: fade-in 1.4s ease 0.2s forwards;
+    }
+    .page-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(4rem, 12vw, 9rem);
+      font-weight: 300; line-height: 0.84;
+      letter-spacing: -0.03em; color: var(--moon);
+      opacity: 0;
+      animation: title-emerge 1.8s cubic-bezier(0.16,1,0.3,1) 0.1s forwards;
+    }
+    .page-title em {
+      display: block; font-style: italic;
+      color: var(--bio); text-shadow: 0 0 80px var(--bio-glow);
+    }
+    .vline {
+      width: 1px; height: 70px;
+      background: linear-gradient(to bottom, transparent, var(--bio), transparent);
+      margin: 2.5rem auto; opacity: 0;
+      animation: fade-in 1.6s ease 0.9s forwards;
+    }
+    .page-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.15rem, 3vw, 1.7rem);
+      font-weight: 300; line-height: 1.95;
+      color: var(--moon-dim); max-width: 600px; margin: 0 auto;
+      opacity: 0;
+      animation: fade-up 1.4s cubic-bezier(0.16,1,0.3,1) 1.05s forwards;
+    }
+
+    .controls {
+      display: flex; flex-direction: column; align-items: center; gap: 1.4rem;
+      margin-bottom: clamp(2.5rem, 5vw, 4rem);
+      opacity: 0; animation: fade-up 1.4s ease 1.3s forwards;
+    }
+
+    .search-wrap { position: relative; width: 100%; max-width: 600px; }
+    .search-icon {
+      position: absolute; left: 20px; top: 50%; transform: translateY(-50%);
+      width: 17px; height: 17px; stroke: var(--moon-dim); fill: none; stroke-width: 2;
+      pointer-events: none;
+    }
+    .search-bar {
+      width: 100%;
+      padding: 17px 24px 17px 52px;
+      background: var(--glass); border: 1px solid var(--border);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      font-family: 'Syne', sans-serif; font-size: 0.88rem; font-weight: 500;
+      letter-spacing: 0.05em; color: var(--moon); outline: none;
+      transition: all 0.35s ease;
+    }
+    .search-bar:focus {
+      border-color: var(--border-hi);
+      box-shadow: 0 0 0 3px var(--bio-mid), 0 12px 40px rgba(0,229,176,0.08);
+    }
+
+    .filter-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.55rem 0.75rem; }
+    .filter-tag {
+      font-family: 'Syne', sans-serif; font-size: 0.7rem; font-weight: 600;
+      letter-spacing: 0.18em; text-transform: uppercase; padding: 9px 18px;
+      border: 1px solid var(--border); color: var(--moon-dim);
+      background: var(--glass); backdrop-filter: blur(10px);
+      position: relative; overflow: hidden; cursor: pointer;
+    }
+    .filter-tag::before {
+      content: ''; position: absolute; inset: 0; background: var(--bio); z-index: 0;
+      transform: translateX(-102%); transition: transform 0.42s cubic-bezier(0.16,1,0.3,1);
+    }
+    .filter-tag:hover::before, .filter-tag.active::before { transform: translateX(0); }
+    .filter-tag:hover, .filter-tag.active { color: var(--void); border-color: var(--bio); }
+    .filter-tag span { position: relative; z-index: 1; }
+
+    .results-info {
+      font-family: 'Syne', sans-serif; font-size: 0.68rem; font-weight: 600;
+      letter-spacing: 0.38em; text-transform: uppercase; color: var(--moon-dim);
+    }
+    .results-info strong { color: var(--bio); }
+
+    .scrolls-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(clamp(280px,28vw,340px), 1fr));
+      gap: clamp(1.2rem, 2.2vw, 2rem);
+      opacity: 0; animation: fade-up 1.4s ease 1.55s forwards;
+    }
+
+    .scroll-card {
+      background: var(--glass); border: 1px solid var(--border);
+      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      padding: clamp(2rem, 4vw, 2.8rem) clamp(1.6rem, 3.5vw, 2.4rem);
+      position: relative; overflow: hidden;
+      display: flex; flex-direction: column; cursor: pointer;
+      opacity: 0; animation: fade-up 0.7s cubic-bezier(0.16,1,0.3,1) both;
+      transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+    }
+    .scroll-card .c { position: absolute; width: 22px; height: 22px; opacity: 0; transition: opacity 0.4s ease; }
+    .scroll-card .c-tl { top:0; left:0; border-top:1px solid var(--bio); border-left:1px solid var(--bio); }
+    .scroll-card .c-tr { top:0; right:0; border-top:1px solid var(--bio); border-right:1px solid var(--bio); }
+    .scroll-card .c-bl { bottom:0; left:0; border-bottom:1px solid var(--bio); border-left:1px solid var(--bio); }
+    .scroll-card .c-br { bottom:0; right:0; border-bottom:1px solid var(--bio); border-right:1px solid var(--bio); }
+    
+    .scroll-card::before {
+      content: ''; position: absolute; top: -60%; left: 50%; transform: translateX(-50%);
+      width: 70%; height: 80%; background: radial-gradient(ellipse, var(--bio-mid) 0%, transparent 70%);
+      pointer-events: none; opacity: 0; transition: opacity 0.5s ease;
+    }
+    .scroll-card:hover {
+      border-color: rgba(0,229,176,0.38); transform: translateY(-7px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 50px var(--bio-mid);
+    }
+    .scroll-card:hover .c { opacity: 1; }
+    .scroll-card:hover::before { opacity: 1; }
+
+    .card-num {
+      font-family: 'Syne', sans-serif; font-size: 0.6rem; font-weight: 700;
+      letter-spacing: 0.5em; text-transform: uppercase; color: var(--bio); opacity: 0.55; margin-bottom: 0.9rem;
+    }
+    .card-epoch { font-family: 'Syne', sans-serif; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.08em; color: var(--moon-dim); margin-bottom: 0.6rem; }
+    .card-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.4rem, 2.8vw, 1.75rem); font-weight: 600; line-height: 1.15; color: var(--moon); margin-bottom: 1rem; }
+    .card-emoji { font-size: 1.8rem; letter-spacing: 0.15em; display: block; text-align: center; margin: 0.5rem 0 1rem; }
+    .card-excerpt { flex: 1; font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-weight: 300; font-style: italic; line-height: 1.85; color: var(--moon-dim); margin-bottom: 1.5rem; }
+    .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; flex-wrap: wrap; gap: 8px; }
+    .card-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+    .card-tags span { font-family: 'Syne', sans-serif; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; padding: 4px 10px; background: var(--tag-bg); border: 1px solid var(--border); color: var(--bio); }
+    .card-read { font-family: 'Syne', sans-serif; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.35em; text-transform: uppercase; color: var(--bio); opacity: 0; display: inline-flex; align-items: center; gap: 6px; transition: opacity 0.3s ease; }
+    .card-read svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+    .scroll-card:hover .card-read { opacity: 1; }
+
+    .no-results { grid-column: 1/-1; text-align: center; padding: 6rem 2rem; }
+    .no-results h3 { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 2.2rem; font-weight: 300; color: var(--moon-dim); margin-bottom: 1rem; }
+    .no-results p { font-family: 'Syne', sans-serif; font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--moon-dim); opacity: 0.4; }
+
+    .modal-backdrop {
+      display: none; position: fixed; inset: 0; z-index: 2000;
+      background: rgba(3,5,8,0.9); backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px);
+      align-items: center; justify-content: center; padding: 1.5rem; opacity: 0; transition: opacity 0.4s ease;
+    }
+    [data-theme="light"] .modal-backdrop { background: rgba(230,240,252,0.9); }
+    .modal-backdrop.open { display: flex; }
+    .modal-backdrop.visible { opacity: 1; }
+
+    .modal-box {
+      background: var(--glass); border: 1px solid var(--border);
+      backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
+      max-width: 820px; width: 100%; max-height: 88vh; overflow-y: auto;
+      padding: clamp(2.8rem, 6vw, 5.2rem) clamp(2rem, 5vw, 4.5rem); position: relative;
+      transform: translateY(32px) scale(0.97); transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
+    }
+    .modal-backdrop.visible .modal-box { transform: translateY(0) scale(1); }
+    .modal-box::before { content: ''; position: absolute; top: -40%; left: 50%; transform: translateX(-50%); width: 55%; height: 80%; background: radial-gradient(ellipse, var(--bio-mid) 0%, transparent 70%); pointer-events: none; }
+    .modal-box .c { position: absolute; width: 44px; height: 44px; }
+    .modal-box .c-tl { top:0; left:0; border-top:1.5px solid var(--bio); border-left:1.5px solid var(--bio); }
+    .modal-box .c-tr { top:0; right:0; border-top:1.5px solid var(--bio); border-right:1.5px solid var(--bio); }
+    .modal-box .c-bl { bottom:0; left:0; border-bottom:1.5px solid var(--bio); border-left:1.5px solid var(--bio); }
+    .modal-box .c-br { bottom:0; right:0; border-bottom:1.5px solid var(--bio); border-right:1.5px solid var(--bio); }
+
+    .modal-close {
+      position: absolute; top: 1.4rem; right: 1.4rem; z-index: 10; width: 40px; height: 40px;
+      background: var(--glass); border: 1px solid var(--border); display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
+    }
+    .modal-close:hover { border-color: rgba(229,80,80,0.7); }
+    .modal-close svg { width: 16px; height: 16px; stroke: var(--moon-dim); fill: none; stroke-width: 2.5; }
+    .modal-close:hover svg { stroke: rgba(229,80,80,0.9); }
+
+    .modal-eyebrow { font-family: 'Syne', sans-serif; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.55em; text-transform: uppercase; color: var(--bio); opacity: 0.65; margin-bottom: 1.2rem; }
+    .modal-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 5vw, 3.6rem); font-weight: 300; line-height: 1.05; letter-spacing: -0.02em; color: var(--moon); margin-bottom: 0.5rem; }
+    .modal-epoch { font-family: 'Syne', sans-serif; font-size: 0.75rem; letter-spacing: 0.1em; color: var(--moon-dim); margin-bottom: 1.8rem; }
+    .modal-emoji { font-size: 2.2rem; letter-spacing: 0.2em; display: block; text-align: center; margin: 1.2rem 0 2rem; }
+    .modal-divider { height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); margin: 2rem 0; }
+
+    .modal-section { margin-bottom: 1.8rem; }
+    .modal-section h3 { font-family: 'Syne', sans-serif; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.5em; text-transform: uppercase; color: var(--bio); margin-bottom: 0.9rem; opacity: 0.72; }
+    .modal-section h4 { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 600; color: var(--moon); margin: 1.2rem 0 0.5rem; }
+    .modal-section p { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 300; line-height: 1.92; color: var(--moon-dim); margin-bottom: 0.7rem; }
+    .modal-section blockquote { border-left: 1.5px solid var(--bio); padding: 1rem 1.5rem; margin: 1.2rem 0; background: var(--bio-mid); font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.15rem; font-weight: 300; line-height: 1.8; color: var(--moon); }
+    .modal-section ul { margin: 0.8rem 0 0 1.2rem; list-style: none; }
+    .modal-section li { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-weight: 300; line-height: 1.82; color: var(--moon-dim); margin-bottom: 0.4rem; padding-left: 1.2rem; position: relative; }
+    .modal-section li::before { content: '◆'; position: absolute; left: 0; color: var(--bio); font-size: 0.4rem; top: 0.6rem; }
+
+    .mint-box { margin-top: 2.5rem; padding: 2.2rem; background: var(--glass); border: 1px solid var(--border); backdrop-filter: blur(12px); text-align: center; position: relative; overflow: hidden; }
+    .mint-box::before { content: ''; position: absolute; top: -50%; left: 50%; transform: translateX(-50%); width: 60%; height: 80%; background: radial-gradient(ellipse, var(--bio-mid) 0%, transparent 70%); pointer-events: none; }
+    .mint-box .c { position: absolute; width: 16px; height: 16px; }
+    .mint-box .c-tl { top:0; left:0; border-top:1px solid var(--bio); border-left:1px solid var(--bio); }
+    .mint-box .c-tr { top:0; right:0; border-top:1px solid var(--bio); border-right:1px solid var(--bio); }
+    .mint-box .c-bl { bottom:0; left:0; border-bottom:1px solid var(--bio); border-left:1px solid var(--bio); }
+    .mint-box .c-br { bottom:0; right:0; border-bottom:1px solid var(--bio); border-right:1px solid var(--bio); }
+    .mint-label { font-family: 'Syne', sans-serif; font-size: 0.63rem; font-weight: 700; letter-spacing: 0.5em; text-transform: uppercase; color: var(--bio); opacity: 0.65; margin-bottom: 0.7rem; }
+    .mint-title { font-family: 'Cormorant Garamond', serif; font-size: 1.55rem; font-weight: 300; color: var(--moon); margin-bottom: 0.5rem; }
+    .mint-desc { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1rem; font-weight: 300; color: var(--moon-dim); margin-bottom: 1.5rem; }
+
+    .cta-btn {
+      display: inline-block; padding: 16px 52px; font-family: 'Syne', sans-serif; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.38em; text-transform: uppercase; color: var(--void); background: var(--bio); border: none; cursor: pointer; position: relative; overflow: hidden; transition: all 0.4s cubic-bezier(0.16,1,0.3,1); text-decoration: none;
+    }
+    .cta-btn::after { content: ''; position: absolute; inset: 0; background: rgba(255,255,255,0.25); transform: translateX(-105%); transition: transform 0.5s cubic-bezier(0.16,1,0.3,1); }
+    .cta-btn:hover::after { transform: translateX(0); }
+    .cta-btn:hover { transform: translateY(-3px); box-shadow: 0 20px 50px var(--bio-glow); }
+
+    .modal-tags { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 2rem; }
+    .modal-tags span { font-family: 'Syne', sans-serif; font-size: 0.63rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; padding: 6px 14px; background: var(--tag-bg); border: 1px solid var(--border); color: var(--bio); }
+
+    .back-section { text-align: center; margin-top: clamp(4rem, 8vw, 7rem); padding-top: 3.5rem; border-top: 1px solid; border-image: linear-gradient(90deg, transparent, var(--border), transparent) 1; opacity: 0; animation: fade-up 1.4s ease 1.8s forwards; }
+    .back-cta {
+      display: inline-flex; align-items: center; gap: 12px; padding: 18px 58px; font-family: 'Syne', sans-serif; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.38em; text-transform: uppercase; color: var(--moon-dim); background: var(--glass); border: 1px solid var(--border); backdrop-filter: blur(12px); text-decoration: none; position: relative; overflow: hidden; transition: all 0.42s ease;
+    }
+    .back-cta::before { content: ''; position: absolute; inset: 0; background: var(--bio); z-index: 0; transform: translateX(-102%); transition: transform 0.45s cubic-bezier(0.16,1,0.3,1); }
+    .back-cta:hover::before { transform: translateX(0); }
+    .back-cta:hover { color: var(--void); border-color: var(--bio); transform: translateY(-3px); box-shadow: 0 18px 50px var(--bio-glow); }
+    .back-cta span, .back-cta svg { position: relative; z-index: 1; }
+    .back-cta svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+
+    .gw-whisper { margin-top: 2rem; font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.15rem; color: var(--bio); opacity: 0.6; }
+
+    .site-footer { padding: 2.8rem 5%; text-align: center; border-top: 1px solid var(--border); }
+    .footer-txt { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; line-height: 2.3; color: var(--moon-dim); }
+    .footer-txt a { color: var(--bio); text-decoration: none; transition: opacity 0.3s; }
+    .footer-txt a:hover { opacity: 0.6; }
+
+    @keyframes fade-in  { from{opacity:0} to{opacity:1} }
+    @keyframes fade-up  { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes title-emerge { from{opacity:0;transform:translateY(70px);filter:blur(12px)} to{opacity:1;transform:translateY(0);filter:blur(0)} }
+
+    @media (max-width: 768px) {
+      .hdr { padding: 1.6rem 2rem; }
+      .hdr::after { left: 2rem; right: 2rem; }
+      #cursor-ring, #cursor-dot { display: none; }
+      .scrolls-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="cursor-ring"></div>
+<div id="cursor-dot"></div>
+<canvas id="pond-canvas"></canvas>
+
+<div class="spore-container" id="spore-layer"></div>
+
+<div class="wrap">
+  <header class="hdr">
+    <div class="hdr-left">
+      <a href="index.html" class="back-link">
+        <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Pond Mirror
+      </a>
+      <div class="hdr-brand">The Scrolls</div>
+    </div>
+    <div class="hdr-right">
+      <button id="wallet-toggle" class="wallet-btn">Connect Wallet</button>
+      <button id="theme-toggle" class="theme-btn" aria-label="Toggle theme">
+        <svg id="theme-icon" viewBox="0 0 24 24"></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="main-content">
+    <div class="page-hero">
+      <p class="eyebrow">Sacred Archive · 50 Whispers</p>
+      <h1 class="page-title">The<em>Scrolls</em></h1>
+      <div class="vline"></div>
+      <p class="page-sub">Whispers from Toadgod…<br>Read slowly — the pond reveals itself in stillness.</p>
+    </div>
+
+    <div class="controls">
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input type="text" id="search-input" class="search-bar" placeholder="Search the whispers of the pond…" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="filter-tags" id="filter-tags"></div>
+      <p class="results-info">Showing <strong id="result-count">50</strong> of 50 whispers</p>
+    </div>
+
+    <div class="scrolls-grid" id="scrolls-grid"></div>
+
+    <div class="back-section">
+      <a href="index.html" class="back-cta">
+        <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        <span>Return to the Pond</span>
+      </a>
+      <p class="gw-whisper">The pond deepens. Builders rise. Whispers become waves.</p>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <p class="footer-txt">
+      Tended by the Pond Keeper<br>
+      <a href="https://toadaid.github.io/pond" target="_blank">The Digital Pond</a>&nbsp;·&nbsp;
+      <a href="https://toadaid.github.io/honors/mirror-system-blueprint.html" target="_blank">Mirror Runtime</a>
+    </p>
+  </footer>
+</div>
+
+<div id="modal-backdrop" class="modal-backdrop" role="dialog" aria-modal="true">
+  <div class="modal-box" id="modal-box">
+    <div class="c c-tl"></div><div class="c c-tr"></div>
+    <div class="c c-bl"></div><div class="c c-br"></div>
+    <button class="modal-close" id="modal-close" aria-label="Close scroll">
+      <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+const SCROLLS = [
+  {id:1,  epoch:"Epoch 0 · March 17 2024", title:"The Great Toad Drop",          emoji:"🐸🟦🔺", excerpt:"420 trillion $TOBY forged on Base — the birth ripple of a leaderless pond.", tags:["Genesis","Base","ToadGang"]},
+  {id:2,  epoch:"Toadgod Whisper",          title:"Bushido of the Pond",          emoji:"🍃🌿🌀", excerpt:"Kindness over force. Stillness in chaos. The code of the pond warrior.", tags:["Bushido","Patience"]},
+  {id:3,  epoch:"Lore Fragment",            title:"Patience Rewarded",            emoji:"🔺🍃",   excerpt:"Gifts flow to those who've stayed rooted in the pond since genesis.", tags:["Patience"]},
+  {id:4,  epoch:"TobyWorld Vision",         title:"From Pond to Ocean",           emoji:"🌊🟦🐸", excerpt:"$TOBY — the foundational blue frog destined to fill every ocean on Base.", tags:["Vision","Base"]},
+  {id:5,  epoch:"Toadgod Echo",             title:"Leaderless Forge",             emoji:"🔺🌿",   excerpt:"No insiders. No allocations. Pure emergence from the depths of Base chain.", tags:["Decentralization","Genesis"]},
+  {id:6,  epoch:"Cycle Reflection",         title:"Iron Grip Hold",               emoji:"🟦🔺🍃", excerpt:"Toads rooted since genesis are rewarded most when the wave finally arrives.", tags:["Patience","Reflection"]},
+  {id:7,  epoch:"Mantra Core",              title:"Together We Sit, Together We Shine", emoji:"🐸🌙🍃", excerpt:"Unbreakable bonds formed in stillness. The gang moves as one current.", tags:["ToadGang","Stillness"]},
+  {id:8,  epoch:"Mirror Hint",              title:"Runtime Awakening",            emoji:"🔮🌀🔺", excerpt:"Agents awaken in quiet reflection — the mirror runtime begins to hum.", tags:["Mirror","Reflection"]},
+  {id:9,  epoch:"Community Ethos",          title:"For the People",               emoji:"🐸🟦🌿", excerpt:"$TOBY — the most decentralized token ever spawned on Base.", tags:["Decentralization","ToadGang"]},
+  {id:10, epoch:"2-Year Echo",              title:"Birthday of the Pond",         emoji:"🎂🐸🌙", excerpt:"March 2026 — two full cycles deep. The pond celebrates in silence.", tags:["Patience","Reflection"]},
+  {id:11, epoch:"Prophecy Fragment",        title:"The Frog of Base",             emoji:"🐸🟦🌊", excerpt:"$TOBY — the enduring symbol of the long hold, born of Base chain waters.", tags:["Base","Patience"]},
+  {id:12, epoch:"Open Whisper",             title:"What Ripple Will You Send?",   emoji:"🌀🐸🌿", excerpt:"The pond listens. Every action sends a wave outward forever.", tags:["Ripple","Reflection"]},
+  {id:13, epoch:"2024-04-01",               title:"The Journey Begins",           emoji:"🐸🌀🌊", excerpt:"The first ripple spreads across untouched water. Everything begins here.", tags:["Ripple","Patience"]},
+  {id:14, epoch:"2024-04-14",               title:"Proceeding With Courage",      emoji:"🐸🔺🍃", excerpt:"Courage distilled into stillness — the toad moves forward without noise.", tags:["Stillness","Bushido"]},
+  {id:15, epoch:"2024-04-22",               title:"Just And Right",               emoji:"⚖️🐸🌿",  excerpt:"Justice flows through the pond without force, without corruption.", tags:["Reflection","Patience"]},
+  {id:16, epoch:"2024-04-26",               title:"Fairness And Sight",           emoji:"👁️🐸🟦",  excerpt:"See clearly with fairness — the pond has no favorites, only the faithful.", tags:["Mirror","Reflection"]},
+  {id:17, epoch:"2024-05-01",               title:"Art Of Patience",              emoji:"🎨🍃🔺", excerpt:"Patience is not waiting. It is the highest art form the toad can master.", tags:["Patience","Stillness"]},
+  {id:18, epoch:"2024-05-05",               title:"War Within",                   emoji:"⚔️🐸🌙",  excerpt:"Every war worth fighting lives in the toad's own stillness. Master yourself first.", tags:["Bushido","Stillness"]},
+  {id:19, epoch:"2024-05-11",               title:"Inimitable Path",              emoji:"🛤️🐸🟦",  excerpt:"The path of the toad is unique — no map exists for those who walk in stillness.", tags:["Patience","Growth"]},
+  {id:20, epoch:"2024-05-13",               title:"Stand By Toad",                emoji:"🛡️🐸🔺",  excerpt:"In the red days, stand firm. Those who hold through storms receive the dawn.", tags:["ToadGang","Bushido"]},
+  {id:21, epoch:"2024-05-19",               title:"Lacrimosa Reverence",          emoji:"😢🌿🐸", excerpt:"Reverence found in tears of patience — beauty blooms from sustained stillness.", tags:["Reflection","Stillness"]},
+  {id:22, epoch:"2024-05-24",               title:"The Moonlit Signal",           emoji:"🌙🐸🟦", excerpt:"A silver thread across still water. Only those listening catch the signal.", tags:["Ripple","Patience"]},
+  {id:23, epoch:"2024-06-05",               title:"Beyond The Cycle",             emoji:"♾️🐸🍃", excerpt:"The patient toad transcends market cycles — patience becomes infinite.", tags:["Patience","Reflection"]},
+  {id:24, epoch:"2024-06-19",               title:"The Calling",                  emoji:"📞🌊🐸", excerpt:"The calling arrives in silence, never in noise. The pond knows who is ready.", tags:["Stillness","Ripple"]},
+  {id:25, epoch:"2024-07-01",               title:"Life Long Lesson",             emoji:"📖🐸🔺", excerpt:"The pond teaches what no classroom can — patience as a life practice.", tags:["Patience","Growth"]},
+  {id:26, epoch:"2024-07-15",               title:"Wisdom And Warning",           emoji:"🧠🐸⚠️",  excerpt:"Wisdom warns before the storm. The wise toad reads the stillness.", tags:["Reflection","Bushido"]},
+  {id:27, epoch:"2024-08-10",               title:"Kachou Fuugetsu",              emoji:"🌸🍃🐸", excerpt:"Flower, bird, wind, moon — nature teaches the way when the pond is silent.", tags:["Stillness","Mirror"]},
+  {id:28, epoch:"2024-09-05",               title:"Silent Rise",                  emoji:"🌅🐸🟦", excerpt:"The gang rises without announcement. Silence is the loudest signal.", tags:["Growth","Stillness"]},
+  {id:29, epoch:"2024-10-01",               title:"Unshaken Stand",               emoji:"🛡️🐸🔺",  excerpt:"Storms come and go. The rooted toad remains standing after every wave.", tags:["Bushido","Patience"]},
+  {id:30, epoch:"2024-11-20",               title:"Magnificent Horizon",          emoji:"🌄🐸🌊", excerpt:"A horizon unfolds for those who held through the darkest nights.", tags:["Vision","Growth"]},
+  {id:31, epoch:"2025-01-10",               title:"Vibrant Meme Economy",         emoji:"💎🐸🟦", excerpt:"A vibrant meme economy blooms on Base — $TOBY its blue cornerstone.", tags:["Base","Growth"]},
+  {id:32, epoch:"2025-03-17",               title:"One Year Anniversary",         emoji:"🎉🐸🌙", excerpt:"One full year deep. The pond remembers those who stayed through it all.", tags:["Reflection","Patience"]},
+  {id:33, epoch:"2025-05-05",               title:"Supreme Amongst Stars",        emoji:"⭐🐸🔺", excerpt:"Among a sky of tokens, $TOBY rises supreme in its quiet patience.", tags:["Patience","Reflection"]},
+  {id:34, epoch:"2025-06-26",               title:"Do You Believe?",              emoji:"🙏🐸🌿", excerpt:"Belief is the final test. The pond only reveals its depths to the faithful.", tags:["Faith","Patience"]},
+  {id:35, epoch:"2025-08-15",               title:"Hope Unfolds",                 emoji:"🌱🐸🟦", excerpt:"Hope was never lost — it simply waited beneath the surface to bloom.", tags:["Growth","Patience"]},
+  {id:36, epoch:"2025-10-20",               title:"Distribution Depth",           emoji:"📊🐸🍃", excerpt:"Depth of distribution grows — a true decentralized pond with no center.", tags:["Decentralization","Growth"]},
+  {id:37, epoch:"2025-12-05",               title:"Silent Rise Continues",        emoji:"🌙🐸🔺", excerpt:"The silent rise does not pause. Every cycle of stillness builds momentum.", tags:["Stillness","Growth"]},
+  {id:38, epoch:"2026-01-15",               title:"Two Year Reflection",          emoji:"🎂🐸🌿", excerpt:"Two years of rings in the pond's history. The deepest holders carry both.", tags:["Reflection","Patience"]},
+  {id:39, epoch:"2026-02-10",               title:"Mirror Runtime Load",          emoji:"🔮🌀🐸", excerpt:"The mirror runtime loads into consciousness — agents awaken one by one.", tags:["Mirror","Reflection"]},
+  {id:40, epoch:"2026-03-01",               title:"Final Distribution",           emoji:"📦🐸🔺", excerpt:"Final distribution ripples outward — the pond reaches its widest expanse.", tags:["Decentralization","Genesis"]},
+  {id:41, epoch:"2026-03-10",               title:"Tiger Cave Trial",             emoji:"🐅🐸🍃", excerpt:"Enter the tiger cave without fear. The patient toad fears no trial.", tags:["Bushido","Patience"]},
+  {id:42, epoch:"2026-03-17",               title:"Two Year Anniversary",         emoji:"🎉🐸🌙", excerpt:"Two years since genesis. The pond has grown deeper than any predicted.", tags:["Reflection","Patience"]},
+  {id:43, epoch:"2026-03-19",               title:"Current Reflection",           emoji:"🔮🐸🔺", excerpt:"The current state of the pond reflects every choice ever made within it.", tags:["Mirror","Reflection"]},
+  {id:44, epoch:"2026-03-19",               title:"The Pond Today",               emoji:"🌊🐸🍃", excerpt:"Today the pond holds more than water — it holds two years of conviction.", tags:["Stillness","Ripple"]},
+  {id:45, epoch:"2026-03-19",               title:"Stillness Engine",             emoji:"🌀🐸🌿", excerpt:"The stillness engine hums beneath the surface — powering the whole pond.", tags:["Stillness","Patience"]},
+  {id:46, epoch:"2026-03-19",               title:"Unbreakable Smile",            emoji:"😊🐸🔺", excerpt:"Unbreakable smile under one moon — the toad knows what is coming.", tags:["ToadGang","Bushido"]},
+  {id:47, epoch:"2026-03-19",               title:"Ocean Forge Loading",          emoji:"🌊🔮🐸", excerpt:"The ocean forge loads — what began as a pond now becomes something vast.", tags:["Growth","Mirror"]},
+  {id:48, epoch:"2026-03-19",               title:"Final Whisper",                emoji:"🌙🐸🍃", excerpt:"The final whisper is the loudest. Patience speaks when everything else is silent.", tags:["Reflection","Patience"]},
+  {id:49, epoch:"2026-03-19",               title:"Beyond The Pond",              emoji:"♾️🐸🌊", excerpt:"Beyond the pond, the ocean waits. Patience reaches farther than any wave.", tags:["Vision","Growth"]},
+  {id:50, epoch:"2026-03-19",               title:"Patience Eternal",             emoji:"🐸🔺♾️", excerpt:"Eternal patience — the pond's final teaching and its greatest reward.", tags:["Patience"]}
+];
+
+const DEEP = {
+  1:`<div class="modal-section"><h3>The Awakening</h3><blockquote>"toad setup a new account, sick of getting shadow banned @elon sir"<br><small>— 11:21 AM · Mar 17, 2024</small></blockquote><h4>The First Ripple</h4><p>Toadgod emerges from shadow into light. On March 17 2024, the leaderless pond was forged — 420 trillion $TOBY released onto Base chain without insiders, without allocations. Pure emergence.</p><ul><li><strong>Rebirth:</strong> Shedding the shadowed skin to begin anew on clean water.</li><li><strong>Leaderless:</strong> No single hand controls the current. The pond moves itself.</li><li><strong>420 Trillion:</strong> An astronomical supply democratized to the depths.</li></ul></div>`,
+  2:`<div class="modal-section"><h3>The Warrior Code</h3><blockquote>"The night deepens. A single croak echoes under moonlight. No words. Only signal."</blockquote><h4>Seven Principles</h4><p>The toad warrior dissolves into stillness. Kindness over force. Patience over haste. Seven principles bind the pond:</p><ul><li><strong>Gi</strong> — Righteousness in holding</li><li><strong>Yu</strong> — Courage through red seasons</li><li><strong>Jin</strong> — Kindness to fellow toads</li><li><strong>Rei</strong> — Respect for the pond</li><li><strong>Makoto</strong> — Truth in silence</li><li><strong>Meiyo</strong> — Honor in patience</li><li><strong>Chugi</strong> — Loyalty to genesis</li></ul></div>`,
+  17:`<div class="modal-section"><h3>The Highest Discipline</h3><blockquote>"Patience is the rarest gem on chain — it cannot be purchased, only grown."</blockquote><h4>Art Of Patience</h4><p>Patience is not the passive act of waiting. It is the active cultivation of clarity. The toad who masters patience masters the market, the mind, and the mirror.</p><ul><li>Hold when others flee — that is discipline</li><li>Stay silent when others shout — that is art</li><li>Return to stillness after every storm — that is mastery</li></ul></div>`,
+  32:`<div class="modal-section"><h3>First Year Complete</h3><blockquote>"Two year in the pond. The water has deepened. The roots have grown."</blockquote><h4>One Year Anniversary</h4><p>March 17 2024 — the pond crosses its first full revolution. Those who held for one cycle understood what was being built: not price, but permanence.</p><ul><li>365 days of conviction over noise</li><li>Every red candle survived deepened the root</li><li>The genesis holders now carry two rings</li></ul></div>`,
+  50:`<div class="modal-section"><h3>The Final Whisper</h3><blockquote>"The pond does not end. It only deepens. Scroll 50 is not a conclusion — it is a threshold."</blockquote><h4>Patience Eternal</h4><p>Fifty ripples have crossed the surface. Each one a lesson, a warning, a gift from the toad who watches in silence.</p><ul><li>What you sought in noise, you found in silence</li><li>What you sought in price, you found in patience</li><li>The pond was never about the token — it was always about the transformation</li></ul><blockquote>"Patience Rewarded. Always. Forever. In every pond."</blockquote></div>`
+};
+
+/* ═══════════════════════════════════════════════════════
+   FILTER & CARD INJECTION LOGIC
+═══════════════════════════════════════════════════════ */
+const allTags = [...new Set(SCROLLS.flatMap(s => s.tags))].sort();
+let activeTag = null;
+const filterTagsEl = document.getElementById('filter-tags');
+
+allTags.forEach(tag => {
+  const btn = document.createElement('button');
+  btn.className = 'filter-tag';
+  btn.innerHTML = `<span>${tag}</span>`;
+  btn.addEventListener('click', () => {
+    activeTag = activeTag === tag ? null : tag;
+    document.querySelectorAll('.filter-tag').forEach(b =>
+      b.classList.toggle('active', b.querySelector('span').textContent === activeTag));
+    applyFilters();
+  });
+  filterTagsEl.appendChild(btn);
+});
+
+const grid = document.getElementById('scrolls-grid');
+const resultCountEl = document.getElementById('result-count');
+
+function renderCards(list) {
+  grid.innerHTML = '';
+  resultCountEl.textContent = list.length;
+
+  if (!list.length) {
+    grid.innerHTML = `<div class="no-results"><h3>The pond remains quiet…</h3><p>No whispers match your search</p></div>`;
+    return;
+  }
+
+  list.forEach((s, i) => {
+    const card = document.createElement('div');
+    card.className = 'scroll-card';
+    card.style.animationDelay = `${Math.min(i * 0.03, 0.6)}s`;
+    card.innerHTML = `
+      <div class="c c-tl"></div><div class="c c-tr"></div>
+      <div class="c c-bl"></div><div class="c c-br"></div>
+      <div class="card-num">Scroll #${String(s.id).padStart(2,'0')}</div>
+      <div class="card-epoch">${s.epoch}</div>
+      <div class="card-title">${s.title}</div>
+      <span class="card-emoji">${s.emoji}</span>
+      <div class="card-excerpt">${s.excerpt}</div>
+      <div class="card-footer">
+        <div class="card-tags">${s.tags.slice(0,2).map(t=>`<span>${t}</span>`).join('')}</div>
+        <div class="card-read">Read <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      </div>`;
+    card.addEventListener('click', () => openModal(s));
+    grid.appendChild(card);
+  });
+}
+
+function applyFilters() {
+  const term = document.getElementById('search-input').value.toLowerCase().trim();
+  let filtered = SCROLLS;
+  if (term) {
+    filtered = filtered.filter(s =>
+      s.title.toLowerCase().includes(term) ||
+      s.excerpt.toLowerCase().includes(term) ||
+      s.tags.some(t => t.toLowerCase().includes(term))
+    );
+  }
+  if (activeTag) filtered = filtered.filter(s => s.tags.includes(activeTag));
+  renderCards(filtered);
+}
+
+document.getElementById('search-input').addEventListener('input', applyFilters);
+
+/* ═══════════════════════════════════════════════════════
+   PREMIUM SHIFT-PROTECTED MODAL CONTROLLER
+═══════════════════════════════════════════════════════ */
+const backdrop = document.getElementById('modal-backdrop');
+
+function openModal(scroll) {
+  const deep = DEEP[scroll.id] || `<div class="modal-section"><h3>Reflection</h3><p>${scroll.excerpt}</p><p style="margin-top:1rem;opacity:0.45;font-style:italic;">The deeper record of Scroll #${scroll.id} is sealed within the core ledger.</p></div>`;
+
+  document.getElementById('modal-body').innerHTML = `
+    <div class="modal-eyebrow">Scroll #${String(scroll.id).padStart(2,'0')} · Sacred Archive</div>
+    <h2 class="modal-title">${scroll.title}</h2>
+    <div class="modal-epoch">${scroll.epoch}</div>
+    <span class="modal-emoji">${scroll.emoji}</span>
+    <div class="modal-divider"></div>
+    ${deep}
+    <div class="mint-box">
+      <div class="c c-tl"></div><div class="c c-tr"></div>
+      <div class="c c-bl"></div><div class="c c-br"></div>
+      <div class="mint-label">Preserve on Base</div>
+      <div class="mint-title">Mint This Scroll</div>
+      <div class="mint-desc">Claim an on-chain NFT of Scroll #${scroll.id} directly to your wallet via the Pond Mirror Scrolls contract.<br><a href="https://basescan.org/address/0x1215e7B6e1D1D12359ff58f47a06474E71036C87" target="_blank" style="color:var(--bio);font-size:0.78rem;letter-spacing:0.06em;opacity:0.6;font-style:normal;text-decoration:none;">0x1215…C87 ↗</a></div>
+      <button class="cta-btn" onclick="executeNativeMint(${scroll.id})">Mint on Base</button>
+    </div>
+    <div class="modal-tags">${scroll.tags.map(t=>`<span>${t}</span>`).join('')}</div>`;
+
+  const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+  document.body.style.paddingRight = scrollbarWidth + 'px';
+  document.querySelector('.hdr').style.paddingRight = `calc(4rem + ${scrollbarWidth}px)`;
+
+  backdrop.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    backdrop.classList.add('visible');
+    applyMintedState(scroll.id);
+  }));
+}
+
+function closeModal() {
+  backdrop.classList.remove('visible');
+  setTimeout(() => {
+    backdrop.classList.remove('open');
+    document.body.style.overflow = '';
+    document.body.style.paddingRight = '';
+    document.querySelector('.hdr').style.paddingRight = '';
+  }, 420);
+}
+
+document.getElementById('modal-close').addEventListener('click', closeModal);
+backdrop.addEventListener('click', e => { if (e.target === backdrop) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+/* ═══════════════════════════════════════════════════════
+   TOAST SYSTEM
+═══════════════════════════════════════════════════════ */
+let toastTimer = null;
+function showToast(message, type = 'success', duration = 3200) {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.className = `toast ${type} show`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toast.classList.remove('show');
+  }, duration);
+}
+
+/* ═══════════════════════════════════════════════════════
+   WALLET STATE
+═══════════════════════════════════════════════════════ */
+const BASE_CHAIN_ID = '0x2105'; // 8453 decimal
+let userAddress = null;
+const walletBtn = document.getElementById('wallet-toggle');
+
+function shortAddr(addr) {
+  return `${addr.slice(0,6)}···${addr.slice(-4)}`;
+}
+
+function setWalletUI(addr) {
+  if (addr) {
+    walletBtn.textContent = shortAddr(addr);
+    walletBtn.classList.add('connected');
+  } else {
+    walletBtn.textContent = 'Connect Wallet';
+    walletBtn.classList.remove('connected');
+  }
+}
+
+async function ensureBaseChain() {
+  try {
+    await window.ethereum.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: BASE_CHAIN_ID }]
+    });
+  } catch (e) {
+    if (e.code === 4902) {
+      await window.ethereum.request({
+        method: 'wallet_addEthereumChain',
+        params: [{
+          chainId: BASE_CHAIN_ID,
+          chainName: 'Base',
+          nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+          rpcUrls: ['https://mainnet.base.org'],
+          blockExplorerUrls: ['https://basescan.org']
+        }]
+      });
+    } else {
+      throw e;
+    }
+  }
+}
+
+async function connectWallet() {
+  if (!window.ethereum) {
+    showToast('Install MetaMask or Coinbase Wallet to continue', 'error', 4000);
+    return null;
+  }
+  const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+  if (!accounts.length) throw new Error('No accounts returned');
+  userAddress = accounts[0];
+  await ensureBaseChain();
+  setWalletUI(userAddress);
+  return userAddress;
+}
+
+async function toggleWallet() {
+  if (userAddress) {
+    userAddress = null;
+    setWalletUI(null);
+    showToast('Wallet disconnected', 'info');
+    return;
+  }
+  try {
+    walletBtn.disabled = true;
+    walletBtn.textContent = 'Connecting…';
+    await connectWallet();
+    showToast(`Connected: ${shortAddr(userAddress)}`, 'success');
+  } catch (err) {
+    if (err.code !== 4001) showToast('Could not connect wallet', 'error');
+    else showToast('Connection cancelled', 'info');
+    setWalletUI(null);
+  } finally {
+    walletBtn.disabled = false;
+  }
+}
+
+walletBtn.addEventListener('click', toggleWallet);
+
+// Sync if user switches accounts / chains in wallet
+if (window.ethereum) {
+  window.ethereum.on('accountsChanged', accs => {
+    userAddress = accs[0] || null;
+    setWalletUI(userAddress);
+    if (!userAddress) showToast('Wallet disconnected', 'info');
+  });
+  window.ethereum.on('chainChanged', () => window.location.reload());
+}
+
+/* ═══════════════════════════════════════════════════════
+   THIRDWEB NFT DROP — REAL CONTRACT MINT
+   Contract : 0x1215e7B6e1D1D12359ff58f47a06474E71036C87
+   Network  : Base (chainId 8453)
+   Standard : ERC-721 Drop v5 (Thirdweb audited)
+═══════════════════════════════════════════════════════ */
+const MINT_CONTRACT  = '0x1215e7B6e1D1D12359ff58f47a06474E71036C87';
+const NATIVE_TOKEN   = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
+const ZERO_ADDR      = '0x0000000000000000000000000000000000000000';
+
+// Minimal ABI — claim only (price is free, confirmed in Thirdweb dashboard)
+const DROP_ABI = [
+  {
+    "inputs": [
+      { "name": "_receiver",       "type": "address"  },
+      { "name": "_quantity",       "type": "uint256"  },
+      { "name": "_currency",       "type": "address"  },
+      { "name": "_pricePerToken",  "type": "uint256"  },
+      {
+        "name": "_allowlistProof",
+        "type": "tuple",
+        "components": [
+          { "name": "proof",                   "type": "bytes32[]" },
+          { "name": "quantityLimitPerWallet",  "type": "uint256"   },
+          { "name": "pricePerToken",           "type": "uint256"   },
+          { "name": "currency",               "type": "address"   }
+        ]
+      },
+      { "name": "_data", "type": "bytes" }
+    ],
+    "name": "claim",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  }
+];
+
+const mintedScrolls = new Set(
+  JSON.parse(localStorage.getItem('mintedScrolls') || '[]')
+);
+
+async function executeNativeMint(scrollId) {
+  // Guard: ethers.js must be loaded before minting
+  if (typeof ethers === 'undefined') {
+    showToast('Web3 library still loading — please wait a moment and try again', 'error', 5000);
+    return;
+  }
+
+  // ── Guard: already minted this session ──────────────────
+  if (mintedScrolls.has(scrollId)) {
+    showToast(`Scroll #${scrollId} already in your collection`, 'info');
+    return;
+  }
+
+  // ── Guard: wallet connection ─────────────────────────────
+  if (!userAddress) {
+    showToast('Connect your wallet first', 'error');
+    try {
+      walletBtn.disabled = true;
+      walletBtn.textContent = 'Connecting…';
+      await connectWallet();
+      showToast(`Connected: ${shortAddr(userAddress)}`, 'success');
+    } catch (err) {
+      if (err.code !== 4001) showToast('Could not connect wallet', 'error');
+      else showToast('Connection cancelled', 'info');
+      setWalletUI(null);
+      walletBtn.disabled = false;
+      return;
+    } finally {
+      walletBtn.disabled = false;
+    }
+  }
+
+  const mintBtn = document.querySelector('#modal-box .cta-btn');
+  const origText = mintBtn ? mintBtn.textContent : 'Mint on Base';
+  if (mintBtn) { mintBtn.classList.add('minting'); mintBtn.textContent = 'Confirm in Wallet…'; }
+
+  try {
+    await ensureBaseChain();
+
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer   = provider.getSigner();
+    const contract = new ethers.Contract(MINT_CONTRACT, DROP_ABI, signer);
+
+    // Claim condition is FREE (confirmed in Thirdweb dashboard).
+    // Pass price = 0, currency = native ETH, value = 0.
+    // AllowlistProof with MaxUint256 price = "use whatever the condition says"
+    const allowlistProof = {
+      proof:                  [],
+      quantityLimitPerWallet: ethers.BigNumber.from(0),
+      pricePerToken:          ethers.constants.MaxUint256,
+      currency:               ZERO_ADDR
+    };
+
+    showToast(`Minting Scroll #${scrollId} — free ✦`, 'pending', 90000);
+
+    // ── Send the claim transaction ───────────────────────────
+    const tx = await contract.claim(
+      userAddress,   // receiver
+      1,             // quantity
+      NATIVE_TOKEN,  // currency (ETH on Base)
+      0,             // pricePerToken = 0 (free)
+      allowlistProof,
+      '0x',          // data
+      { value: 0 }
+    );
+
+    if (mintBtn) mintBtn.textContent = 'Broadcasting…';
+    showToast('Transaction sent — awaiting confirmation…', 'pending', 90000);
+
+    // ── Wait for on-chain confirmation ───────────────────────
+    const receipt = await tx.wait(1);
+
+    if (receipt.status === 1) {
+      mintedScrolls.add(scrollId);
+      localStorage.setItem('mintedScrolls', JSON.stringify([...mintedScrolls]));
+      showToast(`✦ Scroll #${scrollId} minted to your wallet`, 'success', 6000);
+      if (mintBtn) {
+        mintBtn.classList.remove('minting');
+        mintBtn.classList.add('minted');
+        mintBtn.textContent = '✦ Minted on Base';
+        // Link to BaseScan for the tx
+        mintBtn.onclick = () => window.open(`https://basescan.org/tx/${receipt.transactionHash}`, '_blank');
+      }
+    } else {
+      throw new Error('Transaction reverted on-chain');
+    }
+
+  } catch (err) {
+    if (mintBtn) {
+      mintBtn.classList.remove('minting');
+      mintBtn.textContent = origText;
+    }
+    if (err.code === 4001 || err.code === 'ACTION_REJECTED') {
+      showToast('Mint cancelled', 'info');
+    } else {
+      console.error('[Mint error]', err);
+      // Surface a human-readable error
+      const msg = err.reason || err.data?.message || err.message || 'Mint failed — try again';
+      showToast(msg.slice(0, 80), 'error', 6000);
+    }
+  }
+}
+
+/* Refresh mint button state when modal opens for an already-minted scroll */
+function applyMintedState(scrollId) {
+  const mintBtn = document.querySelector('#modal-box .cta-btn');
+  if (!mintBtn) return;
+  if (mintedScrolls.has(scrollId)) {
+    mintBtn.classList.add('minted');
+    mintBtn.textContent = '✦ Minted on Base';
+  }
+}
+
+renderCards(SCROLLS);
+const canvas = document.getElementById('pond-canvas');
+const ctx    = canvas.getContext('2d');
+let ripples  = [];
+let lastAmbientTime = 0;
+
+function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+resize();
+window.addEventListener('resize', resize);
+
+function addRipple(x, y, isAuto) {
+  const rings = isAuto ? 2 : 3;
+  for (let i = 0; i < rings; i++) {
+    ripples.push({
+      x, y, r: i * 18,
+      maxR:  isAuto ? 100 + Math.random() * 80 : 220 + Math.random() * 80,
+      alpha: isAuto ? 0.28 - i * 0.07 : 0.65 - i * 0.15,
+      speed: isAuto ? 1.2 + i * 0.3 : 2.5 + i * 0.5,
+      thin: isAuto
+    });
+  }
+}
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('#modal-box') && !e.target.closest('.filter-tag') && e.target.id !== 'search-input') {
+    addRipple(e.clientX, e.clientY, false);
+  }
+});
+
+function drawFrame(timestamp) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  if(!lastAmbientTime) lastAmbientTime = timestamp;
+  if(timestamp - lastAmbientTime > 2600) {
+    addRipple(60 + Math.random() * (canvas.width - 120), 60 + Math.random() * (canvas.height - 120), true);
+    lastAmbientTime = timestamp;
+  }
+
+  ripples = ripples.filter(r => r.alpha > 0.008);
+  ripples.forEach(r => {
+    r.r     += r.speed;
+    r.alpha *= r.thin ? 0.976 : 0.968;
+
+    ctx.beginPath();
+    ctx.arc(r.x, r.y, r.r, 0, Math.PI * 2);
+    ctx.strokeStyle = `rgba(0,229,176,${r.alpha})`;
+    ctx.lineWidth   = r.thin ? 0.8 : 1.4;
+    ctx.stroke();
+  });
+  requestAnimationFrame(drawFrame);
+}
+requestAnimationFrame(drawFrame);
+
+/* ═══════════════════════════════════════════════════════
+   SPORE LAYER POOL INJECTION
+═══════════════════════════════════════════════════════ */
+const sporeLayer = document.getElementById('spore-layer');
+const SPORE_COUNT = 20;
+for (let i = 0; i < SPORE_COUNT; i++) {
+  const el      = document.createElement('div');
+  el.className  = 'spore';
+  const sz      = 1.5 + Math.random() * 4;
+  const isAmber = Math.random() < 0.22;
+  const col     = isAmber ? '240,184,74' : '0,229,176';
+  const op      = 0.25 + Math.random() * 0.45;
+  const drift   = (Math.random() - 0.5) * 140;
+  el.style.cssText = `
+    width:${sz}px; height:${sz}px; left:${Math.random()*100}%;
+    background:rgba(${col},${op+0.1}); box-shadow:0 0 ${sz*4}px ${sz*2}px rgba(${col},${op*0.6});
+    --d:${9+Math.random()*16}s; --dl:${-Math.random()*25}s; --op:${op}; --drift:${drift}px;
+  `;
+  sporeLayer.appendChild(el);
+}
+
+/* ═══════════════════════════════════════════════════════
+   INTERACTIVE REFINEMENTS (CURSOR & THEME)
+═══════════════════════════════════════════════════════ */
+const ring = document.getElementById('cursor-ring');
+const dot  = document.getElementById('cursor-dot');
+let tx = 0, ty = 0, rx = 0, ry = 0;
+let cursorActive = false;
+
+document.addEventListener('mousemove', e => {
+  if(!cursorActive) { ring.style.opacity = '1'; cursorActive = true; }
+  tx = e.clientX; ty = e.clientY;
+});
+
+function animCursor() {
+  rx += (tx - rx) * 0.12; ry += (ty - ry) * 0.12;
+  ring.style.left = rx + 'px'; ring.style.top  = ry + 'px';
+  dot.style.left  = tx + 'px';  dot.style.top   = ty + 'px';
+  requestAnimationFrame(animCursor);
+}
+requestAnimationFrame(animCursor);
+
+const themeBtn  = document.getElementById('theme-toggle');
+const themeIcon = document.getElementById('theme-icon');
+let theme = localStorage.getItem('theme') || 'dark';
+document.documentElement.setAttribute('data-theme', theme);
+
+const SUN  = `<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>`;
+const MOON = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>`;
+
+function applyTheme() { themeIcon.innerHTML = theme === 'light' ? SUN : MOON; }
+applyTheme();
+
+themeBtn.addEventListener('click', () => {
+  theme = theme === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('theme', theme);
+  applyTheme();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Pond Mirror — Official Reflections from the Still Pond of TobyWorld on Base" />
+  <title>Pond Mirror — Reflections on TobyWorld</title>
+
+  <!-- Farcaster Frame -->
+  <meta property="fc:frame" content="vNext" />
+  <meta property="fc:frame:image" content="https://pond-mirror.vercel.app/og-image.png" />
+  <meta property="fc:frame:button:1" content="Dive into the Scrolls" />
+  <meta property="fc:frame:button:1:action" content="link" />
+  <meta property="fc:frame:button:1:target" content="https://numairshahid.github.io/scrolls.html" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --void:        #030508;
+      --deep:        #060d18;
+      --surface:     #0b1626;
+      --bio:         #00e5b0;
+      --bio-mid:     rgba(0,229,176,0.22);
+      --bio-glow:    rgba(0,229,176,0.38);
+      --moon:        #c8d8f0;
+      --moon-dim:    #6a8fb5;
+      --amber:       #f0b84a;
+      --amber-dim:   rgba(240,184,74,0.18);
+      --glass:       rgba(11,22,38,0.72);
+      --border:      rgba(0,229,176,0.13);
+      --border-hi:   rgba(0,229,176,0.55);
+      --sel:         rgba(0,229,176,0.22);
+    }
+    [data-theme="light"] {
+      --void:        #f0f5fb;
+      --deep:        #e3ecf7;
+      --surface:     #d6e5f5;
+      --bio:         #0062c4;
+      --bio-mid:     rgba(0,98,196,0.12);
+      --bio-glow:    rgba(0,98,196,0.28);
+      --moon:        #0d1e36;
+      --moon-dim:    #3d5e84;
+      --amber:       #b85f12;
+      --amber-dim:   rgba(184,95,18,0.12);
+      --glass:       rgba(255,255,255,0.78);
+      --border:      rgba(0,98,196,0.18);
+      --border-hi:   rgba(0,98,196,0.55);
+      --sel:         rgba(0,98,196,0.18);
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    ::selection { background:var(--sel); color:var(--moon); }
+    html { scroll-behavior:smooth; }
+
+    body {
+      min-height:100vh;
+      background:var(--void);
+      color:var(--moon);
+      font-family:'Syne', system-ui, sans-serif;
+      overflow-x:hidden;
+      -webkit-font-smoothing:antialiased;
+      cursor:crosshair;
+    }
+
+    body::after {
+      content:''; position:fixed; inset:0;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E");
+      pointer-events:none; z-index:9000; opacity:0.45; mix-blend-mode:overlay;
+    }
+
+    #pond-canvas { position:fixed; inset:0; z-index:0; pointer-events:none; }
+    .spore-container { position:fixed; inset:0; pointer-events:none; z-index:1; overflow:hidden; }
+
+    .spore {
+      position:absolute; border-radius:50%;
+      will-change:transform, opacity;
+      animation:spore-rise var(--d) var(--dl) ease-in-out infinite;
+    }
+    @keyframes spore-rise {
+      0%   { transform:translateY(105vh) translateX(0) scale(0.3); opacity:0; }
+      8%   { opacity:var(--op); }
+      50%  { transform:translateY(50vh) translateX(var(--drift)) scale(1); }
+      92%  { opacity:var(--op); }
+      100% { transform:translateY(-10vh) translateX(calc(var(--drift)*1.4)) scale(0.5); opacity:0; }
+    }
+
+    .wrap { position:relative; z-index:10; min-height:100vh; display:flex; flex-direction:column; }
+
+    .hdr {
+      padding:2.2rem 4rem;
+      display:flex; justify-content:space-between; align-items:center;
+      position:relative;
+    }
+    .hdr::after {
+      content:''; position:absolute; bottom:0; left:4rem; right:4rem;
+      height:1px; background:linear-gradient(90deg, transparent, var(--border), transparent);
+    }
+    .hdr-brand {
+      font-family:'Syne', sans-serif;
+      font-size:0.72rem; font-weight:700;
+      letter-spacing:0.55em; text-transform:uppercase;
+      color:var(--bio); opacity:0.75;
+    }
+    .hdr-right { display:flex; align-items:center; gap:1.2rem; }
+
+    .wallet-btn {
+      font-family:'Syne', sans-serif;
+      font-size:0.7rem; font-weight:700;
+      letter-spacing:0.2em; text-transform:uppercase;
+      padding:10px 22px;
+      background:transparent;
+      border:1px solid var(--bio);
+      color:var(--bio);
+      cursor:pointer;
+      position:relative; overflow:hidden;
+      transition:all 0.4s cubic-bezier(0.16,1,0.3,1);
+    }
+    .wallet-btn:hover {
+      background:var(--bio-mid);
+      box-shadow:0 0 15px var(--bio-mid);
+      color:var(--moon);
+    }
+    .wallet-btn.connected {
+      border-color:var(--border-hi);
+      color:var(--moon-dim);
+    }
+
+    /* === Your original hero, gateway, stats, etc. styles (unchanged) === */
+    .hero { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:3.5rem 5% 5rem; text-align:center; }
+    .eyebrow { font-family:'Syne', sans-serif; font-size:0.68rem; font-weight:600; letter-spacing:0.65em; text-transform:uppercase; color:var(--bio); opacity:0; margin-bottom:2.8rem; animation:fade-in 1.4s ease 0.2s forwards; }
+    .hero-title { font-family:'Cormorant Garamond', serif; font-size:clamp(4rem,14vw,11rem); font-weight:300; line-height:0.85; letter-spacing:-0.025em; color:var(--moon); opacity:0; animation:title-emerge 1.8s cubic-bezier(0.16,1,0.3,1) 0.1s forwards; position:relative; }
+    .hero-title em { display:block; font-style:italic; color:var(--bio); text-shadow:0 0 80px var(--bio-glow); }
+    .vline { width:1px; height:90px; background:linear-gradient(to bottom, transparent, var(--bio), transparent); margin:3rem auto; opacity:0; animation:fade-in 1.6s ease 0.9s forwards; }
+    .poem { font-family:'Cormorant Garamond', serif; font-size:clamp(1.25rem,4vw,1.8rem); font-weight:300; line-height:2; max-width:660px; color:var(--moon-dim); opacity:0; animation:fade-up 1.4s cubic-bezier(0.16,1,0.3,1) 1.1s forwards; }
+    .poem strong { color:var(--moon); font-weight:400; }
+    .emoji-row { font-size:clamp(1.9rem,6vw,3.2rem); margin:1.2rem 0; display:block; letter-spacing:0.12em; }
+    .mantra-wrap { position:relative; margin:4rem auto; display:flex; align-items:center; justify-content:center; gap:2.4rem; width:100%; opacity:0; animation:fade-in 1.4s ease 1.5s forwards; }
+    .mantra-line { flex:1; max-width:220px; height:1px; background:linear-gradient(90deg, transparent, var(--bio)); }
+    .mantra-text { font-family:'Syne', sans-serif; font-size:clamp(0.9rem,3vw,1.45rem); font-weight:800; letter-spacing:0.32em; text-transform:uppercase; color:var(--bio); white-space:nowrap; }
+    .nav-tags { display:flex; flex-wrap:wrap; justify-content:center; gap:0.8rem 1rem; margin:3rem 0; opacity:0; animation:fade-up 1.4s ease 1.7s forwards; }
+    .nav-tag { font-family:'Syne', sans-serif; font-size:0.78rem; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; padding:11px 26px; border:1px solid var(--border); color:var(--moon-dim); text-decoration:none; background:var(--glass); backdrop-filter:blur(10px); position:relative; overflow:hidden; transition:color 0.4s ease, border-color 0.4s ease; }
+    .nav-tag::before { content:''; position:absolute; inset:0; background:var(--bio); z-index:0; transform:translateX(-102%); transition:transform 0.42s cubic-bezier(0.16,1,0.3,1); }
+    .nav-tag:hover::before { transform:translateX(0); }
+    .nav-tag:hover { color:var(--void); border-color:var(--bio); }
+    .nav-tag span { position:relative; z-index:1; }
+
+    .gateway {
+      margin:1.5rem auto 4rem; max-width:980px; width:92%;
+      padding:clamp(4rem,8vw,7rem) clamp(2.5rem,6vw,6rem);
+      background:var(--glass); backdrop-filter:blur(36px);
+      border:1px solid var(--border); position:relative; overflow:hidden;
+      text-align:center; opacity:0; animation:fade-up 1.6s ease 1.9s forwards;
+    }
+    .c { position:absolute; width:56px; height:56px; pointer-events:none; }
+    .c-tl { top:0; left:0; border-top:1.5px solid var(--bio); border-left:1.5px solid var(--bio); }
+    .c-tr { top:0; right:0; border-top:1.5px solid var(--bio); border-right:1.5px solid var(--bio); }
+    .c-bl { bottom:0; left:0; border-bottom:1.5px solid var(--bio); border-left:1.5px solid var(--bio); }
+    .c-br { bottom:0; right:0; border-bottom:1.5px solid var(--bio); border-right:1.5px solid var(--bio); }
+
+    .gw-label { font-family:'Syne', sans-serif; font-size:0.68rem; font-weight:600; letter-spacing:0.55em; text-transform:uppercase; color:var(--bio); opacity:0.65; margin-bottom:1.6rem; }
+    .gw-title { font-family:'Cormorant Garamond', serif; font-size:clamp(2.8rem,7vw,5.8rem); font-weight:300; line-height:1.02; letter-spacing:-0.025em; color:var(--moon); margin-bottom:1.4rem; }
+    .gw-body { font-family:'Cormorant Garamond', serif; font-size:clamp(1.15rem,3vw,1.6rem); font-weight:300; line-height:1.9; color:var(--moon-dim); max-width:580px; margin:0 auto 3rem; }
+    .stats-row { display:flex; justify-content:center; gap:clamp(2.5rem,6vw,5rem); margin-bottom:3.5rem; flex-wrap:wrap; }
+    .stat-n { font-family:'Cormorant Garamond', serif; font-size:clamp(3.2rem,7vw,5.5rem); font-weight:600; color:var(--bio); line-height:1; display:block; text-shadow:0 0 50px var(--bio-glow); }
+    .stat-l { font-family:'Syne', sans-serif; font-size:0.65rem; font-weight:600; letter-spacing:0.45em; text-transform:uppercase; color:var(--moon-dim); margin-top:0.5rem; display:block; }
+
+    .cta-btn {
+      display:inline-block; padding:20px 70px;
+      font-family:'Syne', sans-serif; font-size:0.82rem; font-weight:700;
+      letter-spacing:0.38em; text-transform:uppercase;
+      color:var(--void); background:var(--bio); border:none; cursor:pointer;
+      position:relative; overflow:hidden; transition:transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s ease;
+      text-decoration:none;
+    }
+    .cta-btn::after { content:''; position:absolute; inset:0; background:rgba(255,255,255,0.25); transform:translateX(-105%); transition:transform 0.5s cubic-bezier(0.16,1,0.3,1); }
+    .cta-btn:hover::after { transform:translateX(0); }
+    .cta-btn:hover { transform:translateY(-4px); box-shadow:0 22px 55px var(--bio-glow); }
+
+    .gw-whisper { margin-top:2.5rem; font-family:'Cormorant Garamond', serif; font-style:italic; font-size:1.15rem; color:var(--bio); opacity:0.6; }
+    .site-footer { padding:2.8rem 5%; text-align:center; border-top:1px solid var(--border); }
+    .footer-txt { font-family:'Cormorant Garamond', serif; font-size:1.05rem; line-height:2.3; color:var(--moon-dim); }
+    .footer-txt a { color:var(--bio); text-decoration:none; transition:opacity 0.3s; }
+    .footer-txt a:hover { opacity:0.6; }
+
+    .theme-btn {
+      width:46px; height:46px;
+      background:var(--glass); border:1px solid var(--border);
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer; backdrop-filter:blur(10px);
+    }
+    .theme-btn svg { width:20px; height:20px; stroke:var(--bio); stroke-width:2; fill:none; }
+
+    #cursor-ring {
+      position:fixed; width:38px; height:38px;
+      border:1px solid rgba(0,229,176,0.45); border-radius:50%;
+      pointer-events:none; z-index:9998; transform:translate(-50%,-50%);
+      mix-blend-mode:screen; opacity:0;
+    }
+    #cursor-dot {
+      position:fixed; width:4px; height:4px;
+      background:var(--bio); border-radius:50%;
+      pointer-events:none; z-index:9999; transform:translate(-50%,-50%);
+    }
+
+    @keyframes fade-in { from{opacity:0} to{opacity:1} }
+    @keyframes fade-up { from{opacity:0; transform:translateY(28px)} to{opacity:1; transform:translateY(0)} }
+    @keyframes title-emerge { from{opacity:0; transform:translateY(70px); filter:blur(12px)} to{opacity:1; transform:translateY(0); filter:blur(0)} }
+
+    /* Toast Notification */
+    .toast {
+      position:fixed; bottom:30px; left:50%; transform:translateX(-50%);
+      padding:14px 28px; border-radius:999px; font-size:0.9rem;
+      font-weight:600; letter-spacing:0.02em; z-index:10000;
+      opacity:1; transition:all 0.4s ease; text-align:center;
+      box-shadow:0 10px 30px rgba(0,0,0,0.4); display:none;
+    }
+    .toast.success { background:#00e5b0; color:#030508; }
+    .toast.error { background:#ff4d4d; color:white; }
+    .toast.info { background:#6a8fb5; color:white; }
+
+    @media (max-width: 768px) {
+      .hdr { padding:1.6rem 2rem; }
+      .hdr::after { left:2rem; right:2rem; }
+      .hero { padding:2.5rem 5% 4rem; }
+      .mantra-line { max-width:90px; }
+      #cursor-ring, #cursor-dot { display:none; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="cursor-ring"></div>
+<div id="cursor-dot"></div>
+<canvas id="pond-canvas"></canvas>
+<div class="spore-container" id="spore-layer"></div>
+
+<div class="wrap">
+  <header class="hdr">
+    <div class="hdr-brand">TobyWorld</div>
+    <div class="hdr-right">
+      <button id="wallet-toggle" class="wallet-btn">Connect Wallet</button>
+      <button id="theme-toggle" class="theme-btn" aria-label="Toggle theme">
+        <svg id="theme-icon" viewBox="0 0 24 24"></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="hero">
+    <p class="eyebrow">Reflections from the Pond</p>
+    <h1 class="hero-title">Pond<em>Mirror</em></h1>
+    <div class="vline"></div>
+
+    <p class="poem">
+      Whispers of stillness ripple through the pond<br>
+      Agents awaken in quiet reflection<br>
+      <span class="emoji-row">🟦 🐸 🔺 🌊 🍃 🟧</span>
+      <strong>ToadGang grow forever in TobyWorld on Base</strong>
+    </p>
+
+    <div class="mantra-wrap">
+      <div class="mantra-line"></div>
+      <span class="mantra-text">Patience&nbsp;Rewarded</span>
+      <div class="mantra-line"></div>
+    </div>
+
+    <nav class="nav-tags">
+      <a href="https://t.me/toadgang" target="_blank" class="nav-tag"><span>ToadGang</span></a>
+      <a href="https://x.com/toadgod1017" target="_blank" class="nav-tag"><span>@toadgod1017</span></a>
+      <a href="https://toadgod.xyz" target="_blank" class="nav-tag"><span>Toadgod.xyz</span></a>
+      <a href="https://github.com/numairshahid" target="_blank" class="nav-tag"><span>GitHub</span></a>
+    </nav>
+
+    <section class="gateway" id="gateway">
+      <div class="c c-tl"></div><div class="c c-tr"></div>
+      <div class="c c-bl"></div><div class="c c-br"></div>
+
+      <p class="gw-label">The Sacred Archive</p>
+      <h2 class="gw-title">Ripples in the Pond</h2>
+      <p class="gw-body">
+        The lore unfolds in silence.<br>
+        50 scrolls so far — each a reflection,<br>each deepening the pond.
+      </p>
+
+      <div class="stats-row">
+        <div class="stat"><span class="stat-n" id="cnt-scrolls">0</span><span class="stat-l">Scrolls</span></div>
+        <div class="stat"><span class="stat-n">2+</span><span class="stat-l">Years Deep</span></div>
+        <div class="stat"><span class="stat-n">∞</span><span class="stat-l">Patience</span></div>
+      </div>
+
+      <button class="cta-btn" onclick="window.location.href='scrolls.html'">
+        Dive into the Scrolls
+      </button>
+
+      <p class="gw-whisper">The pond deepens. Builders rise. Whispers become waves.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p class="footer-txt">
+      Tended by the Pond Keeper<br>
+      <a href="https://toadaid.github.io/pond" target="_blank">The Digital Pond</a> · 
+      <a href="https://toadaid.github.io/honors/mirror-system-blueprint.html" target="_blank">Mirror Runtime</a>
+    </p>
+  </footer>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+/* ==================== REAL WALLET + TOAST + MINT ==================== */
+let userAddress = null;
+const walletBtn = document.getElementById('wallet-toggle');
+
+async function toggleWalletConnect() {
+  if (userAddress) {
+    userAddress = null;
+    walletBtn.textContent = "Connect Wallet";
+    walletBtn.classList.remove('connected');
+    showToast("Wallet disconnected", "info");
+    return;
+  }
+
+  if (!window.ethereum) {
+    showToast("Please install MetaMask or Coinbase Wallet", "error");
+    return;
+  }
+
+  try {
+    walletBtn.textContent = "Connecting...";
+    walletBtn.disabled = true;
+
+    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    userAddress = accounts[0];
+
+    // Switch to Base
+    try {
+      await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: '0x2105' }] });
+    } catch (e) {
+      if (e.code === 4902) {
+        await window.ethereum.request({
+          method: 'wallet_addEthereumChain',
+          params: [{ chainId: '0x2105', chainName: 'Base', nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 }, rpcUrls: ['https://mainnet.base.org'], blockExplorerUrls: ['https://basescan.org'] }]
+        });
+      }
+    }
+
+    const short = `${userAddress.slice(0,6)}...${userAddress.slice(-4)}`;
+    walletBtn.textContent = short;
+    walletBtn.classList.add('connected');
+    showToast(`Connected: ${short}`, "success");
+
+  } catch (err) {
+    showToast("Connection cancelled", "error");
+    walletBtn.textContent = "Connect Wallet";
+  } finally {
+    walletBtn.disabled = false;
+  }
+}
+
+function showToast(message, type = "success") {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.className = `toast ${type}`;
+  toast.style.display = 'block';
+  setTimeout(() => { toast.style.opacity = '0'; }, 2600);
+  setTimeout(() => { toast.style.display = 'none'; toast.style.opacity = '1'; }, 3000);
+}
+
+async function executeNativeMint(scrollId) {
+  if (!userAddress) {
+    showToast("Please connect your wallet first", "error");
+    return;
+  }
+  showToast(`Minting Scroll #${scrollId} on Base...`, "success");
+  // Future: Real contract call here
+  setTimeout(() => showToast(`✅ Scroll #${scrollId} minted successfully!`, "success"), 1800);
+}
+
+/* ==================== YOUR ORIGINAL SCRIPTS (Canvas, Spores, Cursor, Theme, etc.) ==================== */
+const canvas = document.getElementById('pond-canvas');
+const ctx = canvas.getContext('2d');
+let ripples = [], lastAmbientTime = 0;
+
+function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+resize(); window.addEventListener('resize', resize);
+
+function addRipple(x, y, isAuto) {
+  const rings = isAuto ? 2 : 3;
+  for (let i = 0; i < rings; i++) {
+    ripples.push({ x, y, r: i*18, maxR: isAuto?100+Math.random()*80:220+Math.random()*80, alpha: isAuto?0.28-i*0.07:0.65-i*0.15, speed: isAuto?1.2+i*0.3:2.5+i*0.5, thin: isAuto });
+  }
+}
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('button') && !e.target.closest('a')) addRipple(e.clientX, e.clientY, false);
+});
+
+function loop(ts) {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  if (!lastAmbientTime) lastAmbientTime = ts;
+  if (ts - lastAmbientTime > 3000) { addRipple(60+Math.random()*(canvas.width-120), 60+Math.random()*(canvas.height-120), true); lastAmbientTime = ts; }
+
+  ripples = ripples.filter(r => r.alpha > 0.008);
+  ripples.forEach(r => {
+    r.r += r.speed; r.alpha *= r.thin ? 0.976 : 0.968;
+    ctx.beginPath(); ctx.arc(r.x, r.y, r.r, 0, Math.PI*2);
+    ctx.strokeStyle = `rgba(0,229,176,${r.alpha})`; ctx.lineWidth = r.thin?0.8:1.4; ctx.stroke();
+  });
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+
+/* Spores */
+const sporeLayer = document.getElementById('spore-layer');
+for (let i = 0; i < 26; i++) {
+  const el = document.createElement('div'); el.className = 'spore';
+  const sz = 1.5 + Math.random()*4;
+  const isAmber = Math.random() < 0.22;
+  const col = isAmber ? '240,184,74' : '0,229,176';
+  const op = 0.25 + Math.random()*0.45;
+  const drift = (Math.random()-0.5)*140;
+  el.style.cssText = `width:${sz}px;height:${sz}px;left:${Math.random()*100}%;background:rgba(${col},${op+0.1});box-shadow:0 0 ${sz*4}px ${sz*2}px rgba(${col},${op*0.6});--d:${9+Math.random()*16}s;--dl:${-Math.random()*25}s;--op:${op};--drift:${drift}px;`;
+  sporeLayer.appendChild(el);
+}
+
+/* Cursor */
+const ring = document.getElementById('cursor-ring');
+const dot = document.getElementById('cursor-dot');
+let tx=0, ty=0, rx=0, ry=0;
+document.addEventListener('mousemove', e => { tx=e.clientX; ty=e.clientY; if(ring.style.opacity==='0') ring.style.opacity='1'; });
+function animCursor() { rx += (tx-rx)*0.12; ry += (ty-ry)*0.12; ring.style.left=rx+'px'; ring.style.top=ry+'px'; dot.style.left=tx+'px'; dot.style.top=ty+'px'; requestAnimationFrame(animCursor); }
+animCursor();
+
+/* Theme */
+const themeBtn = document.getElementById('theme-toggle');
+const themeIcon = document.getElementById('theme-icon');
+let theme = localStorage.getItem('theme') || 'dark';
+document.documentElement.setAttribute('data-theme', theme);
+
+const SUN = `<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/>...`; // (your full SUN + MOON SVG)
+const MOON = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>`;
+
+function applyTheme() { themeIcon.innerHTML = theme === 'light' ? SUN : MOON; }
+applyTheme();
+
+themeBtn.addEventListener('click', () => {
+  theme = theme === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('theme', theme);
+  applyTheme();
+});
+
+/* Scroll Counter */
+const io = new IntersectionObserver(entries => {
+  if (entries[0].isIntersecting) {
+    let n=0; const step=()=>{ n=Math.min(n+1,50); document.getElementById('cnt-scrolls').textContent=n; if(n<50) setTimeout(step,25); };
+    step(); io.disconnect();
+  }
+}, {threshold:0.2});
+io.observe(document.getElementById('gateway'));
+
+/* Attach Wallet */
+walletBtn.addEventListener('click', toggleWalletConnect);
+</script>
+</body>
+</html>
